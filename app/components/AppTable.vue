@@ -6,7 +6,7 @@ const props = defineProps({
 </script>
 
 <template>
-  <div class="overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-lg shadow-slate-200/60">
+  <div class="overflow-hidden border border-slate-200 bg-white shadow-lg shadow-slate-200/60">
     <table class="min-w-full border-collapse text-left text-sm text-slate-700">
       <thead class="bg-slate-50">
         <tr>
