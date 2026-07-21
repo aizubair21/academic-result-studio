@@ -10,14 +10,12 @@ const emit = defineEmits(['update:modelValue'])
 </script>
 
 <template>
-  <label class="block space-y-2 text-slate-700">
-    <span class="text-sm font-medium text-slate-600">{{ label }}</span>
-    <input
-      :type="type"
-      :placeholder="placeholder"
-      :value="modelValue"
-      @input="event => emit('update:modelValue', event.target.value)"
-      class="w-full rounded-3xl border border-slate-200 bg-white px-4 py-3 text-base text-slate-900 shadow-sm outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100"
-    />
-  </label>
+  <label class="block text-sm font-medium text-gray-700 mb-1.5">{{ label }}</label>
+  <input
+    :type="type"
+    :placeholder="placeholder"
+    :value="modelValue"
+    @input="event => emit('update:modelValue', event.target.value)"
+    class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+  />
 </template>

@@ -1,8 +1,7 @@
 <script lang="ts" setup>
 // import { ChevronRight, Download, Printer, Redo2, Settings, Save, RotateCcw, Undo, Upload } from 'lucide-vue-next'
-type WorkspaceStep = 'empty' | 'institution' | 'classes' | 'subjects' | 'students' | 'marks' | 'reports'
-
-const step = ref<WorkspaceStep>('empty')
+const uiStore = useUiStore();
+const step = uiStore.activeWidget;
 
 
 const workspaceTitle = computed(() => {
@@ -104,20 +103,12 @@ const navigate = (key: string) => {
   }
 }
 
-// Modals/Drawers (UI-only)
+// Modals/Drawers
 const institutionModalOpen = ref(false)
 const settingsOpen = ref(false)
 
 const subjectsDrawerOpen = ref(false)
 const studentsDrawerOpen = ref(false)
-
-const dummyInstitution = {
-  name: 'ABC High School',
-  location: 'Dhaka',
-  country: 'Bangladesh',
-  session: '২০২৪-২০২৫',
-  email: 'abc@gmail.com',
-}
 
 const dummyClasses = 
 [
@@ -175,8 +166,8 @@ const autoSaveText = computed(() => {
 const rightAssistant = computed(() => {
   if (step.value === 'empty') {
     return {
-      title: 'Next Step',
-      nextStepTitle: 'Add Institution',
+      title: 'Start Now',
+      nextStepTitle: 'Institution Details',
       ctaLabel: 'Add Institution',
       tips: ['Ctrl + S', 'Auto Save (dummy) Enabled'],
       progress: [
@@ -321,14 +312,6 @@ const setStepFromAssistantCTA = () => {
   }
 }
 
-const printNow = () => {
-  window.print()
-}
-
-const exportNow = () => {
-  // UI only
-  alert('Export (UI only)')
-}
 
 const generateResultNow = () => {
   // UI only; jump to reports
@@ -336,9 +319,10 @@ const generateResultNow = () => {
 }
 
 // Fake editable drawer content
-const tempInstitutionName = ref(dummyInstitution.name)
-const tempEmail = ref(dummyInstitution.email)
-const tempSession = ref(dummyInstitution.session)
+const institutions = ref([]);
+const classes = ref([])
+const subjects = ref([])
+const students = ref([])
 
 const saveInstitution = () => {
   institutionModalOpen.value = false
@@ -366,6 +350,8 @@ const addStudentDummy = () => {
     { roll: String(dummyStudents.value.length + 1), name: `শিক্ষার্থী ${dummyStudents.value.length + 1}` },
   ]
 }
+
+
 </script>
 
 <template>
@@ -403,7 +389,7 @@ const addStudentDummy = () => {
 
           <div class="h-10 w-px bg-slate-200" />
 
-          <AppButton variant="primary" size="md" type="button" title="Save" @click="() => {}">
+          <!-- <AppButton variant="primary" size="md" type="button" title="Save" @click="() => {}">
             <span class="flex items-center gap-2">
               <Save :size="18" />
               Save
@@ -424,7 +410,7 @@ const addStudentDummy = () => {
           >
             <Printer :size="18" />
             Print
-          </button>
+          </button> -->
 
           <button
             class="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-slate-200 transition hover:bg-slate-50"
@@ -467,17 +453,24 @@ const addStudentDummy = () => {
 
       <!-- Main Workspace -->
       <main class="min-h-[calc(100vh-108px)] px-4 pb-4 pt-4 md:px-6">
+
+        <!-- widget wrapper  -->
+        <div class="bg-white p-6 border rounded-lg">
+
+          <!-- widget welcome -->
+          <ArsWidgetWelcome />
+
+          <!-- widget box  -->
+          <div class="p-6 rounded-lg bg-slate-50">
+            <ArsInstituteCreate />
+            <ArsClassesCreate />
+          </div>
+
+        </div>
+
         <!-- State 1: Empty Workspace -->
         <section v-if="step === 'empty'" class="flex h-full flex-col gap-6">
           <div class="rounded-[2rem] bg-white p-8 shadow-sm ring-1 ring-slate-200">
-            <div class="flex flex-col gap-3">
-              <div class="text-3xl font-bold text-slate-900">স্বাগতম</div>
-              <div class="text-2xl font-semibold text-slate-800">Academic Result Studio</div>
-              <p class="max-w-2xl text-base text-slate-600">
-                এই প্রকল্পটি বর্তমানে খালি। নিচের ওয়ার্কফ্লো অনুযায়ী প্রতিষ্ঠান যোগ দিয়ে শুরু করুন।
-              </p>
-            </div>
-
             <div class="mt-6 rounded-[1.5rem] bg-slate-50 p-6">
               <div class="text-sm font-semibold uppercase tracking-widest text-slate-500">Workflow</div>
               <div class="mt-4 grid gap-3 sm:grid-cols-2">
@@ -803,7 +796,7 @@ const addStudentDummy = () => {
       <aside class="hidden border-l border-slate-200 bg-white md:block">
         <div class="flex h-[calc(100vh-108px)] flex-col">
           <div class="p-4">
-            <div class="rounded-[2rem] bg-slate-50 p-5 ring-1 ring-slate-200">
+            <div class="">
               <div class="text-sm font-semibold uppercase tracking-widest text-slate-500">{{ rightAssistant.title }}</div>
               <div class="mt-2 text-lg font-bold text-slate-900">{{ rightAssistant.nextStepTitle }}</div>
 
@@ -811,14 +804,14 @@ const addStudentDummy = () => {
                 <AppButton variant="primary" size="lg" class="w-full" @click="setStepFromAssistantCTA">{{ rightAssistant.ctaLabel }}</AppButton>
               </div>
 
-              <div class="mt-6 rounded-[1.5rem] bg-white p-4 ring-1 ring-slate-200">
+              <!-- <div class="mt-6 rounded-[1.5rem] bg-white p-4 ring-1 ring-slate-200">
                 <div class="text-sm font-semibold text-slate-700">Tips</div>
                 <div class="mt-2 space-y-2">
                   <div v-for="t in rightAssistant.tips" :key="t" class="text-sm font-semibold text-slate-600">
                     • {{ t }}
                   </div>
                 </div>
-              </div>
+              </div> -->
 
               <div class="mt-6">
                 <div class="text-sm font-semibold text-slate-700">Project Progress</div>
@@ -837,13 +830,13 @@ const addStudentDummy = () => {
             </div>
           </div>
 
-          <div class="mt-auto p-4">
+          <!-- <div class="mt-auto p-4">
             <div class="rounded-[2rem] bg-gradient-to-br from-blue-600/10 to-indigo-600/10 p-4 ring-1 ring-blue-600/10">
               <div class="text-sm font-semibold text-slate-700">Current mode</div>
               <div class="mt-1 text-lg font-bold text-slate-900">{{ workspaceTitle }}</div>
               <div class="mt-2 text-sm font-medium text-slate-600">UI-only workflow state</div>
             </div>
-          </div>
+          </div> -->
         </div>
       </aside>
     </div>
@@ -855,23 +848,13 @@ const addStudentDummy = () => {
         <div>{{ projectName }}</div>
         <div class="flex items-center gap-3">
           <span>IndexedDB {{ databaseStatusText }}</span>
-          <span class="hidden md:inline">•</span>
-          <span class="hidden md:inline">{{ versionText }}</span>
         </div>
       </div>
     </footer>
 
     <!-- Institution Modal -->
     <AppModal title="Institution" :open="institutionModalOpen" @close="institutionModalOpen = false">
-      <div class="space-y-4">
-        <AppInputField label="Institution Name" placeholder="ABC High School" v-model="tempInstitutionName" />
-        <AppInputField label="Email" placeholder="abc@gmail.com" type="email" v-model="tempEmail" />
-        <AppInputField label="Session" placeholder="২০২৪-২০২৫" v-model="tempSession" />
-        <div class="flex justify-end gap-3">
-          <AppButton variant="secondary" size="md" @click="institutionModalOpen = false">Cancel</AppButton>
-          <AppButton variant="primary" size="md" @click="saveInstitution">Save</AppButton>
-        </div>
-      </div>
+       <ArsInstituteCreate />
     </AppModal>
 
     <!-- Settings Modal -->
