@@ -1,9 +1,12 @@
 export const useWidgetStore = defineStore('widget', () => {
 
-  const widgets = {
-    institute: {
-      widgetName: 'institute',
-      widgetInfo: '',
+  const workflow = {
+    current: 'institute',
+    completed: {
+      institute: false,
+      classes: false,
+      subjects:false,
+      students:false,
     }
   }
 
@@ -33,11 +36,15 @@ export const useWidgetStore = defineStore('widget', () => {
       isActive:false,
       status:'pending'
     },
-  ]  
+    
+  ] 
+
+  const reset = () => {
+    this.$reset();
+  }
+  
   return {
-    widgets, widgetSteps
+    workflow, widgetSteps, reset
   };
 
-}, {
-  persist:true,
 });

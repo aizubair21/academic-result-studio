@@ -1,7 +1,9 @@
-<script lang="ts" setup>
-// import { ChevronRight, Download, Printer, Redo2, Settings, Save, RotateCcw, Undo, Upload } from 'lucide-vue-next'
+<script setup>
+
 const uiStore = useUiStore();
-const step = uiStore.activeWidget;
+const widgetStore = useWidgetStore()
+
+const step = widgetStore.workflow.current;
 
 
 const workspaceTitle = computed(() => {
@@ -34,17 +36,17 @@ const readiness = computed(() => {
     marksReady: ['marks', 'reports'].includes(step.value),
     reportsReady: ['reports'].includes(step.value),
   }
-})
+});
 
 const navItems = [
   { key: 'institution', label: '🏫 Institution', icon: '🏫' },
-  { key: 'classes', label: ' 📚 Classes', 'icon': '📚'},
+  { key: 'classes', label: ' 📚 Classes', icon: '📚'},
   { key: 'subjects', label: '📚 Subjects', icon: '📚' },
   { key: 'students', label: '👨‍🎓 Students', icon: '👨‍🎓' },
   { key: 'marks', label: '📝 Marks', icon: '📝' },
   { key: 'reports', label: '📄 Reports', icon: '📄' },
   { key: 'settings', label: '⚙ Settings', icon: '⚙️' },
-] as const
+];
 
 const activeNavKey = computed(() => {
   switch (step.value) {
@@ -63,9 +65,9 @@ const activeNavKey = computed(() => {
     case 'reports':
       return 'reports'
   }
-})
+});
 
-const canNavigateTo = (key: string) => {
+const canNavigateTo = (key) => {
   if (key === 'institution') return true
   if (key === 'classes') return readiness.value.classReady
   if (key === 'subjects') return readiness.value.institutionReady
@@ -74,9 +76,9 @@ const canNavigateTo = (key: string) => {
   if (key === 'reports') return readiness.value.marksReady
   if (key === 'settings') return true
   return false
-}
+};
 
-const navigate = (key: string) => {
+const navigate = (key) => {
   if (!canNavigateTo(key)) return
   switch (key) {
     case 'institution':
@@ -105,7 +107,6 @@ const navigate = (key: string) => {
 
 // Modals/Drawers
 const institutionModalOpen = ref(false)
-const settingsOpen = ref(false)
 
 const subjectsDrawerOpen = ref(false)
 const studentsDrawerOpen = ref(false)
@@ -122,15 +123,9 @@ const subjectCards =
     { name: 'ইংরেজী', classId: 1 },
     { name: 'গনিত', classId:2},
 
-]
+];
 
-type StudentRow = {
-  roll: string
-  name: string
-  classId: BigInteger
-}
-
-const dummyStudents = ref<StudentRow[]>([
+const dummyStudents = ref([
   { roll: '1', name: 'রাফি হাসান', classId:1 },
   { roll: '2', name: 'সাবিনা সুলতানা', classId:1 },
   { roll: '3', name: 'মাহিনুর রহমান', classId:2 },
@@ -156,12 +151,6 @@ const marksRows = computed(() => {
 })
 
 const tableRowsMarks = computed(() => marksRows.value.map((r) => r.row))
-
-const versionText = 'v1.0'
-const databaseStatusText = 'Ready'
-const autoSaveText = computed(() => {
-  return readiness.value.marksReady || readiness.value.reportsReady ? 'Auto Save ✓' : 'Auto Save —'
-})
 
 const rightAssistant = computed(() => {
   if (step.value === 'empty') {
@@ -290,10 +279,6 @@ const setStepFromAssistantCTA = () => {
     institutionModalOpen.value = true
     return
   }
-//   if (step.value === 'institution') {
-//     classDrawerdoOpen.value = true
-//     return
-//   }
   if (step.value === 'classes') {
     subjectsDrawerOpen.value = true
     return
@@ -313,44 +298,35 @@ const setStepFromAssistantCTA = () => {
 }
 
 
-const generateResultNow = () => {
-  // UI only; jump to reports
-  step.value = 'reports'
-}
+// const generateResultNow = () => {
+//   step.value = 'reports'
+// }
 
 // Fake editable drawer content
-const institutions = ref([]);
-const classes = ref([])
-const subjects = ref([])
-const students = ref([])
+// const institutions = ref([]);
+// const classes = ref([])
+// const subjects = ref([])
+// const students = ref([])
 
-const saveInstitution = () => {
-  institutionModalOpen.value = false
-  step.value = 'institution'
-}
+// const saveInstitution = () => {
+//   institutionModalOpen.value = false
+//   step.value = 'institution'
+// }
 
-const closeDrawer = (which: 'subjects' | 'students') => {
-  if (which === 'subjects') subjectsDrawerOpen.value = false
-  if (which === 'students') studentsDrawerOpen.value = false
-}
+// const closeDrawer = (which: 'subjects' | 'students') => {
+//   if (which === 'subjects') subjectsDrawerOpen.value = false
+//   if (which === 'students') studentsDrawerOpen.value = false
+// }
 
-const saveSubjects = () => {
-  closeDrawer('subjects')
-  step.value = 'subjects'
-}
+// const saveSubjects = () => {
+//   closeDrawer('subjects')
+//   step.value = 'subjects'
+// }
 
-const saveStudents = () => {
-  closeDrawer('students')
-  step.value = 'students'
-}
-
-const addStudentDummy = () => {
-  dummyStudents.value = [
-    ...dummyStudents.value,
-    { roll: String(dummyStudents.value.length + 1), name: `শিক্ষার্থী ${dummyStudents.value.length + 1}` },
-  ]
-}
-
+// const saveStudents = () => {
+//   closeDrawer('students')
+//   step.value = 'students'
+// }
 
 </script>
 
@@ -361,7 +337,7 @@ const addStudentDummy = () => {
       <div class="mx-auto flex h-full max-w-[1440px] items-center justify-between px-4">
         <div class="flex items-center gap-3">
           <div class="flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-blue-600 to-indigo-600 text-white shadow-sm">
-            🎓
+            
           </div>
           <div>
             <div class="text-base font-semibold text-slate-900">Academic Result Studio</div>
@@ -425,9 +401,9 @@ const addStudentDummy = () => {
     </header>
 
     <!-- Main layout regions -->
-    <div class="mx-auto grid max-w-[1440px] grid-cols-[72px_1fr_320px] gap-0 px-0 pt-0">
+    <div class="mx-auto grid max-w-[1440px] grid-cols-[72px_1fr_250px] gap-0 px-0 pt-0">
       <!-- Left Workspace Navigator -->
-      <nav class="hidden border-r border-slate-200 md:block" aria-label="Workspace navigation">
+      <nav class="border-r border-slate-200 md:block" aria-label="Workspace navigation">
         <div class="flex h-[calc(100vh-108px)] flex-col items-center gap-3 py-4">
           <button
             v-for="item in navItems"
@@ -452,344 +428,11 @@ const addStudentDummy = () => {
       </nav>
 
       <!-- Main Workspace -->
-      <main class="min-h-[calc(100vh-108px)] px-4 pb-4 pt-4 md:px-6">
+      <main class="sm:w-full min-h-[calc(100vh-108px)] px-4 pb-4 pt-4 md:px-6">
 
         <!-- widget wrapper  -->
-        <div class="bg-white p-6 border rounded-lg">
-
-          <!-- widget welcome -->
-          <ArsWidgetWelcome />
-
-          <!-- widget box  -->
-          <div class="p-6 rounded-lg bg-slate-50">
-            <ArsInstituteCreate />
-            <ArsClassesCreate />
-          </div>
-
-        </div>
-
-        <!-- State 1: Empty Workspace -->
-        <section v-if="step === 'empty'" class="flex h-full flex-col gap-6">
-          <div class="rounded-[2rem] bg-white p-8 shadow-sm ring-1 ring-slate-200">
-            <div class="mt-6 rounded-[1.5rem] bg-slate-50 p-6">
-              <div class="text-sm font-semibold uppercase tracking-widest text-slate-500">Workflow</div>
-              <div class="mt-4 grid gap-3 sm:grid-cols-2">
-                <div class="flex items-center gap-3">
-                  <div class="h-9 w-9 rounded-xl bg-indigo-600 text-white flex items-center justify-center">①</div>
-                  <div class="text-base font-semibold text-slate-800">Institution</div>
-                </div>
-                <div class="flex items-center gap-3 opacity-60">
-                  <div class="h-9 w-9 rounded-xl bg-slate-200 text-slate-700 flex items-center justify-center">②</div>
-                  <div class="text-base font-semibold text-slate-800">Subjects</div>
-                </div>
-                <div class="flex items-center gap-3 opacity-60">
-                  <div class="h-9 w-9 rounded-xl bg-slate-200 text-slate-700 flex items-center justify-center">③</div>
-                  <div class="text-base font-semibold text-slate-800">Students</div>
-                </div>
-                <div class="flex items-center gap-3 opacity-60">
-                  <div class="h-9 w-9 rounded-xl bg-slate-200 text-slate-700 flex items-center justify-center">④</div>
-                  <div class="text-base font-semibold text-slate-800">Marks</div>
-                </div>
-                <div class="flex items-center gap-3 opacity-60">
-                  <div class="h-9 w-9 rounded-xl bg-slate-200 text-slate-700 flex items-center justify-center">⑤</div>
-                  <div class="text-base font-semibold text-slate-800">Reports</div>
-                </div>
-              </div>
-
-              <div class="mt-6">
-                <AppButton variant="primary" size="lg" @click="institutionModalOpen = true">
-                  Add Institution
-                </AppButton>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        <!-- State 2: Institution Ready -->
-        <section v-else-if="step === 'institution'" class="flex flex-col gap-6">
-          <AppCard>
-            <template #default>
-              <div class="flex flex-col gap-5 sm:flex-row sm:items-start sm:justify-between">
-                <div>
-                  <div class="text-sm font-semibold uppercase tracking-widest text-slate-500">Institution</div>
-                  <div class="mt-2 text-3xl font-bold text-slate-900">{{ dummyInstitution.name }}</div>
-                  <div class="mt-2 text-base font-medium text-slate-600">{{ dummyInstitution.location }} • {{ dummyInstitution.country }}</div>
-                </div>
-                <div>
-                  <AppButton variant="secondary" size="md" @click="institutionModalOpen = true">Edit</AppButton>
-                </div>
-              </div>
-
-              <div class="mt-6 grid gap-4 sm:grid-cols-3">
-                <div class="rounded-[1.5rem] bg-white p-5 ring-1 ring-slate-200">
-                  <div class="text-sm font-medium text-slate-500">Session</div>
-                  <div class="mt-2 text-lg font-semibold text-slate-900">{{ dummyInstitution.session }}</div>
-                </div>
-                <div class="rounded-[1.5rem] bg-white p-5 ring-1 ring-slate-200">
-                  <div class="text-sm font-medium text-slate-500">Email</div>
-                  <div class="mt-2 text-lg font-semibold text-slate-900">{{ dummyInstitution.email }}</div>
-                </div>
-                <div class="rounded-[1.5rem] bg-white p-5 ring-1 ring-slate-200">
-                  <div class="text-sm font-medium text-slate-500">Project State</div>
-                  <div class="mt-2 text-lg font-semibold text-slate-900">{{ workspaceTitle }}</div>
-                </div>
-              </div>
-
-              <div class="mt-6 flex items-center gap-4">
-                <div class="flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-700">✓</div>
-                <div>
-                  <div class="text-sm font-semibold text-slate-500">Next Step</div>
-                  <div class="text-lg font-semibold text-slate-900">Add Subjects</div>
-                </div>
-              </div>
-
-              <div class="mt-6">
-                <AppButton variant="primary" size="lg" @click="subjectsDrawerOpen = true">Add Subject</AppButton>
-              </div>
-            </template>
-          </AppCard>
-        </section>
-
-        <!-- State 3: Subjects Ready -->
-        <section v-else-if="step === 'subjects'" class="flex flex-col gap-6">
-          <div class="flex items-center justify-between gap-4">
-            <div>
-              <div class="text-sm font-semibold uppercase tracking-widest text-slate-500">Subjects</div>
-              <div class="mt-2 text-3xl font-bold text-slate-900">Select / Edit</div>
-            </div>
-            <AppButton variant="primary" size="md" @click="subjectsDrawerOpen = true">(+)</AppButton>
-          </div>
-
-          <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-            <div
-              v-for="s in subjectCards"
-              :key="s"
-              class="rounded-[2rem] bg-white p-6 ring-1 ring-slate-200 shadow-sm"
-            >
-              <div class="text-lg font-semibold text-slate-900">{{ s }}</div>
-              <div class="mt-3 text-sm text-slate-600">UI-only card scaffold</div>
-            </div>
-            <button
-              class="rounded-[2rem] bg-slate-50 p-6 ring-1 ring-slate-200 shadow-sm transition hover:bg-slate-100"
-              @click="subjectsDrawerOpen = true"
-            >
-              <div class="text-2xl font-semibold text-indigo-600">(+)</div>
-              <div class="mt-3 text-sm font-semibold text-slate-700">Add</div>
-            </button>
-          </div>
-        </section>
-
-        <!-- State 4: Students Ready -->
-        <section v-else-if="step === 'students'" class="flex flex-col gap-6">
-          <div class="flex items-center justify-between gap-4">
-            <div>
-              <div class="text-sm font-semibold uppercase tracking-widest text-slate-500">Students</div>
-              <div class="mt-2 text-3xl font-bold text-slate-900">Manage Roster</div>
-            </div>
-            <AppButton variant="primary" size="lg" @click="studentsDrawerOpen = true">Add Student</AppButton>
-          </div>
-
-          <AppCard>
-            <template #default>
-              <div class="overflow-x-auto">
-                <table class="min-w-full table-auto rounded-[2rem] border border-slate-200 bg-white">
-                  <thead class="sticky top-0 bg-slate-50">
-                    <tr>
-                      <th class="px-5 py-4 text-left text-sm font-semibold text-slate-600">Roll</th>
-                      <th class="px-5 py-4 text-left text-sm font-semibold text-slate-600">Name</th>
-                      <th class="px-5 py-4 text-left text-sm font-semibold text-slate-600">Edit</th>
-                      <th class="px-5 py-4 text-left text-sm font-semibold text-slate-600">Delete</th>
-                    </tr>
-                  </thead>
-                  <tbody class="divide-y divide-slate-200">
-                    <tr v-for="st in dummyStudents" :key="st.roll" class="hover:bg-slate-50">
-                      <td class="px-5 py-4 text-sm font-medium text-slate-700">{{ st.roll }}</td>
-                      <td class="px-5 py-4 text-sm text-slate-800">{{ st.name }}</td>
-                      <td class="px-5 py-4">
-                        <button class="rounded-xl bg-emerald-500/10 px-4 py-2 text-sm font-semibold text-emerald-700">Edit</button>
-                      </td>
-                      <td class="px-5 py-4">
-                        <button class="rounded-xl bg-red-500/10 px-4 py-2 text-sm font-semibold text-red-700">Delete</button>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-
-              <div class="mt-6 flex items-center gap-4">
-                <div class="flex h-10 w-10 items-center justify-center rounded-2xl bg-emerald-500/10 text-emerald-700">✓</div>
-                <div>
-                  <div class="text-sm font-semibold text-slate-500">Next Step</div>
-                  <div class="text-lg font-semibold text-slate-900">Enter Marks</div>
-                </div>
-                <div class="ml-auto">
-                  <AppButton variant="primary" size="md" @click="step = 'marks'">Go to Marks</AppButton>
-                </div>
-              </div>
-            </template>
-          </AppCard>
-        </section>
-
-        <!-- State 5: Marks Entry -->
-        <section v-else-if="step === 'marks'" class="flex flex-col gap-6">
-          <div class="flex items-center justify-between gap-4">
-            <div>
-              <div class="text-sm font-semibold uppercase tracking-widest text-slate-500">Marks Entry</div>
-              <div class="mt-2 text-3xl font-bold text-slate-900">Excel-like Workspace</div>
-            </div>
-            <div class="flex flex-wrap items-center gap-2">
-              <AppButton variant="primary" size="md" @click="generateResultNow">Generate Result</AppButton>
-              <AppButton variant="secondary" size="md" @click="() => {}">Save</AppButton>
-            </div>
-          </div>
-
-          <div class="rounded-[2rem] bg-white p-4 ring-1 ring-slate-200">
-            <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <div class="flex flex-wrap items-center gap-3">
-                <div class="rounded-2xl bg-indigo-50 px-3 py-2 text-sm font-semibold text-indigo-700">Search Student</div>
-                <div class="rounded-2xl bg-slate-50 px-3 py-2 text-sm font-semibold text-slate-700">UI-only</div>
-              </div>
-              <div class="flex items-center gap-3 text-sm font-semibold text-slate-600">
-                <span class="rounded-2xl bg-emerald-500/10 px-3 py-2 text-emerald-700">Enter</span>
-                <span class="rounded-2xl bg-emerald-500/10 px-3 py-2 text-emerald-700">Tab</span>
-                <span class="rounded-2xl bg-emerald-500/10 px-3 py-2 text-emerald-700">Arrow Keys</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="overflow-hidden rounded-[2rem] bg-white ring-1 ring-slate-200">
-            <table class="min-w-full border-collapse text-left text-sm">
-              <thead class="sticky top-0 bg-slate-50">
-                <tr>
-                  <th
-                    v-for="h in marksTableHeaders"
-                    :key="h"
-                    class="border-b border-slate-200 px-5 py-4 font-semibold text-slate-600"
-                  >
-                    {{ h }}
-                  </th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr
-                  v-for="(row, rIdx) in tableRowsMarks"
-                  :key="rIdx"
-                  class="border-b border-slate-100 hover:bg-slate-50"
-                >
-                  <td v-for="(cell, cIdx) in row" :key="cIdx" class="px-5 py-4 text-slate-700">
-                    <span v-if="cIdx < 2" class="font-semibold text-slate-800">{{ cell }}</span>
-                    <span v-else-if="cIdx === row.length - 2">{{ cell }}</span>
-                    <span
-                      v-else-if="cIdx === row.length - 1"
-                      class="inline-flex items-center rounded-xl px-3 py-1 text-xs font-bold"
-                      :class="cell === 'Pass' ? 'bg-emerald-500/10 text-emerald-700' : 'bg-red-500/10 text-red-700'"
-                    >
-                      {{ cell }}
-                    </span>
-                    <input
-                      v-else
-                      class="w-20 rounded-xl border border-slate-200 bg-white px-2 py-2 text-sm font-semibold text-slate-900 outline-none transition focus:border-indigo-500 focus:ring-2 focus:ring-indigo-200"
-                      :value="cell"
-                      @input="() => {}"
-                    />
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </section>
-
-        <!-- State 6: Report Mode -->
-        <section v-else class="flex flex-col gap-6">
-          <div class="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-            <div>
-              <div class="text-sm font-semibold uppercase tracking-widest text-slate-500">Report Mode</div>
-              <div class="mt-2 text-3xl font-bold text-slate-900">Printable Results</div>
-            </div>
-            <div class="flex flex-wrap items-center gap-2">
-              <AppButton variant="secondary" size="md" @click="printNow">Print</AppButton>
-              <AppButton variant="primary" size="md" @click="exportNow">Export</AppButton>
-              <AppButton variant="secondary" size="md" @click="step = 'marks'">Back to Marks</AppButton>
-            </div>
-          </div>
-
-          <div class="rounded-[2rem] bg-white p-4 ring-1 ring-slate-200">
-            <div class="flex flex-wrap gap-2">
-              <button
-                v-for="t in [
-                  { key: 'class', label: 'Class Result' },
-                  { key: 'subject', label: 'Subject Result' },
-                  { key: 'student', label: 'Student Result' },
-                  { key: 'stats', label: 'Statistics' },
-                ]"
-                :key="t.key"
-                class="rounded-2xl px-4 py-2 text-sm font-semibold transition"
-                :class="reportTab === t.key ? 'bg-indigo-600 text-white shadow-sm' : 'bg-slate-50 text-slate-700 ring-1 ring-slate-200 hover:bg-slate-100'"
-                @click="reportTab = t.key as any"
-              >
-                {{ t.label }}
-              </button>
-            </div>
-          </div>
-
-          <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            <div class="rounded-[2rem] bg-white p-6 ring-1 ring-slate-200 shadow-sm">
-              <div class="text-sm font-semibold text-slate-500">Pass</div>
-              <div class="mt-2 text-3xl font-bold text-emerald-700">3</div>
-            </div>
-            <div class="rounded-[2rem] bg-white p-6 ring-1 ring-slate-200 shadow-sm">
-              <div class="text-sm font-semibold text-slate-500">Fail</div>
-              <div class="mt-2 text-3xl font-bold text-red-700">1</div>
-            </div>
-            <div class="rounded-[2rem] bg-white p-6 ring-1 ring-slate-200 shadow-sm">
-              <div class="text-sm font-semibold text-slate-500">Highest</div>
-              <div class="mt-2 text-3xl font-bold text-indigo-700">450</div>
-            </div>
-            <div class="rounded-[2rem] bg-white p-6 ring-1 ring-slate-200 shadow-sm">
-              <div class="text-sm font-semibold text-slate-500">Lowest</div>
-              <div class="mt-2 text-3xl font-bold text-orange-700">392</div>
-            </div>
-          </div>
-
-          <div class="grid gap-6 lg:grid-cols-[1.2fr_0.8fr]">
-            <AppCard>
-              <template #default>
-                <div class="flex items-center justify-between gap-3">
-                  <div>
-                    <div class="text-sm font-semibold uppercase tracking-widest text-slate-500">{{ reportTab === 'class' ? 'Class Result' : 'Result Table' }}</div>
-                    <div class="mt-2 text-lg font-bold text-slate-900">UI-only table scaffold</div>
-                  </div>
-                  <div class="rounded-2xl bg-slate-50 px-4 py-2 text-sm font-semibold text-slate-700">{{ reportTab }}</div>
-                </div>
-
-                <div class="mt-4">
-                  <AppTable :headers="['Roll', 'Name', 'Total', 'Status']" :rows="[
-                    ['1', 'রাফি হাসান', '450', 'Pass'],
-                    ['2', 'সাবিনা সুলতানা', '420', 'Pass'],
-                    ['3', 'মাহিনুর রহমান', '392', 'Fail'],
-                    ['4', 'সোহেল রানা', '430', 'Pass'],
-                  ]" />
-                </div>
-              </template>
-            </AppCard>
-
-            <AppCard>
-              <template #default>
-                <div class="text-sm font-semibold uppercase tracking-widest text-slate-500">Merit Table</div>
-                <div class="mt-2 text-lg font-bold text-slate-900">Top performers (dummy)</div>
-                <div class="mt-4 space-y-3">
-                  <div v-for="i in 5" :key="i" class="flex items-center justify-between rounded-2xl bg-slate-50 p-3 ring-1 ring-slate-200">
-                    <div class="flex items-center gap-3">
-                      <div class="flex h-8 w-8 items-center justify-center rounded-xl bg-indigo-600 text-white text-xs font-bold">{{ i }}</div>
-                      <div class="text-sm font-semibold text-slate-800">শিক্ষার্থী {{ i }}</div>
-                    </div>
-                    <div class="text-sm font-bold text-slate-700">{{ 500 - i * 10 }}</div>
-                  </div>
-                </div>
-              </template>
-            </AppCard>
-          </div>
-        </section>
+        <ArsWidgetPanel/>
+        
       </main>
 
       <!-- Right Context Assistant -->
@@ -852,17 +495,13 @@ const addStudentDummy = () => {
       </div>
     </footer>
 
-    <!-- Institution Modal -->
-    <AppModal title="Institution" :open="institutionModalOpen" @close="institutionModalOpen = false">
-       <ArsInstituteCreate />
-    </AppModal>
-
     <!-- Settings Modal -->
     <AppModal title="Settings" :open="settingsOpen" @close="settingsOpen = false">
       <div class="space-y-4">
         <AppCard>
           <template #default>
             <div class="space-y-2">
+              <div class="flex items-start px-2 py-1"></div>
               <div class="text-sm font-semibold text-slate-700">UI-only settings</div>
               <div class="text-sm text-slate-600">No persistence/business logic implemented.</div>
             </div>
@@ -880,7 +519,7 @@ const addStudentDummy = () => {
       class="fixed inset-0 z-50 flex"
       aria-modal="true"
       role="dialog"
-    >
+     >
       <div class="flex-1 bg-slate-950/40" @click="subjectsDrawerOpen = false" />
       <div class="w-full max-w-md bg-white p-4 shadow-2xl ring-1 ring-slate-200">
         <div class="flex items-center justify-between gap-3 rounded-[2rem] bg-slate-50 p-4 ring-1 ring-slate-200">
@@ -912,7 +551,7 @@ const addStudentDummy = () => {
       class="fixed inset-0 z-50 flex"
       aria-modal="true"
       role="dialog"
-    >
+     >
       <div class="flex-1 bg-slate-950/40" @click="studentsDrawerOpen = false" />
       <div class="w-full max-w-md bg-white p-4 shadow-2xl ring-1 ring-slate-200">
         <div class="flex items-center justify-between gap-3 rounded-[2rem] bg-slate-50 p-4 ring-1 ring-slate-200">

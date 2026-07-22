@@ -1,8 +1,7 @@
-<script lang="ts" setup>
+<script setup>
 const uiStore = useUiStore();
 const widgetStore = useWidgetStore();
-
-import { useInstitute } from '~/composables/useInstitute';
+// import { useInstitute } from '~/composables/useInstitute';
 
 const emit = defineEmits(['close', 'saved', 'deleted']);
 
@@ -10,14 +9,14 @@ const { getInstitute, saveInstitute, updateInstitute } = useInstitute();
 // const uiStore = useUiStore();
 
 // Form state
-const form = reactive({
+const form = ref({
   name: '',
   email: '',
   session: '',
   headSirName: '',
 });
 
-const errors = reactive({});
+const errors = ref({});
 const saving = ref(false);
 const errorMsg = ref(null);
 const successMsg = ref(null);
@@ -25,9 +24,6 @@ const successMsg = ref(null);
 // Delete modal
 const showDeleteModal = ref(false);
 const deleting = ref(false);
-
-// Computed
-// const isEdit = computed(() => props.mode === 'edit');
 
 // Load data if editing
 // watchEffect(async () => {
@@ -43,23 +39,23 @@ const deleting = ref(false);
 // });
 
 // Validation
-// const validateForm = () => {
-//   Object.keys(errors).forEach(k => delete errors[k]);
-//   errorMsg.value = null;
-
-//   if (!form.name.trim()) errors.name = 'প্রতিষ্ঠানের নাম আবশ্যক';
-//   if (!form.email.trim()) errors.email = 'ইমেইল আবশ্যক';
-//   else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) errors.email = 'সঠিক ইমেইল দিন';
-//   if (!form.session.trim()) errors.session = 'সেশন আবশ্যক';
-//   if (!form.headSirName.trim()) errors.headSirName = 'প্রধান শিক্ষকের নাম আবশ্যক';
-
-//   return Object.keys(errors).length === 0;
-// };
-
-
 const validateForm = () => {
+  Object.keys(errors).forEach(k => delete errors[k]);
+  errorMsg.value = null;
+
+  if (!form.name.trim()) errors.name = 'প্রতিষ্ঠানের নাম আবশ্যক';
+  if (!form.email.trim()) errors.email = 'ইমেইল আবশ্যক';
+  else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) errors.email = 'সঠিক ইমেইল দিন';
+  if (!form.session.trim()) errors.session = 'সেশন আবশ্যক';
+  if (!form.headSirName.trim()) errors.headSirName = 'প্রধান শিক্ষকের নাম আবশ্যক';
+
   return Object.keys(errors).length === 0;
 };
+
+
+// const validateForm = () => {
+//   return Object.keys(errors).length === 0;
+// };
 
 // Submit handler
 const handleSubmit = async () => {
@@ -100,7 +96,7 @@ const handleSubmit = async () => {
 
 <template>
   <Transition>
-    <div v-if="uiStore.activeWidget == 'institure'">
+    <div v-if="widgetStore.workflow.current == 'institute'">
       <!-- Form -->
       <form @submit.prevent="handleSubmit" class="space-y-5">
         <!-- Error Alert -->
@@ -127,54 +123,6 @@ const handleSubmit = async () => {
             :class="{ 'border-red-500': errors.name }"
           />
           <p v-if="errors.name" class="text-red-500 text-xs mt-1">{{ errors.name }}</p>
-        </div>
-
-        <!-- Email -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1.5">
-            ইমেইল <span class="text-red-500">*</span>
-          </label>
-          <input
-            v-model="form.email"
-            type="email"
-            required
-            placeholder="example@school.edu.bd"
-            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
-            :class="{ 'border-red-500': errors.email }"
-          />
-          <p v-if="errors.email" class="text-red-500 text-xs mt-1">{{ errors.email }}</p>
-        </div>
-
-        <!-- Session -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1.5">
-            শিক্ষাবর্ষ/সেশন <span class="text-red-500">*</span>
-          </label>
-          <input
-            v-model="form.session"
-            type="text"
-            required
-            placeholder="যেমন: ২০২৫-২৬"
-            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
-            :class="{ 'border-red-500': errors.session }"
-          />
-          <p v-if="errors.session" class="text-red-500 text-xs mt-1">{{ errors.session }}</p>
-        </div>
-
-        <!-- Head Sir Name -->
-        <div>
-          <label class="block text-sm font-medium text-gray-700 mb-1.5">
-            প্রধান শিক্ষকের নাম <span class="text-red-500">*</span>
-          </label>
-          <input
-            v-model="form.headSirName"
-            type="text"
-            required
-            placeholder="যেমন: মোঃ আব্দুল করিম"
-            class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
-            :class="{ 'border-red-500': errors.headSirName }"
-          />
-          <p v-if="errors.headSirName" class="text-red-500 text-xs mt-1">{{ errors.headSirName }}</p>
         </div>
 
         <!-- Footer Buttons -->

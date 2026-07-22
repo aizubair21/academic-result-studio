@@ -1,10 +1,11 @@
-// db/index.js
 import Dexie from 'dexie';
 
 export const db = new Dexie('ResultSheetDB');
 
 db.version(1).stores({
-  // ইনস্টিটিউট - একটাই রেকর্ড (Singleton pattern)
+  workspace: 'id',
+
+  // একটাই রেকর্ড
   institute: 'id',
   
   // ক্লাস
