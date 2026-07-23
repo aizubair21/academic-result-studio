@@ -7,7 +7,7 @@
 <div class="bg-white p-6 border rounded-lg">
 
   <!-- widget welcome -->
-  <ArsWidgetWelcome />
+    <ArsWidgetSteps />
 
   <!-- widget box  -->
   <div class="p-6 rounded-lg bg-slate-50">
@@ -17,7 +17,6 @@
 
 </div>
 </template>
-
 
 
 <style>

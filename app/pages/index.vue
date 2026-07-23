@@ -1,6 +1,6 @@
 <script setup>
 
-const uiStore = useUiStore();
+const ui = useUiStore();
 const widgetStore = useWidgetStore()
 
 const step = widgetStore.workflow.current;
@@ -430,6 +430,19 @@ const setStepFromAssistantCTA = () => {
       <!-- Main Workspace -->
       <main class="sm:w-full min-h-[calc(100vh-108px)] px-4 pb-4 pt-4 md:px-6">
 
+        <!-- toast messages start  -->
+         <!-- Error Alert -->
+        <div v-if="ui.toast.type == 'error'" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
+          {{ ui.toast.message }}
+        </div>
+
+        <!-- Success Alert -->
+        <div v-if="ui.toast.type == 'success'" class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm">
+          {{ ui.toast.message }}
+        </div>
+        <!-- toast message end  -->
+
+
         <!-- widget wrapper  -->
         <ArsWidgetPanel/>
         
@@ -440,12 +453,12 @@ const setStepFromAssistantCTA = () => {
         <div class="flex h-[calc(100vh-108px)] flex-col">
           <div class="p-4">
             <div class="">
-              <div class="text-sm font-semibold uppercase tracking-widest text-slate-500">{{ rightAssistant.title }}</div>
-              <div class="mt-2 text-lg font-bold text-slate-900">{{ rightAssistant.nextStepTitle }}</div>
-
-              <div class="mt-5">
+              <!-- <div class="text-sm font-semibold uppercase tracking-widest text-slate-500">{{ rightAssistant.title }}</div>
+              <div class="mt-2 text-lg font-bold text-slate-900">{{ rightAssistant.nextStepTitle }}</div> -->
+              <ArsWidgetWelcome />
+              <!-- <div class="mt-5">
                 <AppButton variant="primary" size="lg" class="w-full" @click="setStepFromAssistantCTA">{{ rightAssistant.ctaLabel }}</AppButton>
-              </div>
+              </div> -->
 
               <!-- <div class="mt-6 rounded-[1.5rem] bg-white p-4 ring-1 ring-slate-200">
                 <div class="text-sm font-semibold text-slate-700">Tips</div>

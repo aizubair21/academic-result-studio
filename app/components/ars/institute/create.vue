@@ -1,5 +1,5 @@
 <script setup>
-const uiStore = useUiStore();
+const ui = useUiStore();
 const widgetStore = useWidgetStore();
 // import { useInstitute } from '~/composables/useInstitute';
 
@@ -16,41 +16,22 @@ const form = ref({
   headSirName: '',
 });
 
-const errors = ref({});
+const errors = ui.errors
 const saving = ref(false);
-const errorMsg = ref(null);
-const successMsg = ref(null);
-
-// Delete modal
-const showDeleteModal = ref(false);
-const deleting = ref(false);
-
-// Load data if editing
-// watchEffect(async () => {
-//   if (props.visible && isEdit.value) {
-//     const institute = await getInstitute();
-//     if (institute) {
-//       form.name = institute.name || '';
-//       form.email = institute.email || '';
-//       form.session = institute.session || '';
-//       form.headSirName = institute.headSirName || '';
-//     }
-//   }
-// });
 
 // Validation
-const validateForm = () => {
-  Object.keys(errors).forEach(k => delete errors[k]);
-  errorMsg.value = null;
+// const validateForm = () => {
+//   Object.keys(errors).forEach(k => delete errors[k]);
+//   errorMsg.value = null;
 
-  if (!form.name.trim()) errors.name = 'প্রতিষ্ঠানের নাম আবশ্যক';
-  if (!form.email.trim()) errors.email = 'ইমেইল আবশ্যক';
-  else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) errors.email = 'সঠিক ইমেইল দিন';
-  if (!form.session.trim()) errors.session = 'সেশন আবশ্যক';
-  if (!form.headSirName.trim()) errors.headSirName = 'প্রধান শিক্ষকের নাম আবশ্যক';
+//   if (!form.name.trim()) errors.name = 'প্রতিষ্ঠানের নাম আবশ্যক';
+//   if (!form.email.trim()) errors.email = 'ইমেইল আবশ্যক';
+//   else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(form.email)) errors.email = 'সঠিক ইমেইল দিন';
+//   if (!form.session.trim()) errors.session = 'সেশন আবশ্যক';
+//   if (!form.headSirName.trim()) errors.headSirName = 'প্রধান শিক্ষকের নাম আবশ্যক';
 
-  return Object.keys(errors).length === 0;
-};
+//   return Object.keys(errors).length === 0;
+// };
 
 
 // const validateForm = () => {
@@ -59,36 +40,41 @@ const validateForm = () => {
 
 // Submit handler
 const handleSubmit = async () => {
-  if (!validateForm()) return;
 
-  saving.value = true;
-  errorMsg.value = null;
-  successMsg.value = null;
+  ui.saving = true;
 
   try {
     const data = {
       name: form.name.trim(),
-      email: form.email.trim(),
-      session: form.session.trim(),
-      headSirName: form.headSirName.trim(),
+      // email: form.email.trim(),
+      // session: form.session.trim(),
+      // headSirName: form.headSirName.trim(),
     };
 
     await saveInstitute(data);
-    successMsg.value = 'ইনস্টিটিউট সফলভাবে তৈরি হয়েছে!';
+    ui.toast = {
+      message: 'ইনস্টিটিউট সফলভাবে তৈরি হয়েছে',
+      type:'success',
+    }
+    // successMsg.value = 'ইনস্টিটিউট সফলভাবে তৈরি হয়েছে!';
 
     emit('saved');
     
     // Auto close after success
-    setTimeout(() => {
-      handleClose();
-    }, 1500);
+    // setTimeout(() => {
+    //   handleClose();
+    // }, 1500);
+
   } catch (err) {
-    errorMsg.value = err.message || 'কিছু ভুল হয়েছে';
+    ui.toast = {
+      message: 'কিছু ভুল হয়েছে', 
+      type: 'error'
+    }
+    // errorMsg.value = err.message || 'কিছু ভুল হয়েছে';
   } finally {
-    saving.value = false;
+    ui.saving = false;
   }
 };
-
 
 
 </script>
@@ -99,15 +85,8 @@ const handleSubmit = async () => {
     <div v-if="widgetStore.workflow.current == 'institute'">
       <!-- Form -->
       <form @submit.prevent="handleSubmit" class="space-y-5">
-        <!-- Error Alert -->
-        <div v-if="errorMsg" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
-          {{ errorMsg }}
-        </div>
 
-        <!-- Success Alert -->
-        <div v-if="successMsg" class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm">
-          {{ successMsg }}
-        </div>
+        
 
         <!-- Institute Name -->
         <div>
@@ -128,7 +107,7 @@ const handleSubmit = async () => {
         <!-- Footer Buttons -->
         <div class="flex gap-3 pt-4 border-t">
           <!-- Delete Button (শুধু Edit মোডে) -->
-          <button
+          <!-- <button
             v-if="isEdit"
             type="button"
             @click="handleDeleteClick"
@@ -140,9 +119,9 @@ const handleSubmit = async () => {
               </svg>
               ডিলিট
             </span>
-          </button>
+          </button> -->
 
-          <div class="flex-1"></div>
+          <!-- <div class="flex-1"></div> -->
 
           <button
             type="submit"

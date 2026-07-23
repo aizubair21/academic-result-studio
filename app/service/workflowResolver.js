@@ -63,6 +63,8 @@ export class WorkflowResolver {
 
         }
 
+        useUiStore().workflow.current = workflow;
+
         return {
 
             workflow
