@@ -1,26 +1,33 @@
+import { WorkflowResolver } from "~/service/workflowResolver";
+
 export const useClasses = () => {
     const { db } = useDatabase();
+    const wpr = new WorkflowResolver();
 
-    const first = async () => db.classes.orderBy("id").first();
 
-    const latest = async () => db.classes.orderBy("id").last();
+    const first = async () => await db.classes.orderBy("id").first();
 
-    const find = async (id: number) => db.classes.get(id);
+    const latest = async () => await db.classes.orderBy("id").last();
 
-    const all = async () => db.classes.toArray();
+    const find = async (id: number) => await db.classes.get(id);
 
-    const count = async () => db.classes.count();
+    const all = async () => await db.classes.toArray();
+
+    const count = async () => await db.classes.count();
 
     const exists = async () => (await count()) > 0;
 
-    const create = async (data: any) => db.classes.add(data);
+    const create = async (data: any) => {
+        await db.classes.add(data);
+        wpr.resolve()
+    };
 
     const update = async (id: number, partial: any) =>
-        db.classes.update(id, partial);
+        await db.classes.update(id, partial);
 
-    const remove = async (id: number) => db.classes.delete(id);
+    const remove = async (id: number) => await db.classes.delete(id);
 
-    const clear = async () => db.classes.clear();
+    const clear = async () => await db.classes.clear();
 
     return {
         first,

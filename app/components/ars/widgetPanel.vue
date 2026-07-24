@@ -1,5 +1,5 @@
 <script setup>
-
+const widget = useWidgetStore();
 </script>
 
 
@@ -11,8 +11,8 @@
 
   <!-- widget box  -->
   <div class="p-6 rounded-lg bg-slate-50">
-    <ArsInstituteCreate />
-    <ArsClassesCreate />
+    <ArsInstituteCreate v-if="widget.workflow.current == 'institute'" />
+    <ArsClassesCreate v-if="widget.workflow.current == 'classes'" />
   </div>
 
 </div>

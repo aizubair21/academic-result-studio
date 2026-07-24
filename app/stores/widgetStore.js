@@ -1,7 +1,7 @@
 export const useWidgetStore = defineStore('widget', () => {
 
   const workflow = {
-    current: 'institute',
+    current: '',
     completed: {
       institute: false,
       classes: false,

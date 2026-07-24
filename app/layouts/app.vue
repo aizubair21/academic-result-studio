@@ -2,6 +2,14 @@
 const ui = useUiStore();
 const widget = useWidgetStore();
 
+onUpdated((el = ui.toast.type) => {
+  if (!el) {
+    setTimeout(() => {
+      ui.toast.message = '';
+    }, 2000);
+  }
+})
+
 const settingsOpen = ref(false);
 
 const step = useWidgetStore().workflow.current;
@@ -104,7 +112,7 @@ const navigate = (key) => {
         </div>
 
         <div class="flex items-center gap-2">
-          <button
+          <!-- <button
             class="inline-flex h-10 w-10 items-center justify-center rounded-2xl transition hover:bg-slate-100"
             title="Undo"
             aria-label="Undo"
@@ -121,12 +129,11 @@ const navigate = (key) => {
             <Redo2 :size="18" class="text-slate-700" />
           </button>
 
-          <div class="h-10 w-px bg-slate-200" />
+          <div class="h-10 w-px bg-slate-200" /> -->
 
           <button
             class="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-slate-200 transition hover:bg-slate-50"
             title="Settings"
-            aria-label="Settings"
             @click="settingsOpen = true"
           >
             <Settings :size="18" class="text-slate-700" />
@@ -167,14 +174,22 @@ const navigate = (key) => {
       <main class="sm:w-full min-h-[calc(100vh-108px)] px-4 pb-4 pt-4 md:px-6">
 
         <!-- toast messages start  -->
-         <!-- Error Alert -->
-        <div v-if="ui.toast.type == 'error'" class="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg text-sm">
-          {{ ui.toast.message }}
-        </div>
+        <div v-if="ui.showWizedModal == false" class="mb-1" >
 
-        <!-- Success Alert -->
-        <div v-if="ui.toast.type == 'success'" class="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg text-sm">
-          {{ ui.toast.message }}
+          <!-- Error Alert -->
+          <transition name="fade">
+            <div v-if="ui.toast.type == 'error'" class=" text-red-700 px-4 py-3 rounded-lg text-sm">
+              {{ ui.toast.message }}
+            </div>
+          </transition>
+          
+          <!-- Success Alert -->
+          <transition name="fade">
+            <div v-if="ui.toast.type == 'success'" class=" text-green-700 px-4 py-3 rounded-lg text-sm">
+              {{ ui.toast.message }}
+            </div>
+          </transition>
+
         </div>
         <!-- toast message end  -->
 

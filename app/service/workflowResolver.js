@@ -4,8 +4,9 @@ import { useClasses } from "~/composables/useClasses";
 import { useSubjects } from "~/composables/useSubjects";
 import { useStudents } from "~/composables/useStudents";
 
-export class WorkflowResolver {
 
+export class WorkflowResolver {
+    
     async resolve() {
 
         const workspaceRepo = useWorkspace();
@@ -63,7 +64,7 @@ export class WorkflowResolver {
 
         }
 
-        useUiStore().workflow.current = workflow;
+        useWidgetStore().workflow.current = workflow;
 
         return {
 

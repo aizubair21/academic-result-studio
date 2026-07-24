@@ -346,7 +346,7 @@ const setStepFromAssistantCTA = () => {
         </div>
 
         <div class="flex items-center gap-2">
-          <button
+          <!-- <button
             class="inline-flex h-10 w-10 items-center justify-center rounded-2xl transition hover:bg-slate-100"
             title="Undo"
             aria-label="Undo"
@@ -361,7 +361,7 @@ const setStepFromAssistantCTA = () => {
             @click="() => {}"
           >
             <Redo2 :size="18" class="text-slate-700" />
-          </button>
+          </button> -->
 
           <div class="h-10 w-px bg-slate-200" />
 
@@ -500,16 +500,12 @@ const setStepFromAssistantCTA = () => {
     <!-- Bottom Status Bar -->
     <footer class="sticky bottom-0 z-40 border-t border-slate-200 bg-white/90 backdrop-blur">
       <div class="mx-auto flex h-[36px] max-w-[1440px] items-center justify-between px-4 text-xs font-semibold text-slate-600">
-        <div>{{ autoSaveText }}</div>
-        <div>{{ projectName }}</div>
-        <div class="flex items-center gap-3">
-          <span>IndexedDB {{ databaseStatusText }}</span>
-        </div>
+       
       </div>
     </footer>
 
     <!-- Settings Modal -->
-    <AppModal title="Settings" :open="settingsOpen" @close="settingsOpen = false">
+    <!-- <AppModal title="Settings" :open="settingsOpen" @close="settingsOpen = false">
       <div class="space-y-4">
         <AppCard>
           <template #default>
@@ -524,7 +520,7 @@ const setStepFromAssistantCTA = () => {
           <AppButton variant="primary" size="md" @click="settingsOpen = false">Done</AppButton>
         </div>
       </div>
-    </AppModal>
+    </AppModal> -->
 
     <!-- Subjects Drawer (UI-only) -->
     <div

@@ -1,23 +1,19 @@
 <script setup>
 const ui = useUiStore();
 const widgetStore = useWidgetStore();
-// import { useInstitute } from '~/composables/useInstitute';
 
 const emit = defineEmits(['close', 'saved', 'deleted']);
-
-const { getInstitute, saveInstitute, updateInstitute } = useInstitute();
-// const uiStore = useUiStore();
+const institute = useInstitute()
 
 // Form state
-const form = ref({
+const form = reactive({
   name: '',
   email: '',
   session: '',
   headSirName: '',
 });
 
-const errors = ui.errors
-const saving = ref(false);
+const errors = ref(ui.errors)
 
 // Validation
 // const validateForm = () => {
@@ -51,7 +47,7 @@ const handleSubmit = async () => {
       // headSirName: form.headSirName.trim(),
     };
 
-    await saveInstitute(data);
+    await institute.create(data);
     ui.toast = {
       message: 'ইনস্টিটিউট সফলভাবে তৈরি হয়েছে',
       type:'success',
@@ -59,15 +55,10 @@ const handleSubmit = async () => {
     // successMsg.value = 'ইনস্টিটিউট সফলভাবে তৈরি হয়েছে!';
 
     emit('saved');
-    
-    // Auto close after success
-    // setTimeout(() => {
-    //   handleClose();
-    // }, 1500);
 
   } catch (err) {
     ui.toast = {
-      message: 'কিছু ভুল হয়েছে', 
+      message:  "সমস্যা হয়েছে : " + err, 
       type: 'error'
     }
     // errorMsg.value = err.message || 'কিছু ভুল হয়েছে';
@@ -86,9 +77,6 @@ const handleSubmit = async () => {
       <!-- Form -->
       <form @submit.prevent="handleSubmit" class="space-y-5">
 
-        
-
-        <!-- Institute Name -->
         <div>
           <label class="block text-sm font-medium text-gray-700 mb-1.5">
             প্রতিষ্ঠানের নাম <span class="text-red-500">*</span>
@@ -136,6 +124,10 @@ const handleSubmit = async () => {
           </button>
         </div>
       </form>
+    </div>
+
+    <div v-else>
+      একটি প্রতিষ্ঠান বিদ্যমান
     </div>
   </Transition>
 </template>

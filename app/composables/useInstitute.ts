@@ -1,5 +1,9 @@
+import { WorkflowResolver } from "~/service/workflowResolver";
+
 export const useInstitute = () => {
   const { db } = useDatabase();
+  const workflowResolver = new WorkflowResolver();
+  const ui = useUiStore();
 
   const INSTITUTE_ID = 1;
 
@@ -28,10 +32,11 @@ export const useInstitute = () => {
   };
 
   const create = async (data) => {
-    return await db.institute.put({
+    await db.institute.put({
       id: INSTITUTE_ID,
       ...data,
     });
+    workflowResolver.resolve();
   };
 
   const update = async (id, partial) => {

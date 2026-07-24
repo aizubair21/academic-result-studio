@@ -1,8 +1,9 @@
 <script lang="ts" setup>
-const props = defineProps({
+const ui = useUiStore()
+defineProps({
   variant: { type: String, default: 'primary' },
   size: { type: String, default: 'md' },
-  type: { type: String, default: 'button' },
+  type: { type: String, default: 'button' }
 })
 
 const variantClasses = {
@@ -18,7 +19,13 @@ const sizeClasses = {
 </script>
 
 <template>
-  <button :type="type" :class="['inline-flex items-center justify-center rounded-3xl font-semibold transition duration-200', variantClasses[variant], sizeClasses[size]]">
+  <button :type="type" :class="['mt-4 inline-flex items-center justify-center rounded-lg font-semibold transition duration-200', variantClasses[variant], sizeClasses[size]]">
+
+    <div v-if="ui.saving">
+      সেইভ হচ্ছে ..
+    </div>
+    
     <slot />
+
   </button>
 </template>
