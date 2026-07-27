@@ -1,13 +1,23 @@
 <script setup>
 const ui = useUiStore();
 const studentsList = ref([]);
+const allStudents = ref([]);
+const classesList = ref([]);
 const classesMap = ref({});
 const editingId = ref(null);
 const showCreateModal = ref(false);
+const selectedClassId = ref(null);
 
 definePageMeta({
     layout: 'master',
 })
+
+const filteredStudents = computed(() => {
+    if (!selectedClassId.value) return [];
+    return [...allStudents.value]
+        .filter(s => s.classId === Number(selectedClassId.value))
+        .sort((a, b) => (a.roll ?? 0) - (b.roll ?? 0));
+});
 
 onMounted(async () => {
     await fetchData();
@@ -18,11 +28,16 @@ async function fetchData() {
         useStudents().all(),
         useClasses().all(),
     ]);
-    studentsList.value = students;
+    allStudents.value = students;
+    classesList.value = [...classes].sort((a, b) => (a.index ?? 0) - (b.index ?? 0));
     // Build class lookup map
     const map = {};
     classes.forEach(c => { map[c.id] = c.name; });
     classesMap.value = map;
+}
+
+async function onClassChange() {
+    // Filter will auto-update via computed
 }
 
 function openCreateModal() {
@@ -71,13 +86,21 @@ function getClassName(classId) {
             <AppButton variant="primary" type="button" @click="openCreateModal">যোগ করুন</AppButton>
         </template>
 
-        <!-- <AppEmpty
-            v-if="studentsList.length === 0"
-            title="কোনো শিক্ষার্থী নেই"
-            description="একটি শিক্ষার্থী যোগ করতে 'যোগ করুন' বাটনে ক্লিক করুন"
-        /> -->
+        <!-- No class selected -->
+        <AppEmpty
+            v-if="!selectedClassId"
+            title="ক্লাস নির্বাচন করুন"
+            description="দয়া করে ডান পাশের প্যানেল থেকে একটি ক্লাস নির্বাচন করুন।"
+        />
 
-        <div class="overflow-hidden border border-slate-200 bg-white shadow-lg shadow-slate-200/60 rounded-lg">
+        <!-- No students for selected class -->
+        <AppEmpty
+            v-else-if="filteredStudents.length === 0"
+            title="কোনো শিক্ষার্থী নেই"
+            description="এই ক্লাসের জন্য কোনো শিক্ষার্থী যোগ করা হয়নি।"
+        />
+
+        <div v-else class="overflow-hidden border border-slate-200 bg-white shadow-lg shadow-slate-200/60 rounded-lg">
             <table class="min-w-full border-collapse text-left text-sm text-slate-700">
                 <thead class="bg-slate-50">
                     <tr>
@@ -89,7 +112,7 @@ function getClassName(classId) {
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-200 bg-white">
-                    <tr v-for="(student, index) in studentsList" :key="student.id" class="hover:bg-slate-50">
+                    <tr v-for="(student, index) in filteredStudents" :key="student.id" class="hover:bg-slate-50">
                         <!-- View Mode -->
                         <template v-if="editingId !== student.id">
                             <td class="px-5 py-4">{{ index + 1 }}</td>
@@ -133,6 +156,39 @@ function getClassName(classId) {
     <AppModal title="শিক্ষার্থী তৈরি করুন" :open="showCreateModal" @close="handleClose">
         <ArsStudentsCreate @saved="handleSaved" />
     </AppModal>
+
+    <!-- ── Right Sidebar ── -->
+    <LayoutsRightAsside>
+        <LayoutsRightAssideTitle> শিক্ষার্থী ফিল্টার </LayoutsRightAssideTitle>
+
+        <!-- Class Selector -->
+        <div>
+            <label class="block text-sm font-medium text-gray-700 mb-1.5">
+                ক্লাস <span class="text-red-500">*</span>
+            </label>
+            <select
+                v-model="selectedClassId"
+                @change="onClassChange"
+                class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white"
+            >
+                <option :value="null" selected disabled>ক্লাস নির্বাচন করুন</option>
+                <option
+                    v-for="cls in classesList"
+                    :key="cls.id"
+                    :value="cls.id"
+                >
+                    {{ cls.name }} ({{ cls.index ?? '—' }})
+                </option>
+            </select>
+        </div>
+
+        <!-- Summary -->
+        <div v-if="selectedClassId" class="border-t border-slate-200 pt-4">
+            <div class="text-sm text-slate-600 space-y-1">
+                <p><span class="font-medium">শিক্ষার্থী:</span> {{ filteredStudents.length }} জন</p>
+            </div>
+        </div>
+    </LayoutsRightAsside>
 </template>
 
 <style lang="postcss" scoped>

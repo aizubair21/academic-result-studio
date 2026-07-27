@@ -13,7 +13,8 @@ const form = reactive({
 
 onMounted(async () => {
   const cls = useClasses();
-  classesData.value = await cls.all();
+  const allClasses = await cls.all();
+  classesData.value = [...allClasses].sort((a, b) => (a.index ?? 0) - (b.index ?? 0));
 });
 
 async function handleSubmit() {

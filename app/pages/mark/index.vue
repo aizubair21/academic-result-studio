@@ -26,18 +26,21 @@ const selectedStudentId = computed({
 });
 
 const savingRows = ref(new Set());   // track which student rows are saving
+const markErrors = ref({});          // key: `${studentId}-${subjectId}` → error message
 
 // ─── Computed ────────────────────────────────────────────────────
 
-/** Filtered students based on selected student filter */
+/** Filtered students based on selected student filter, sorted by roll */
 const filteredStudents = computed(() => {
-    if (!selectedStudentId.value) return studentsList.value;
-    return studentsList.value.filter(s => s.id === selectedStudentId.value);
+    const list = !selectedStudentId.value
+        ? studentsList.value
+        : studentsList.value.filter(s => s.id === selectedStudentId.value);
+    return [...list].sort((a, b) => (a.roll ?? 0) - (b.roll ?? 0));
 });
 
-/** Subjects sorted for consistent column order */
+/** Subjects sorted by index for consistent column order */
 const sortedSubjects = computed(() => {
-    return [...subjectsList.value].sort((a, b) => (a.name || '').localeCompare(b.name || ''));
+    return [...subjectsList.value].sort((a, b) => (a.index ?? 0) - (b.index ?? 0));
 });
 
 /** Check if all students are displayed (no specific student selected) */
@@ -49,14 +52,46 @@ function getMarkValue(studentId, subjectId) {
     return marksMap.value[key] ?? '';
 }
 
-/** Set mark value in the local map */
+/** Set mark value in the local map and validate */
 function setMarkValue(studentId, subjectId, value) {
     const key = `${studentId}-${subjectId}`;
+    const subject = subjectsList.value.find(s => s.id === subjectId);
+
+    // Clear previous error
+    delete markErrors.value[key];
+
     if (value === '' || value === null) {
         delete marksMap.value[key];
-    } else {
-        marksMap.value[key] = Number(value);
+        return;
     }
+
+    const numValue = Number(value);
+    marksMap.value[key] = numValue;
+
+    // Validate: must be >= 0 and <= total_mark
+    if (isNaN(numValue)) {
+        markErrors.value[key] = 'সংখ্যা দিন';
+    } else if (numValue < 0) {
+        markErrors.value[key] = '০ এর কম হবে না';
+    } else if (subject && subject.total_mark && numValue > Number(subject.total_mark)) {
+        markErrors.value[key] = `সর্বোচ্চ ${subject.total_mark} নম্বর`;
+    } else if (numValue > 999) {
+        markErrors.value[key] = 'অতি বড় মান';
+    }
+}
+
+/** Validate a specific mark value */
+function getMarkError(studentId, subjectId) {
+    const key = `${studentId}-${subjectId}`;
+    return markErrors.value[key] || '';
+}
+
+/** Check if a student's marks have any validation errors */
+function hasMarkErrors(studentId) {
+    return sortedSubjects.value.some(sub => {
+        const key = `${studentId}-${sub.id}`;
+        return !!markErrors.value[key];
+    });
 }
 
 /** Check if a student has any unsaved marks */
@@ -70,8 +105,9 @@ function hasUnsavedMarks(studentId) {
 // ─── Data Loading ────────────────────────────────────────────────
 
 onMounted(async () => {
-    // Load all classes for the selector
-    classesList.value = await classesRepo.all();
+    // Load all classes for the selector, sorted by index
+    const allClasses = await classesRepo.all();
+    classesList.value = [...allClasses].sort((a, b) => (a.index ?? 0) - (b.index ?? 0));
 
     // If a class was previously selected, load its data
     if (selectedClassId.value) {
@@ -117,6 +153,12 @@ async function onClassChange() {
 // ─── Save Operations ─────────────────────────────────────────────
 
 async function saveStudentMarks(studentId) {
+    // Check for validation errors first
+    if (hasMarkErrors(studentId)) {
+        ui.showToast('error', 'কিছু নম্বর সঠিক নয়। অনুগ্রহ করে লাল মার্ক করা ঘরগুলো ঠিক করুন।');
+        return;
+    }
+
     savingRows.value.add(studentId);
 
     try {
@@ -155,6 +197,19 @@ async function saveStudentMarks(studentId) {
 
 async function saveAllMarks() {
     const studentsToSave = filteredStudents.value;
+
+    // Check all students for validation errors
+    let hasErrors = false;
+    for (const student of studentsToSave) {
+        if (hasMarkErrors(student.id)) {
+            hasErrors = true;
+            break;
+        }
+    }
+    if (hasErrors) {
+        ui.showToast('error', 'কিছু নম্বর সঠিক নয়। অনুগ্রহ করে লাল মার্ক করা ঘরগুলো ঠিক করুন।');
+        return;
+    }
 
     for (const student of studentsToSave) {
         const marks = sortedSubjects.value
@@ -268,18 +323,27 @@ async function saveAllMarks() {
                         <td
                             v-for="subject in sortedSubjects"
                             :key="`${student.id}-${subject.id}`"
-                            class="px-2 py-2"
+                            class="px-2 py-2 relative"
                         >
-                            <input
-                                type="number"
-                                :value="getMarkValue(student.id, subject.id)"
-                                @input="setMarkValue(student.id, subject.id, $event.target.value)"
-                                :placeholder="`0-${subject.total_mark ?? 100}`"
-                                min="0"
-                                :max="subject.total_mark ?? 999"
-                                step="0.5"
-                                class="w-full px-2 py-1.5 text-center border border-slate-300 rounded-md focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 outline-none transition-all text-sm"
-                            />
+                            <div class="relative">
+                                <input
+                                    type="number"
+                                    :value="getMarkValue(student.id, subject.id)"
+                                    @input="setMarkValue(student.id, subject.id, $event.target.value)"
+                                    :placeholder="`0-${subject.total_mark ?? 100}`"
+                                    min="0"
+                                    :max="subject.total_mark ?? 999"
+                                    step="0.5"
+                                    class="w-full px-2 py-1.5 text-center border rounded-md focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 outline-none transition-all text-sm"
+                                    :class="getMarkError(student.id, subject.id) ? 'border-red-400 bg-red-50' : 'border-slate-300'"
+                                />
+                                <div
+                                    v-if="getMarkError(student.id, subject.id)"
+                                    class="absolute -bottom-5 left-0 right-0 text-[10px] text-red-500 text-center leading-tight pointer-events-none"
+                                >
+                                    {{ getMarkError(student.id, subject.id) }}
+                                </div>
+                            </div>
                         </td>
 
                         <!-- Save button per student -->
@@ -355,7 +419,7 @@ async function saveAllMarks() {
             >
                 <option :value="null">সকল শিক্ষার্থী</option>
                 <option
-                    v-for="student in studentsList"
+                    v-for="student in [...studentsList].sort((a, b) => (a.roll ?? 0) - (b.roll ?? 0))"
                     :key="student.id"
                     :value="student.id"
                 >

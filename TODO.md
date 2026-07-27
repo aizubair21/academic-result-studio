@@ -1,12 +1,12 @@
-# TODO: Implement Marks Page (pages/mark/index)
+# Implementation Plan - Progress Tracker
 
-## Steps
+## ✅ Completed Steps
 
-- [x] Analyze codebase and create plan
-- [x] Step 1: Create `app/composables/useMarks.ts` - Marks CRUD composable
-- [x] Step 2: Modify `app/layouts/app.vue` - Add right sidebar named slot
-- [ ] Step 3: Create `app/pages/mark/index.vue` - Main marks entry page with:
-  - Left side: mark entry preview table (students × subjects grid with inline inputs)
-  - Right sidebar: Class selector + Student selector
-  - CRUD operations for marks via Dexie
+- [x] 1. **Subjects page** - Add index field, class filter sidebar, sort by index
+- [x] 2. **Students page** - Add class filter sidebar, sort by roll
+- [x] 3. **Subject create form** - Add index field, sort classes by index
+- [x] 4. **Subject edit form** - Add index field, sort classes by index
+- [x] 5. **Student create form** - Sort classes by index
+- [x] 6. **Student edit form** - Sort classes by index
+- [x] 7. **Mark entry page** - Sort by index/roll, add mark validation
 

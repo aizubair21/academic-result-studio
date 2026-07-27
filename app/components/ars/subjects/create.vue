@@ -8,13 +8,15 @@ const classesData = ref([]);
 const form = reactive({
   classId: '',
   name: '',
+  index: '',
   totalMark: '',
   passMark: '',
 });
 
 onMounted(async () => {
   const cls = useClasses();
-  classesData.value = await cls.all();
+  const allClasses = await cls.all();
+  classesData.value = [...allClasses].sort((a, b) => (a.index ?? 0) - (b.index ?? 0));
 });
 
 async function handleSubmit() {
@@ -25,6 +27,7 @@ async function handleSubmit() {
     await subjects.create({
       classId: Number(form.classId),
       name: form.name.trim(),
+      index: form.index ? Number(form.index) : undefined,
       total_mark: form.totalMark ? Number(form.totalMark) : 100,
       pass_mark: form.passMark ? Number(form.passMark) : 33,
     });
@@ -49,7 +52,7 @@ async function handleSubmit() {
         class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white"
       >
         <option value="" disabled>ক্লাস নির্বাচন করুন</option>
-        <option v-for="cls in classesData" :key="cls.id" :value="cls.id">{{ cls.name }}</option>
+        <option v-for="cls in classesData" :key="cls.id" :value="cls.id">{{ cls.name }} ({{ cls.index ?? '—' }})</option>
       </select>
     </div>
 
@@ -61,6 +64,17 @@ async function handleSubmit() {
         type="text"
         required
         placeholder="যেমন: গণিত"
+        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+      />
+    </div>
+
+    <!-- Index -->
+    <div>
+      <label class="block text-sm font-medium text-gray-700 mb-1.5">ইনডেক্স</label>
+      <input
+        v-model="form.index"
+        type="number"
+        placeholder="যেমন: 1"
         class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
       />
     </div>
