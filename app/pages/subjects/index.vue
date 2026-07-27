@@ -6,7 +6,7 @@ const editingId = ref(null);
 const showCreateModal = ref(false);
 
 definePageMeta({
-    layout: 'app',
+    layout: 'master',
 })
 
 onMounted(async () => {

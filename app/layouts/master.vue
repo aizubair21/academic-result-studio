@@ -1,31 +1,6 @@
 <script lang="ts" setup>
 const ui = useUiStore();
-const widget = useWidgetStore();
-
-onUpdated((el = ui.toast.type) => {
-  if (!el) {
-    setTimeout(() => {
-      ui.toast.message = '';
-    }, 2000);
-  }
-})
-
 const settingsOpen = ref(false);
-
-const step = useWidgetStore().workflow.current;
-
-
-const readiness = computed(() => {
-  return {
-    institutionReady: ['institute', 'classes', 'subjects', 'students', 'marks', 'reports'].includes(step),
-    classReady: ['classes', 'subjects', 'students', 'marks', 'reports'].includes(step),
-    subjectsReady: ['subjects', 'students', 'marks', 'reports'].includes(step),
-    studentsReady: ['students', 'marks', 'reports'].includes(step),
-    marksReady: ['marks', 'reports'].includes(step),
-    reportsReady: ['reports'].includes(step),
-  }
-});
-
 </script>
 
 <template>
@@ -33,30 +8,31 @@ const readiness = computed(() => {
     <!-- Top Application Bar -->
     <LayoutsPartialsHeader/>
 
+
     <!-- Main layout regions -->
-    <div class="mx-auto grid max-w-[1440px] grid-cols-[100px_1fr_250px] gap-0 px-0 pt-0">
+    <div class="mx-auto grid max-w-[1440px] grid-cols-[100px_1fr] gap-0 px-0 pt-0">
 
       <!-- Left Workspace Navigator -->
-      <LayoutsPartialsNav/>
+      <LayoutsPartialsNav />
 
       <!-- Main Workspace -->
       <main class="sm:w-full min-h-[calc(100vh-108px)] px-4 pb-4 pt-4 md:px-6">
 
-         <div v-if="ui.showWizedModal == false" class="mb-1" >
+        <div v-if="ui.showWizedModal == false" class="mb-1" >
             <UiToast />
-          </div>
+         </div>
 
         <!-- slot  -->
-        <slot></slot>
+        <div class="mx-auto grid grid-cols-[1fr_250px]">
+            <slot></slot>
+        </div>
         
       </main>
 
-      <!-- Right Context Assistant -->
-      <LayoutsPartialsAsside/>
     </div>
 
     <!-- Bottom Status Bar -->
-   
+    <LayoutsPartialsFooter />
 
     <!-- Settings Modal -->
     <AppModal title="Settings" :open="settingsOpen" @close="settingsOpen = false">

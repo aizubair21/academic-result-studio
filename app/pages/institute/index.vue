@@ -3,7 +3,7 @@ const ui = useUiStore();
 const instituteList = ref([]);
 
 definePageMeta({
-    layout: 'app',
+    layout: 'master',
 })
 
 onMounted(async () => {
@@ -99,6 +99,16 @@ function handleClose() {
             </table>
         </div>
     </AppCard>
+
+
+    <LayoutsRightAsside>
+        <ArsInstituteCreate/>
+    </LayoutsRightAsside>
+
+    <!-- right content  -->
+     <div>
+
+     </div>
 
     <!-- Create Modal -->
     <AppModal title="প্রতিষ্ঠান তৈরি করুন" :open="showCreateModal" @close="handleClose">

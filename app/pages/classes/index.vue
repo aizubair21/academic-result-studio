@@ -2,11 +2,14 @@
 const ui = useUiStore();
 const classesList = ref([]);
 const editingId = ref(null);
-const showCreateModal = ref(false);
 
 definePageMeta({
-    layout: 'app',
+    layout: 'master',
 })
+
+onUpdated(() => {
+    fetchClasses();
+}),
 
 onMounted(async () => {
     await fetchClasses();
@@ -14,21 +17,24 @@ onMounted(async () => {
 
 async function fetchClasses() {
     const cls = useClasses();
-    classesList.value = await cls.all();
+    const clist = await cls.all();
+    classesList.value = clist.sort((a, b) => a.index - b.index);
 }
 
+
+
 function openCreateModal() {
-    showCreateModal.value = true;
+    ui.showWizedModal = true;
 }
 
 function handleSaved() {
-    showCreateModal.value = false;
+    ui.showWizedModal = false;
     editingId.value = null;
     fetchClasses();
 }
 
 function handleClose() {
-    showCreateModal.value = false;
+    ui.showWizedModal = false;
 }
 
 function startEdit(id) {
@@ -60,13 +66,13 @@ async function handleDelete(id) {
             <AppButton variant="primary" type="button" @click="openCreateModal">যোগ করুন</AppButton>
         </template>
 
-        <!-- <AppEmpty
+        <AppEmpty
             v-if="classesList.length === 0"
             title="কোনো ক্লাস নেই"
             description="একটি ক্লাস যোগ করতে 'যোগ করুন' বাটনে ক্লিক করুন"
-        /> -->
+        />
 
-        <div class="overflow-hidden border border-slate-200 bg-white shadow-lg shadow-slate-200/60 rounded-lg">
+        <div v-else class="overflow-hidden border border-slate-200 bg-white shadow-lg shadow-slate-200/60 rounded-lg">
             <table class="min-w-full border-collapse text-left text-sm text-slate-700">
                 <thead class="bg-slate-50">
                     <tr>
@@ -116,9 +122,14 @@ async function handleDelete(id) {
         </div>
     </AppCard>
 
+    <LayoutsRightAsside>
+        <LayoutsRightAssideTitle > ক্লাস যুক্ত করুন </LayoutsRightAssideTitle>
+        <ArsClassesCreate/>
+    </LayoutsRightAsside>
+
     <!-- Create Modal -->
-    <AppModal title="ক্লাস তৈরি করুন" :open="showCreateModal" @close="handleClose">
-        <ArsClassesCreate @saved="handleSaved" />
+    <AppModal title="ক্লাস তৈরি করুন" :open="ui.showWizedModal" @close="handleClose">
+        <ArsClassesCreate @handle-saved-from-parent="handleSaved" />
     </AppModal>
 </template>
 
