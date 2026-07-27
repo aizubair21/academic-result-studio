@@ -19,8 +19,8 @@ const navItems = [
   { key: 'classes', label: 'ক্লাস', icon: '📚'},
   { key: 'subjects', label: 'বিষয়', icon: '📚' },
   { key: 'students', label: 'শিক্ষার্থী', icon: '👨‍🎓' },
-  { key: 'marks', label: 'মার্ক', icon: '📝' },
-  { key: 'reports', label: 'রিপোর্ট', icon: '📄' },
+  { key: 'mark', label: 'মার্ক', icon: '📝' },
+  { key: 'reports', label: 'রেজাল্ট', icon: '📄' },
 ];
 
 
@@ -107,25 +107,22 @@ const readiness = computed(() => {
       <aside class="hidden border-l border-slate-200 bg-white md:block">
         <div class="flex h-[calc(100vh-108px)] flex-col">
           <div class="p-4">
-            <div class="">
-              
-              <ArsWidgetWelcome />
-            
-              <div class="mt-6">
-                <div class="text-sm font-semibold text-slate-700">Project Progress</div>
-                <!-- <div class="mt-3 space-y-2">
-                  <div v-for="p in rightAssistant.progress" :key="p.label" class="flex items-center justify-between rounded-2xl bg-white p-3 ring-1 ring-slate-200">
-                    <div class="text-sm font-semibold text-slate-700">{{ p.label }}</div>
-                    <div
-                      class="text-xs font-bold"
-                      :class="p.done ? 'text-emerald-700' : 'text-slate-400'"
-                    >
-                      {{ p.done ? '✓' : '○' }}
-                    </div>
-                  </div>
-                </div> -->
+
+            <slot>
+              <!-- Default content when slot is not used -->
+              <div v-if="widget.workflow.current != 'dashboard'">
+                <!-- workflow welcome and workflow steps  -->
+                <ArsWidgetWelcome />
+                <div class="mt-6">
+                  <div class="text-sm font-semibold text-slate-700">Project Progress</div>
+                </div>
               </div>
-            </div>
+
+              <div v-else>
+                <!-- right sidebar  -->
+                <slot name="right-sidebar"></slot> 
+              </div>
+            </slot>
           </div>
         </div>
       </aside>
