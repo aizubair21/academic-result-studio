@@ -1,13 +1,8 @@
 <script lang="ts" setup>
 import { WorkflowResolver } from './service/workflowResolver'
-
-const widgetStore = useWidgetStore()
-
 onMounted(async () => {
   const resolver = new WorkflowResolver();
-
-  const state = await resolver.resolve();
-  widgetStore.workflow.current = state.workflow;
+  await resolver.resolve();
 })
 
 
@@ -15,6 +10,7 @@ onMounted(async () => {
 
 <template>
   <NuxtLayout>
+    <NuxtRouteAnnouncer/>
     <NuxtPage></NuxtPage>
   </NuxtLayout>
 </template>

@@ -4,6 +4,7 @@ export const useUiStore = defineStore('ui', () => {
   const saving = ref(false)
   const saveButtonText = ref('সেইভ করুন')
   const updateButtonText = ref('‍আফডেট করুন')
+  const addButtonText = ref('যোগ করুন')
   let timeoutId = null;
 
 
@@ -46,6 +47,6 @@ export const useUiStore = defineStore('ui', () => {
   }
 
   return {
-    loading, saving, saveButtonText, updateButtonText, showWizedModal, selectedClassId, selectedStudentId, selectedSbujectId, sidebarOpen, reset, errors, toast, showToast, clearToast
+    loading, saving, saveButtonText, updateButtonText, addButtonText, showWizedModal, selectedClassId, selectedStudentId, selectedSbujectId, sidebarOpen, reset, errors, toast, showToast, clearToast
   };
 });

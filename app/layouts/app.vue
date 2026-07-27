@@ -15,49 +15,18 @@ const settingsOpen = ref(false);
 const step = useWidgetStore().workflow.current;
 
 const navItems = [
-  { key: 'institution', label: '🏫 Institution', icon: '🏫' },
-  { key: 'classes', label: ' 📚 Classes', icon: '📚'},
-  { key: 'subjects', label: '📚 Subjects', icon: '📚' },
-  { key: 'students', label: '👨‍🎓 Students', icon: '👨‍🎓' },
-  { key: 'marks', label: '📝 Marks', icon: '📝' },
-  { key: 'reports', label: '📄 Reports', icon: '📄' },
-  { key: 'settings', label: '⚙ Settings', icon: '⚙️' },
+  { key: 'institute', label: 'প্রতিষ্ঠান', icon: '🏫' },
+  { key: 'classes', label: 'ক্লাস', icon: '📚'},
+  { key: 'subjects', label: 'বিষয়', icon: '📚' },
+  { key: 'students', label: 'শিক্ষার্থী', icon: '👨‍🎓' },
+  { key: 'marks', label: 'মার্ক', icon: '📝' },
+  { key: 'reports', label: 'রিপোর্ট', icon: '📄' },
 ];
-
-const activeNavKey = computed(() => {
-  switch (widget.workflow.current) {
-    case 'empty':
-      return 'institution'
-    case 'institution':
-      return 'institution'
-    case 'classes':
-      return 'classes'
-    case 'subjects':
-      return 'subjects'
-    case 'students':
-      return 'students'
-    case 'marks':
-      return 'marks'
-    case 'reports':
-      return 'reports'
-  }
-});
-
-const canNavigateTo = (key) => {
-  if (key === 'institution') return true
-  if (key === 'classes') return readiness.value.classReady
-  if (key === 'subjects') return readiness.value.institutionReady
-  if (key === 'students') return readiness.value.subjectsReady
-  if (key === 'marks') return readiness.value.studentsReady
-  if (key === 'reports') return readiness.value.marksReady
-  if (key === 'settings') return true
-  return false
-};
 
 
 const readiness = computed(() => {
   return {
-    institutionReady: ['institution', 'classes', 'subjects', 'students', 'marks', 'reports'].includes(step),
+    institutionReady: ['institute', 'classes', 'subjects', 'students', 'marks', 'reports'].includes(step),
     classReady: ['classes', 'subjects', 'students', 'marks', 'reports'].includes(step),
     subjectsReady: ['subjects', 'students', 'marks', 'reports'].includes(step),
     studentsReady: ['students', 'marks', 'reports'].includes(step),
@@ -65,34 +34,6 @@ const readiness = computed(() => {
     reportsReady: ['reports'].includes(step),
   }
 });
-
-const navigate = (key) => {
-  if (!canNavigateTo(key)) return
-  switch (key) {
-    case 'institution':
-      widget.workflow.current = readiness.value.institutionReady ? 'institution' : 'empty'
-      break
-    case 'classes':
-      widget.workflow.current = 'classes'
-      break
-    case 'subjects':
-      widget.workflow.current = 'subjects'
-      break
-    case 'students':
-      widget.workflow.current = 'students'
-      break
-    case 'marks':
-      widget.workflow.current = 'marks'
-      break
-    case 'reports':
-      widget.workflow.current = 'reports'
-      break
-    case 'settings':
-      settingsOpen.value = true
-      break
-  }
-}
-
 
 </script>
 
@@ -112,25 +53,6 @@ const navigate = (key) => {
         </div>
 
         <div class="flex items-center gap-2">
-          <!-- <button
-            class="inline-flex h-10 w-10 items-center justify-center rounded-2xl transition hover:bg-slate-100"
-            title="Undo"
-            aria-label="Undo"
-            @click="() => {}"
-          >
-            <Undo :size="18" class="text-slate-700" />
-          </button>
-          <button
-            class="inline-flex h-10 w-10 items-center justify-center rounded-2xl transition hover:bg-slate-100"
-            title="Redo"
-            aria-label="Redo"
-            @click="() => {}"
-          >
-            <Redo2 :size="18" class="text-slate-700" />
-          </button>
-
-          <div class="h-10 w-px bg-slate-200" /> -->
-
           <button
             class="inline-flex h-10 w-10 items-center justify-center rounded-2xl bg-white shadow-sm ring-1 ring-slate-200 transition hover:bg-slate-50"
             title="Settings"
@@ -138,60 +60,43 @@ const navigate = (key) => {
           >
             <Settings :size="18" class="text-slate-700" />
           </button>
+         
         </div>
       </div>
     </header>
 
     <!-- Main layout regions -->
-    <div class="mx-auto grid max-w-[1440px] grid-cols-[72px_1fr_250px] gap-0 px-0 pt-0">
+    <div class="mx-auto grid max-w-[1440px] grid-cols-[100px_1fr_250px] gap-0 px-0 pt-0">
 
           <!-- Left Workspace Navigator -->
       <nav class="border-r border-slate-200 md:block" aria-label="Workspace navigation">
-        <div class="flex h-[calc(100vh-108px)] flex-col items-center gap-3 py-4">
-          <button
+        <div class="flex h-[calc(100vh)] flex-col items-center gap-3 p-4">
+          <NuxtLink 
             v-for="item in navItems"
             :key="item.key"
-            class="relative flex h-12 w-12 items-center justify-center rounded-2xl transition"
-            :class="{
-              'bg-indigo-600 text-white shadow-sm': item.key === activeNavKey && canNavigateTo(item.key),
-              'text-slate-700 hover:bg-slate-100': item.key !== activeNavKey,
-              'opacity-40 cursor-not-allowed hover:bg-transparent': !canNavigateTo(item.key),
-            }"
-            :disabled="!canNavigateTo(item.key)"
-            @click="navigate(item.key)"
+            :to="item.key"
+            class="w-full text-center p-3 rounded-lg cursor-pointer border-b"
+            :title="item.label"
           >
-            <span class="text-lg">{{ item.icon }}</span>
-            <span
-              class="pointer-events-none absolute left-[82px] top-1/2 hidden -translate-y-1/2 whitespace-nowrap rounded-xl bg-slate-900 px-3 py-2 text-xs font-semibold text-white shadow-lg group-hover:block"
+            <span class="text-lg mb-1"> {{ item.icon }}</span>
+            <div>
+              {{ item.label }}
+            </div>
+            <!-- <span
+              class="pointer-events-none absolute left-[82px] top-1/2 -translate-y-1/2 whitespace-nowrap rounded-xl bg-slate-900 px-3 py-2 text-xs font-semibold text-white shadow-lg group-hover:block"
             >
-              {{ item.label.replace(/^[^\w]+\s*/, '') }}
-            </span>
-          </button>
+              {{ item.label}}
+            </span> -->
+          </NuxtLink>
         </div>
       </nav>
 
       <!-- Main Workspace -->
       <main class="sm:w-full min-h-[calc(100vh-108px)] px-4 pb-4 pt-4 md:px-6">
 
-        <!-- toast messages start  -->
-        <div v-if="ui.showWizedModal == false" class="mb-1" >
-
-          <!-- Error Alert -->
-          <transition name="fade">
-            <div v-if="ui.toast.type == 'error'" class=" text-red-700 px-4 py-3 rounded-lg text-sm">
-              {{ ui.toast.message }}
-            </div>
-          </transition>
-          
-          <!-- Success Alert -->
-          <transition name="fade">
-            <div v-if="ui.toast.type == 'success'" class=" text-green-700 px-4 py-3 rounded-lg text-sm">
-              {{ ui.toast.message }}
-            </div>
-          </transition>
-
-        </div>
-        <!-- toast message end  -->
+         <div v-if="ui.showWizedModal == false" class="mb-1" >
+            <UiToast />
+          </div>
 
         <!-- slot  -->
         <slot></slot>
@@ -256,5 +161,7 @@ const navigate = (key) => {
 </template>
 
 <style lang="postcss" scoped>
-    
+.router-link-active{
+  background-color: #rgb(79, 70, 229);
+}
 </style>

@@ -56,7 +56,7 @@ const handleToggleDuppyClasses = (el) => {
 
 
 <template>
-	<form @submit.prevent="handleSubmit" v-if="widgetStore.workflow.current == 'classes'">
+	<form @submit.prevent="handleSubmit" >
 		<!-- <label class="block text-sm font-medium text-gray-700 mb-1.5">
       ক্লাসের নাম <span class="text-red-500">*</span>
     </label>

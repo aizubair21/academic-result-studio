@@ -19,19 +19,11 @@ const emit = defineEmits(['close'])
         <button @click="emit('close')" class="rounded-full bg-slate-100 px-4 py-2 text-slate-700 transition hover:bg-slate-200">Close</button>
       </div>
       <div class="space-y-4">
+
         <div v-if="ui.showWizedModal" class="mb-1" >
-
-          <!-- Error Alert -->
-          <div v-if="ui.toast.type == 'error'" class=" text-red-700 px-4 py-3 rounded-lg text-sm">
-            {{ ui.toast.message }}
-          </div>
-          
-          <!-- Success Alert -->
-          <div v-if="ui.toast.type == 'success'" class=" text-green-700 px-4 py-3 rounded-lg text-sm">
-            {{ ui.toast.message }}
-          </div>
-
+          <UiToast />
         </div>
+        
         <slot />
       </div>
     </div>
