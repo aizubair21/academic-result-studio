@@ -100,7 +100,7 @@ function getClassName(classId) {
             description="এই ক্লাসের জন্য কোনো শিক্ষার্থী যোগ করা হয়নি।"
         />
 
-        <div v-else class="overflow-hidden border border-slate-200 bg-white shadow-lg shadow-slate-200/60 rounded-lg">
+        <div v-else class="overflow-x-auto border border-slate-200 bg-white shadow-lg shadow-slate-200/60 rounded-lg">
             <table class="min-w-full border-collapse text-left text-sm text-slate-700">
                 <thead class="bg-slate-50">
                     <tr>

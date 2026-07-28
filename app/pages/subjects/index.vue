@@ -100,12 +100,11 @@ function getClassName(classId) {
             description="এই ক্লাসের জন্য কোনো বিষয় যোগ করা হয়নি।"
         />
 
-        <div v-else class="overflow-hidden border border-slate-200 bg-white shadow-lg shadow-slate-200/60 rounded-lg">
+        <div v-else class="overflow-x-auto border border-slate-200 bg-white shadow-lg shadow-slate-200/60 rounded-lg">
             <table class="min-w-full border-collapse text-left text-sm text-slate-700">
                 <thead class="bg-slate-50">
                     <tr>
                         <th class="border-b border-slate-200 px-5 py-4 font-semibold text-slate-600">ক্রমিক</th>
-                        <th class="border-b border-slate-200 px-5 py-4 font-semibold text-slate-600">ইনডেক্স</th>
                         <th class="border-b border-slate-200 px-5 py-4 font-semibold text-slate-600">ক্লাস</th>
                         <th class="border-b border-slate-200 px-5 py-4 font-semibold text-slate-600">নাম</th>
                         <th class="border-b border-slate-200 px-5 py-4 font-semibold text-slate-600">মোট নম্বর</th>
@@ -118,7 +117,6 @@ function getClassName(classId) {
                         <!-- View Mode -->
                         <template v-if="editingId !== sub.id">
                             <td class="px-5 py-4">{{ index + 1 }}</td>
-                            <td class="px-5 py-4">{{ sub.index ?? '—' }}</td>
                             <td class="px-5 py-4">{{ getClassName(sub.classId) }}</td>
                             <td class="px-5 py-4 font-medium">{{ sub.name }}</td>
                             <td class="px-5 py-4">{{ sub.total_mark ?? '—' }}</td>

@@ -1,4 +1,4 @@
-<script lang="ts" setup>
+<script setup>
 const ui = useUiStore();
 const settingsOpen = ref(false);
 </script>
@@ -10,20 +10,20 @@ const settingsOpen = ref(false);
 
 
     <!-- Main layout regions -->
-    <div class="mx-auto grid max-w-[1440px] grid-cols-[100px_1fr] gap-0 px-0 pt-0">
+    <div class="mx-auto grid max-w-[1440px] grid-cols-1 gap-0 px-0 pt-0 md:grid-cols-[80px_1fr] lg:grid-cols-[100px_1fr]">
 
       <!-- Left Workspace Navigator -->
       <LayoutsPartialsNav />
 
       <!-- Main Workspace -->
-      <main class="sm:w-full min-h-[calc(100vh-108px)] px-4 pb-4 pt-4 md:px-6">
+      <main class="sm:w-full min-h-[calc(100vh-108px)] px-4 pb-20 pt-4 md:px-6 md:pb-4">
 
         <div v-if="ui.showWizedModal == false" class="mb-1" >
             <UiToast />
          </div>
 
         <!-- slot  -->
-        <div class="mx-auto grid grid-cols-[1fr_250px]">
+        <div class="mx-auto grid grid-cols-1 md:grid-cols-[1fr_250px]">
             <slot></slot>
         </div>
         

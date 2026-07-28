@@ -61,7 +61,7 @@ function handleClose() {
             description="একটি প্রতিষ্ঠান যোগ করতে 'যোগ করুন' বাটনে ক্লিক করুন"
         /> -->
 
-        <div class="overflow-hidden border border-slate-200 bg-white shadow-lg shadow-slate-200/60 rounded-lg">
+        <div class="overflow-x-auto border border-slate-200 bg-white shadow-lg shadow-slate-200/60 rounded-lg">
             <table class="min-w-full border-collapse text-left text-sm text-slate-700">
                 <thead class="bg-slate-50">
                     <tr>
@@ -105,10 +105,6 @@ function handleClose() {
         <ArsInstituteCreate/>
     </LayoutsRightAsside>
 
-    <!-- right content  -->
-     <div>
-
-     </div>
 
     <!-- Create Modal -->
     <AppModal title="প্রতিষ্ঠান তৈরি করুন" :open="showCreateModal" @close="handleClose">

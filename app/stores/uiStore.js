@@ -12,7 +12,7 @@ export const useUiStore = defineStore('ui', () => {
   const selectedClassId = ref(null)
   const selectedStudentId = ref(null)
   const selectedSbujectId = ref(null)
-  const sidebarOpen = ref(true);
+  const sidebarOpen = ref(false);
 
   const errors = ref({})
   const toast = ref({

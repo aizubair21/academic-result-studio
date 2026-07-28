@@ -63,7 +63,7 @@ async function handleDelete(id) {
     <AppCard>
         <template #header>
             <h1 class="text-3xl font-bold text-slate-900">ক্লাসসমূহ</h1>
-            <AppButton variant="primary" type="button" @click="openCreateModal">যোগ করুন</AppButton>
+            <AppButton variant="primary" type="button" @click="ui.showWizedModal = true">যোগ করুন</AppButton>
         </template>
 
         <AppEmpty
@@ -72,13 +72,12 @@ async function handleDelete(id) {
             description="একটি ক্লাস যোগ করতে 'যোগ করুন' বাটনে ক্লিক করুন"
         />
 
-        <div v-else class="overflow-hidden border border-slate-200 bg-white shadow-lg shadow-slate-200/60 rounded-lg">
+        <div v-else class="overflow-x-auto border border-slate-200 bg-white shadow-lg shadow-slate-200/60 rounded-lg">
             <table class="min-w-full border-collapse text-left text-sm text-slate-700">
                 <thead class="bg-slate-50">
                     <tr>
                         <th class="border-b border-slate-200 px-5 py-4 font-semibold text-slate-600">ক্রমিক</th>
                         <th class="border-b border-slate-200 px-5 py-4 font-semibold text-slate-600">নাম</th>
-                        <th class="border-b border-slate-200 px-5 py-4 font-semibold text-slate-600">ইনডেক্স</th>
                         <th class="border-b border-slate-200 px-5 py-4 font-semibold text-slate-600">অ্যাকশন</th>
                     </tr>
                 </thead>
@@ -88,7 +87,6 @@ async function handleDelete(id) {
                         <template v-if="editingId !== cls.id">
                             <td class="px-5 py-4">{{ index + 1 }}</td>
                             <td class="px-5 py-4 font-medium">{{ cls.name }}</td>
-                            <td class="px-5 py-4">{{ cls.index || '—' }}</td>
                             <td class="px-5 py-4">
                                 <div class="flex gap-2">
                                     <button
