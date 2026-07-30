@@ -20,6 +20,9 @@ const ui = useUiStore();
                 </div>
               </div>
 
+
+              <!-- Steps Progress Indicator -->
+              <ArsWidgetSteps />
             </div>
             
           </div>

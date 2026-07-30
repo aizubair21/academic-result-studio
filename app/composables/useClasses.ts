@@ -1,9 +1,5 @@
-import { WorkflowResolver } from "~/service/workflowResolver";
-
 export const useClasses = () => {
     const { db } = useDatabase();
-    const wpr = new WorkflowResolver();
-
 
     const first = async () => await db.classes.orderBy("id").first();
 
@@ -19,7 +15,6 @@ export const useClasses = () => {
 
     const create = async (data: any) => {
         await db.classes.add(data);
-        wpr.resolve()
     };
 
     const update = async (id: number, partial: any) =>

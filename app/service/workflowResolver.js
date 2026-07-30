@@ -6,7 +6,7 @@ import { useStudents } from "~/composables/useStudents";
 
 
 export class WorkflowResolver {
-    
+
     async resolve() {
 
         const workspaceRepo = useWorkspace();
@@ -15,12 +15,19 @@ export class WorkflowResolver {
         const subjectRepo = useSubjects();
         const studentRepo = useStudents();
 
+        const widgetStore = useWidgetStore();
         const workspace = await workspaceRepo.first();
 
         const institutionCount = await instituteRepo.count();
         const classCount = await classRepo.count();
         const subjectCount = await subjectRepo.count();
         const studentCount = await studentRepo.count();
+
+        // Update completed flags based on actual DB state
+        widgetStore.workflow.completed.institute = institutionCount > 0;
+        widgetStore.workflow.completed.classes = classCount > 0;
+        widgetStore.workflow.completed.subjects = subjectCount > 0;
+        widgetStore.workflow.completed.students = studentCount > 0;
 
         let workflow = "institute";
 
@@ -64,7 +71,7 @@ export class WorkflowResolver {
 
         }
 
-        useWidgetStore().workflow.current = workflow;
+        widgetStore.workflow.current = workflow;
 
         return {
 

@@ -1,76 +1,127 @@
-<script setup >
-
+<!--
+Classes Create Form — Create new classes for the institution.
+Supports multiple entries: form stays open after save so user can add more.
+-->
+<script setup>
 const ui = useUiStore();
 const widgetStore = useWidgetStore();
 const classes = useClasses();
-const response = ref();
-const req = ref(true);
-// const emit = defineEmits('handle-saved-from-parent')
+
+const emit = defineEmits(['saved']);
 
 const form = reactive({
   name: '',
   index: '',
 });
 
-const analyseClasses = ref(
-  {
-    value : [
-      'Play','One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten',
-    ], 
-  }
-)
-
-const dymmyClasses = ref([]);
+// Success state for showing feedback
+const justSaved = ref(false);
+let successTimeout = null;
 
 const handleSubmit = async () => {
+  if (!form.name.trim()) return;
+
   ui.saving = true;
-  const dummyClas = dymmyClasses.value.map( item => ({name: item}));
-
   try {
-      const data = {
-        name: form.name.trim(),
-        index: form.index.trim(),
-      }
-      
-      await classes.create(data);
-      ui.showToast('success', "ক্লাস যুক্ত হয়েছে।")
-      ui.showWizedModal = false;
+    const data = {
+      name: form.name.trim(),
+      index: form.index ? Number(form.index) : undefined,
+    };
 
-    } catch (error) {
-      ui.showToast('error', error);
+    await classes.create(data);
+
+    // Show success feedback
+    justSaved.value = true;
+    if (successTimeout) clearTimeout(successTimeout);
+    successTimeout = setTimeout(() => {
+      justSaved.value = false;
+    }, 3000);
+
+    // Reset form for next entry
+    form.name = '';
+    form.index = '';
+
+    ui.showToast('success', `"${data.name}" ক্লাস যুক্ত হয়েছে`);
+
+    emit('saved');
+  } catch (error) {
+    ui.showToast('error', 'ক্লাস যুক্ত করতে সমস্যা হয়েছে: ' + (error.message || error));
+  } finally {
+    ui.saving = false;
   }
-    
-  ui.saving = false
-}
-
-
-
-const handleToggleDuppyClasses = (el) => {
-  var index = dymmyClasses.value.indexOf(el);
-
-    if (index === -1) {
-        dymmyClasses.value.push(el);
-    } else {
-        dymmyClasses.value.splice(index, 1);
-    }
-}
-
+};
 </script>
 
-
 <template>
-	<form @submit.prevent="handleSubmit" >
-
-    <div class="flex items-center justify gap-4">
-      <AppInputField label="ক্লাসের নাম লিখুন" :req="req" type="text" v-model="form.name" placeholder="যেমন: নবম " />
-      <AppInputField label="ইনডেক্স" :req="req" type="number" v-model="form.index" placeholder="যেমন: 9" />
+  <form @submit.prevent="handleSubmit" class="space-y-4">
+    <div class="flex items-start gap-4 flex-col sm:flex-row">
+      <div class="flex-1 w-full">
+        <label class="block text-sm font-medium text-gray-700 mb-1.5">
+          ক্লাসের নাম <span class="text-red-500">*</span>
+        </label>
+        <input
+          v-model="form.name"
+          type="text"
+          required
+          placeholder="যেমন: নবম"
+          class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+        />
+      </div>
+      <div class="w-full sm:w-32">
+        <label class="block text-sm font-medium text-gray-700 mb-1.5">
+          ইনডেক্স
+        </label>
+        <input
+          v-model="form.index"
+          type="number"
+          placeholder="যেমন: 9"
+          class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all"
+        />
+      </div>
     </div>
 
-    <div class="flex items-end mt-6">
-      <AppButton type="submit" :variant="primary"> {{ ui.saveButtonText }} </AppButton>
+    <!-- Success feedback -->
+    <div
+      v-if="justSaved"
+      class="flex items-center gap-2 text-sm text-emerald-600 bg-emerald-50 px-4 py-2 rounded-lg"
+    >
+      <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+      </svg>
+      ক্লাস যুক্ত হয়েছে! আরও যোগ করুন অথবা নিচের "পরবর্তী ধাপ" বাটনে ক্লিক করুন।
     </div>
-	</form>
+
+    <!-- Actions -->
+    <div class="flex gap-3 pt-2">
+      <button
+        type="submit"
+        :disabled="ui.saving"
+        class="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-medium flex items-center gap-2"
+      >
+        <svg v-if="ui.saving" class="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none" />
+          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
+        </svg>
+        {{ ui.saving ? 'সংরক্ষণ হচ্ছে...' : 'ক্লাস যোগ করুন' }}
+      </button>
+    </div>
+  </form>
 </template>
 
-<style>
+<style scoped>
+/* Smooth transition for success message */
+.v-enter-active {
+  transition: opacity 0.3s ease, transform 0.3s ease;
+}
+.v-leave-active {
+  transition: opacity 0.2s ease;
+}
+.v-enter-from {
+  opacity: 0;
+  transform: translateY(-4px);
+}
+.v-leave-to {
+  opacity: 0;
+}
 </style>
+
