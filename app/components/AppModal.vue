@@ -9,7 +9,7 @@ const emit = defineEmits(['close'])
 </script>
 
 <template>
-  <div v-if="open" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 p-4">
+  <div v-if="open" class="fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 p-4 ">
     <div class="w-full max-w-2xl rounded-lg bg-white p-6 shadow-2xl shadow-slate-900/20">
       <div class="mb-6 flex items-center justify-between gap-4">
         <div>
@@ -24,8 +24,18 @@ const emit = defineEmits(['close'])
           <UiToast />
         </div>
         
-        <slot />
+        <div class="overflow-y-scroll s-modal">
+          <slot> </slot>
+        </div>
       </div>
     </div>
   </div>
 </template>
+
+
+<style >
+.s-modal {
+  height:100%;
+  max-height:500px!important;
+}
+</style>

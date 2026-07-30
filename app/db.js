@@ -2,7 +2,7 @@ import Dexie from 'dexie';
 
 export const db = new Dexie('ResultSheetDB');
 
-db.version(2).stores({
+db.version(3).stores({
   workspace: 'id',
 
   // একটাই রেকর্ড
@@ -22,8 +22,24 @@ db.version(2).stores({
   
   // (অপশনাল) ক্যাশে টেবিল - ফ্রিকোয়েন্ট রেজাল্ট ডাটা স্টোর
   resultCache: '++id',  // id = classId বা composite key
+
+  // সিস্টেম সেটিংস - একটাই রেকর্ড
+  settings: 'id',
+
+  // গ্রেড ক্রাইটেরিয়া - ক্লাস অনুযায়ী
+  gradeCriteria: '++id, classId',
 });
 
+// Version 3 upgrade: populate default settings if not exists
+db.version(3).upgrade(async (tx) => {
+  const settingsCount = await tx.table('settings').count();
+  if (settingsCount === 0) {
+    await tx.table('settings').add({
+      id: 1,
+      resultType: 'GPA',  // 'GPA' or 'CGPA'
+    });
+  }
+});
 
 // ডাটাবেস ওপেন (Dexie অটো করে, কিন্তু explicit ওপেন ভালো প্র্যাকটিস)
 db.open().catch(err => {

@@ -7,7 +7,6 @@ export const useUiStore = defineStore('ui', () => {
   const addButtonText = ref('যোগ করুন')
   let timeoutId = null;
 
-
   const showWizedModal = ref(false)
   const selectedClassId = ref(null)
   const selectedStudentId = ref(null)
@@ -20,33 +19,26 @@ export const useUiStore = defineStore('ui', () => {
     type: '',
   })
 
-
   const clearToast = () => {
     toast.value.type = '';
     toast.value.message = '';
   };
 
   const showToast = (newType, newMessage) => {
-    // Clear any existing timer if a new toast comes in quickly
     if (timeoutId) clearTimeout(timeoutId);
-    
-    // Set values
     toast.value.type = newType;
     toast.value.message = newMessage;
-
-    // Set timer to clear after 2 seconds (2000ms)
     timeoutId = setTimeout(() => {
       clearToast();
     }, 5000);
   };
 
 
-
-  const reset = () => {
+  const resetAll = () => {
     this.$reset();
   }
 
   return {
-    loading, saving, saveButtonText, updateButtonText, addButtonText, showWizedModal, selectedClassId, selectedStudentId, selectedSbujectId, sidebarOpen, reset, errors, toast, showToast, clearToast
+    loading, saving, saveButtonText, updateButtonText, addButtonText, showWizedModal, selectedClassId, selectedStudentId, selectedSbujectId, sidebarOpen, resetAll, errors, toast, showToast, clearToast
   };
 });
