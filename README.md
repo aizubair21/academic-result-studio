@@ -44,7 +44,7 @@ The project demonstrates how modern frontend technologies can build a fully func
 
 Academic Result Studio-এর মূল দর্শন তিনটি নীতির উপর প্রতিষ্ঠিত।
 
-## ১. Offline First
+## ১. Offline
 
 ইন্টারনেট একটি সুবিধা হতে পারে, কিন্তু নির্ভরতা নয়।
 একবার Application Load হয়ে গেলে সম্পূর্ণ সিস্টেম Offline-এ কাজ করবে।
@@ -58,7 +58,7 @@ Academic Result Studio-এর মূল দর্শন তিনটি নী�
 
 ---
 
-## ৩. Performance First
+## ৩. Performance
 
 Application-এর প্রতিটি সিদ্ধান্ত Performance বিবেচনা করেই নেওয়া হবে।
 

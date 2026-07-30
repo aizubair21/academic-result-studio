@@ -9,7 +9,7 @@ export default defineNuxtConfig({
       theme: {
         extend: {
           fontFamily: {
-            sans: ['Hind Siliguri', 'sans-serif'],
+            sans: ['Hind Siliguri'],
           },
         },
       },

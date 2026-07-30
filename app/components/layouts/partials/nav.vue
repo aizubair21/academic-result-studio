@@ -1,9 +1,10 @@
 <script setup>
+const widget = useWidgetStore();
 
 const navItems = [
   { key: 'institute', label: 'প্রতিষ্ঠান', icon: '🏫' },
   { key: 'classes', label: 'ক্লাস', icon: '📚'},
-  { key: 'subjects', label: 'বিষয়', icon: '📚' },
+  { key: 'subjects', label: 'বিষয়', icon: '📖' },
   { key: 'students', label: 'শিক্ষার্থী', icon: '👨‍🎓' },
   { key: 'mark', label: 'মার্ক', icon: '📝' },
   { key: 'reports', label: 'রেজাল্ট', icon: '📄' },

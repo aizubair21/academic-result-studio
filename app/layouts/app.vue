@@ -56,7 +56,7 @@ const readiness = computed(() => {
           <div class="bg-gradient-to-r from-indigo-600 to-purple-600 rounded-2xl p-8 text-white shadow-xl">
             <div class="flex items-start justify-between">
               <div class="space-y-3">
-                <div class="text-4xl">🎯</div>
+                <!-- <div class="text-4xl">🎯</div> -->
                 <h1 class="text-3xl font-bold">স্বাগতম!</h1>
               </div>
               
