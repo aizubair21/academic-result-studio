@@ -89,11 +89,9 @@ export const useWidgetStore = defineStore('widget', () => {
     }
   };
 
-  // Manually advance to the next incomplete step
-  const goToNextStep = () => {
+  const goToNextStep = async () => {
     const currentIdx = currentStepIndex.value;
     if (currentIdx === -1) {
-      // If on dashboard, go to first incomplete step
       const nextIncomplete = widgetSteps.find(s => !workflow.completed[s.widget]);
       if (nextIncomplete) {
         workflow.current = nextIncomplete.widget;
@@ -101,14 +99,23 @@ export const useWidgetStore = defineStore('widget', () => {
       return;
     }
 
-    // Mark current as completed if not already
     const currentWidget = widgetSteps[currentIdx].widget;
-    if (currentWidget !== 'institute') {
-      // Only mark non-institute (single-item) steps as complete on manual advance
-      completeStep(currentWidget);
+    const repositories = {
+      institute: useInstitute(),
+      classes: useClasses(),
+      subjects: useSubjects(),
+      students: useStudents(),
+    };
+    const hasEntries = (await repositories[currentWidget].count()) > 0;
+
+    if (!hasEntries) {
+      const step = widgetSteps[currentIdx];
+      useUiStore().showToast('error', `পরবর্তী ধাপে যেতে অন্তত একটি ${step.name} যোগ করুন`);
+      return;
     }
 
-    // Find next incomplete step
+    completeStep(currentWidget);
+
     const nextIncomplete = widgetSteps.slice(currentIdx + 1).find(s => !workflow.completed[s.widget]);
     if (nextIncomplete) {
       workflow.current = nextIncomplete.widget;

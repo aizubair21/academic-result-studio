@@ -7,22 +7,57 @@ Supports multiple entries per step with a "Next Step" button.
 const widget = useWidgetStore();
 const ui = useUiStore();
 const instituteRepo = useInstitute();
+const classesRepo = useClasses();
+const subjectsRepo = useSubjects();
+const studentsRepo = useStudents();
 
 // Track if item was just created to show "Add Another" state
 const lastCreated = ref(false);
 const selectedStepDescription = ref('');
+const workflowItems = ref([]);
+
+const loadWorkflowItems = async () => {
+  if (widget.workflow.current === 'classes') {
+    workflowItems.value = (await classesRepo.all()).sort((a, b) => (a.index ?? 0) - (b.index ?? 0));
+    return;
+  }
+
+  if (widget.workflow.current === 'subjects') {
+    const [subjects, classes] = await Promise.all([subjectsRepo.all(), classesRepo.all()]);
+    const classNames = new Map(classes.map(item => [item.id, item.name]));
+    workflowItems.value = subjects.map(item => ({
+      ...item,
+      className: classNames.get(item.classId) || 'অজানা ক্লাস',
+    }));
+    return;
+  }
+
+  if (widget.workflow.current === 'students') {
+    const [students, classes] = await Promise.all([studentsRepo.all(), classesRepo.all()]);
+    const classNames = new Map(classes.map(item => [item.id, item.name]));
+    workflowItems.value = students.map(item => ({
+      ...item,
+      className: classNames.get(item.classId) || 'অজানা ক্লাস',
+    }));
+    return;
+  }
+
+  workflowItems.value = [];
+};
 
 // Watch for step changes
 watch(() => widget.workflow.current, (newStep) => {
   lastCreated.value = false;
   const step = widget.widgetSteps.find(s => s.widget === newStep);
   selectedStepDescription.value = step ? step.description : '';
+  loadWorkflowItems();
 });
 
 // Handle saved event from sub-forms
-const handleSaved = () => {
+const handleSaved = async () => {
   lastCreated.value = true;
   ui.showToast('success', 'সফলভাবে সংরক্ষিত হয়েছে');
+  await loadWorkflowItems();
 };
 
 // Go to next workflow step
@@ -46,6 +81,9 @@ const currentStepInfo = computed(() => {
 const instituteExists = ref(false);
 onMounted(async () => {
   instituteExists.value = await instituteRepo.exists();
+  const step = widget.widgetSteps.find(s => s.widget === widget.workflow.current);
+  selectedStepDescription.value = step ? step.description : '';
+  await loadWorkflowItems();
 });
 </script>
 
@@ -187,6 +225,32 @@ onMounted(async () => {
           @saved="handleSaved"
           :key="'students-' + lastCreated"
         />
+      </div>
+
+      <div
+        v-if="currentStepAllowsMultiple && workflowItems.length"
+        class="mt-6 bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden"
+      >
+        <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
+          <h3 class="font-semibold text-slate-900">এখন পর্যন্ত যোগ করা তথ্য</h3>
+          <span class="text-sm text-slate-500">{{ workflowItems.length }}টি</span>
+        </div>
+        <div class="divide-y divide-slate-100 max-h-72 overflow-y-auto">
+          <div
+            v-for="item in workflowItems"
+            :key="item.id"
+            class="px-6 py-3 flex items-center justify-between gap-4 text-sm"
+          >
+            <div class="min-w-0">
+              <p class="font-medium text-slate-800 truncate">
+                {{ item.name }}
+                <span v-if="widget.workflow.current === 'students'" class="font-normal text-slate-500">#{{ item.roll }}</span>
+              </p>
+              <p v-if="widget.workflow.current !== 'classes'" class="text-xs text-slate-500 mt-0.5">{{ item.className }}</p>
+            </div>
+            <span v-if="widget.workflow.current === 'classes' && item.index" class="text-xs text-slate-500">{{ item.index }}</span>
+          </div>
+        </div>
       </div>
 
       <!-- Action Buttons -->
