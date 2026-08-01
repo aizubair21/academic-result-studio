@@ -40,11 +40,16 @@ function openReport() {
     <template #header>
       <div>
         <h1 class="text-3xl font-bold text-slate-900">ফলাফল তৈরি করুন</h1>
-        <p class="mt-1 text-sm text-slate-500">একাডেমিক ফলাফল বেছে নিয়ে আলাদা প্রিন্ট পেজে খুলুন</p>
+        <p class="mt-1 text-sm text-slate-500">ফলাফল ধরন নির্বাচন করুন। </p>
       </div>
     </template>
 
-    <div class="grid gap-5 md:grid-cols-2">
+    <div class="mb-6">
+        <label class="text-sm font-medium text-slate-700">পরীক্ষার নাম
+          <input v-model="examName" class="mt-1.5 w-full rounded-lg border border-slate-300 px-3 py-2.5" placeholder="বার্ষিক পরীক্ষা" />
+        </label>
+    </div>
+    <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
       <label class="text-sm font-medium text-slate-700">ফলাফলের ধরন
         <select v-model="type" class="mt-1.5 w-full rounded-lg border border-slate-300 px-3 py-2.5">
           <option value="class">ক্লাস ভিত্তিক ফলাফল</option>
@@ -52,23 +57,20 @@ function openReport() {
           <option value="subject">বিষয় ভিত্তিক ফলাফল</option>
         </select>
       </label>
-      <label class="text-sm font-medium text-slate-700">পরীক্ষার নাম
-        <input v-model="examName" class="mt-1.5 w-full rounded-lg border border-slate-300 px-3 py-2.5" placeholder="বার্ষিক পরীক্ষা" />
-      </label>
       <label class="text-sm font-medium text-slate-700">ক্লাস
-        <select v-model="classId" @change="onClassChange" class="mt-1.5 w-full rounded-lg border border-slate-300 px-3 py-2.5">
+        <select v-model="classId" @change="onClassChange" class="mt-1.5 w-full rounded-lg border px-3 py-2.5">
           <option value="" disabled>ক্লাস নির্বাচন করুন</option>
           <option v-for="item in classes" :key="item.id" :value="item.id">{{ item.name }}</option>
         </select>
       </label>
       <label v-if="type === 'student'" class="text-sm font-medium text-slate-700">শিক্ষার্থী
-        <select v-model="studentId" class="mt-1.5 w-full rounded-lg border border-slate-300 px-3 py-2.5">
+        <select v-model="studentId" class="mt-1.5 w-full rounded-lg border px-3 py-2.5">
           <option value="" disabled>শিক্ষার্থী নির্বাচন করুন</option>
           <option v-for="item in students" :key="item.id" :value="item.id">{{ item.name }} (রোল {{ item.roll }})</option>
         </select>
       </label>
       <label v-if="type === 'subject'" class="text-sm font-medium text-slate-700">বিষয়
-        <select v-model="subjectId" class="mt-1.5 w-full rounded-lg border border-slate-300 px-3 py-2.5">
+        <select v-model="subjectId" class="mt-1.5 w-full rounded-lg border px-3 py-2.5">
           <option value="" disabled>বিষয় নির্বাচন করুন</option>
           <option v-for="item in subjects" :key="item.id" :value="item.id">{{ item.name }}</option>
         </select>
@@ -77,7 +79,7 @@ function openReport() {
 
     <div class="mt-6 flex justify-end">
       <button type="button" :disabled="!classId || (type === 'student' && !studentId) || (type === 'subject' && !subjectId)" @click="openReport" class="rounded-lg bg-indigo-600 px-5 py-2.5 font-semibold text-white hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50">
-        নতুন ট্যাবে ফলাফল খুলুন
+        ফলাফল দেখুন
       </button>
     </div>
   </AppCard>
