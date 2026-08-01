@@ -2,6 +2,8 @@
 const ui = useUiStore();
 const classesList = ref([]);
 const editingId = ref(null);
+const studentsRepo = useStudents();
+const subjectsRepo = useSubjects();
 
 definePageMeta({
     layout: 'master',
@@ -17,8 +19,28 @@ onMounted(async () => {
 
 async function fetchClasses() {
     const cls = useClasses();
-    const clist = await cls.all();
-    classesList.value = clist.sort((a, b) => a.index - b.index);
+    const [clist, students, subjects] = await Promise.all([
+        cls.all(),
+        studentsRepo.all(),
+        subjectsRepo.all(),
+    ]);
+
+    const studentsCount = students.reduce((counts, student) => {
+        counts[student.classId] = (counts[student.classId] || 0) + 1;
+        return counts;
+    }, {});
+    const subjectsCount = subjects.reduce((counts, subject) => {
+        counts[subject.classId] = (counts[subject.classId] || 0) + 1;
+        return counts;
+    }, {});
+
+    classesList.value = clist
+        .map(cls => ({
+            ...cls,
+            studentsCount: studentsCount[cls.id] || 0,
+            subjectsCount: subjectsCount[cls.id] || 0,
+        }))
+        .sort((a, b) => (a.index ?? 0) - (b.index ?? 0));
 }
 
 
@@ -78,6 +100,8 @@ async function handleDelete(id) {
                     <tr>
                         <th class="border-b border-slate-200 px-5 py-4 font-semibold text-slate-600">ক্রমিক</th>
                         <th class="border-b border-slate-200 px-5 py-4 font-semibold text-slate-600">নাম</th>
+                        <th class="border-b border-slate-200 px-5 py-4 font-semibold text-slate-600">বিষয়</th>
+                        <th class="border-b border-slate-200 px-5 py-4 font-semibold text-slate-600">শিক্ষার্থী</th>
                         <th class="border-b border-slate-200 px-5 py-4 font-semibold text-slate-600">অ্যাকশন</th>
                     </tr>
                 </thead>
@@ -87,8 +111,22 @@ async function handleDelete(id) {
                         <template v-if="editingId !== cls.id">
                             <td class="px-5 py-4">{{ index + 1 }}</td>
                             <td class="px-5 py-4 font-medium">{{ cls.name }}</td>
+                            <td class="px-5 py-4">{{ cls.subjectsCount }}</td>
+                            <td class="px-5 py-4">{{ cls.studentsCount }}</td>
                             <td class="px-5 py-4">
                                 <div class="flex gap-2">
+                                    <NuxtLink
+                                        :to="{ path: '/subjects', query: { classId: cls.id } }"
+                                        class="inline-flex items-center rounded-lg bg-blue-50 px-3 py-1.5 text-sm font-medium text-blue-700 hover:bg-blue-100 transition"
+                                    >
+                                        বিষয় দেখুন
+                                    </NuxtLink>
+                                    <NuxtLink
+                                        :to="{ path: '/students', query: { classId: cls.id } }"
+                                        class="inline-flex items-center rounded-lg bg-emerald-50 px-3 py-1.5 text-sm font-medium text-emerald-700 hover:bg-emerald-100 transition"
+                                    >
+                                        শিক্ষার্থী দেখুন
+                                    </NuxtLink>
                                     <button
                                         @click="startEdit(cls.id)"
                                         class="inline-flex items-center rounded-lg bg-indigo-50 px-3 py-1.5 text-sm font-medium text-indigo-700 hover:bg-indigo-100 transition"

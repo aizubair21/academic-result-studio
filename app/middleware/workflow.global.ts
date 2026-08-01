@@ -45,14 +45,14 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     const widgetStore = useWidgetStore();
     const resolver = new WorkflowResolver();
 
-    // try {
-    //     await resolver.resolve();
-    // } catch (err) {
-    //     console.error('[workflow.global] Failed to resolve workflow:', err);
-    //     // If we cannot determine state, allow navigation to avoid
-    //     // blocking the user due to unexpected errors.
-    //     return;
-    // }
+    try {
+        await resolver.resolve();
+    } catch (err) {
+        console.error('[workflow.global] Failed to resolve workflow:', err);
+        // If we cannot determine state, allow navigation to avoid
+        // blocking the user due to unexpected errors.
+        return;
+    }
 
     // ── Check each prerequisite in order ──────────────────────────
     for (const step of requiredSteps) {

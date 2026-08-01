@@ -407,26 +407,7 @@ async function saveAllMarks() {
             </select>
         </div>
 
-        <!-- Subject Selector (optional filter) -->
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1.5">
-                বিষয় <span class="text-xs text-gray-400 font-normal"> (ঐচ্ছিক) </span>
-            </label>
-            <select
-                v-model="selectedClassId"
-                @change="onClassChange"
-                class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white"
-            >
-                <option value="null"  > সকল বিষয় </option>
-                <option
-                    v-for="cls in subjectsList"
-                    :key="cls.id"
-                    :value="cls.id"
-                >
-                    {{ cls.name }}
-                </option>
-            </select>
-        </div>
+        
 
         <!-- Student Selector (optional filter) -->
         <div>

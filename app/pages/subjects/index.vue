@@ -7,6 +7,7 @@ const classesMap = ref({});
 const editingId = ref(null);
 const showCreateModal = ref(false);
 const selectedClassId = ref(null);
+const route = useRoute();
 
 definePageMeta({
     layout: 'master',
@@ -20,6 +21,9 @@ const filteredSubjects = computed(() => {
 });
 
 onMounted(async () => {
+    if (route.query.classId) {
+        selectedClassId.value = Number(route.query.classId);
+    }
     await fetchData();
 })
 
