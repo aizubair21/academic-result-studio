@@ -70,9 +70,11 @@ function checkMobile() {
     </Teleport>
 
   <!-- Desktop: Render normally as sidebar column -->
-  <div class="hidden md:block space-y-6 p-6 mb-6">
-    <slot></slot>
-  </div>
+    <aside class="hidden self-start border-l border-slate-200 bg-white md:sticky md:top-[72px] md:block md:h-[calc(100vh-108px)]">
+      <div class="flex h-full flex-col space-y-6 overflow-y-auto p-6">
+        <slot></slot>
+      </div>
+    </aside>
 </template>
 
 <style>

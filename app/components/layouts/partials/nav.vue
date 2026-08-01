@@ -14,8 +14,8 @@ const navItems = [
 
 <template>
     <!-- Desktop: Left sidebar navigation -->
-    <nav class="hidden border-r border-slate-200 md:flex md:flex-col" aria-label="Workspace navigation">
-        <div class="flex h-[calc(100vh)] flex-col items-center gap-3 p-4">
+    <nav class="hidden self-start border-r border-slate-200 md:sticky md:top-[72px] md:flex md:h-[calc(100vh-108px)] md:flex-col" aria-label="Workspace navigation">
+        <div class="flex h-full flex-col items-center gap-3 p-4">
           <NuxtLink 
             v-for="item in navItems"
             :key="item.key"
