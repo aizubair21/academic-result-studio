@@ -13,7 +13,6 @@ onMounted(async () => {
 async function fetchInstitutes() {
     const inst = useInstitute();
     instituteList.value = await inst.all();
-    console.log(instituteList);
     
 }
 

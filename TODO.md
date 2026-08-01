@@ -1,43 +1,29 @@
-# Index Page Redesign & Workflow Enhancement Plan
+# Workflow Navigation Middleware — Implementation Progress
 
-## Implementation Status
+## Plan Overview
 
-### Step 1: Update widgetStore.js ✅
-- [x] Add `widgetSteps` array with step definitions
-- [x] Add `currentStepIndex` computed property
-- [x] Add `isStepComplete(stepName)` method
-- [x] Add `goToNextStep()` method
-- [x] Add `goToStep(stepName)` method
-- [x] Add `stepCount` and `completedStepCount` computed properties
+Implement a global route guard middleware that checks prerequisite steps before allowing navigation to workflow pages (classes, subjects, students, marks). If a user directly navigates to a page whose prerequisites aren't met, redirect them to the first missing prerequisite step.
 
-### Step 2: Update workflowResolver.js ✅
-- [x] Update completed flags based on DB state
-- [x] Keep initial resolution logic
+Workflow order: **institute → classes → subjects → students → marks**
 
-### Step 3: Update useClasses.ts ✅
-- [x] Remove `wpr.resolve()` from `create()` method
+## Implementation Steps
 
-### Step 4: Update widgetSteps.vue ✅
-- [x] Fix to use actual `widgetSteps` from store
-- [x] Show visual step progress with checkmarks/dots
-- [x] Active step highlighting
-- [x] Show step labels
+### Step 1: Implement global middleware (`app/middleware/workflow.global.ts`)
+- [x] Define route guard map for protected pages with prerequisite steps
+- [x] Call `WorkflowResolver.resolve()` to refresh DB-based completion flags
+- [x] Redirect to first missing prerequisite step
+- [x] Skip on server side (IndexedDB is browser-only)
+- [x] Leave unguarded routes accessible (`/`, `/welcome`, `/institute`)
 
-### Step 5: Update widgetPanel.vue ✅
-- [x] Add welcome/header section for current step
-- [x] Add "Next Step" button for multi-entry workflows
-- [x] Add "Add Another" option after successful creation
-- [x] Dashboard view when all steps are complete
-- [x] Better visual design with cards, icons, progress
+### Step 2: Verify nav links & routes are correctly mapped
+- [x] Confirm `/classes`, `/subjects`, `/students`, `/mark` are guarded
+- [x] Confirm `/institute/edit` requires institute to exist
 
-### Step 6: Update pages/index.vue ✅
-- [x] Show welcome hero section
-- [x] Progress overview/statistics
-- [x] Visual step navigation
-- [x] Summary of what's been created
-- [x] Call WorkflowResolver.resolve() on mount
+### Step 3: Test via `npm run dev`
+- [ ] Directly navigate to `/subjects` with no classes → redirected to `/classes`
+- [ ] Directly navigate to `/students` without subjects → redirected to `/subjects`
+- [ ] Directly navigate to `/classes` without institute → redirected to `/institute`
+- [ ] Verify no infinite redirect loops
 
-### Step 7: Update create forms (classes, subjects, students) ✅
-- [x] Keep form open after save for multiple entries
-- [x] Show success message after creation
-- [x] Stay on current step after save
+> ✅ Implementation complete. `nuxt prepare` passes with no new errors. Middleware logic reviewed: no infinite redirect loops possible (redirect chains terminate at `/institute` which is unguarded).
+
