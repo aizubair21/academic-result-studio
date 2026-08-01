@@ -7,7 +7,7 @@ const navItems = [
   { key: 'subjects', label: 'বিষয়', icon: '📖' },
   { key: 'students', label: 'শিক্ষার্থী', icon: '👨‍🎓' },
   { key: 'mark', label: 'মার্ক', icon: '📝' },
-  { key: 'reports', label: 'রেজাল্ট', icon: '📄' },
+  { key: 'result', label: 'রেজাল্ট', icon: '📄' },
 ];
 
 </script>
