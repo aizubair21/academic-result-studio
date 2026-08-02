@@ -92,11 +92,12 @@ onMounted(async () => {
     <!-- Dashboard View (all steps completed) -->
     <div v-if="widget.workflow.current === 'dashboard'" class="space-y-6">
       <!-- Dashboard Header -->
-      <div class="text-center py-8">
+      <!-- <div class="text-center py-8">
         <div class="text-5xl mb-4">🎉</div>
         <h1 class="text-3xl font-bold text-slate-900 mb-2">সবকিছু প্রস্তুত!</h1>
-        <p class="text-slate-500 text-lg">আপনার প্রতিষ্ঠানের ড্যাশবোর্ডে স্বাগতম। এখন আপনি রেজাল্ট ম্যানেজমেন্ট শুরু করতে প্রস্তুত।</p>
-      </div>
+        <p class="text-slate-500 text-lg">আপনার প্রতিষ্ঠানের ড্যাশবোর্ডে স্বাগতম। এখন আপনি রেজাল্ট ম্যানেজমেন্ট শুরু
+          করতে প্রস্তুত।</p>
+      </div> -->
 
       <!-- Quick Stats -->
       <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -126,28 +127,32 @@ onMounted(async () => {
       <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
         <h3 class="text-lg font-semibold text-slate-900 mb-4">দ্রুত নেভিগেশন</h3>
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <NuxtLink to="/institute" class="flex items-center gap-3 p-3 rounded-lg bg-slate-50 hover:bg-indigo-50 transition-colors group">
+          <NuxtLink to="/institute"
+            class="flex items-center gap-3 p-3 rounded-lg bg-slate-50 hover:bg-indigo-50 transition-colors group">
             <span class="text-xl">🏫</span>
             <div>
               <div class="text-sm font-medium text-slate-700 group-hover:text-indigo-700">প্রতিষ্ঠান</div>
               <div class="text-xs text-slate-400">প্রতিষ্ঠানের তথ্য দেখুন</div>
             </div>
           </NuxtLink>
-          <NuxtLink to="/classes" class="flex items-center gap-3 p-3 rounded-lg bg-slate-50 hover:bg-indigo-50 transition-colors group">
+          <NuxtLink to="/classes"
+            class="flex items-center gap-3 p-3 rounded-lg bg-slate-50 hover:bg-indigo-50 transition-colors group">
             <span class="text-xl">📚</span>
             <div>
               <div class="text-sm font-medium text-slate-700 group-hover:text-indigo-700">ক্লাস</div>
               <div class="text-xs text-slate-400">ক্লাস পরিচালনা করুন</div>
             </div>
           </NuxtLink>
-          <NuxtLink to="/subjects" class="flex items-center gap-3 p-3 rounded-lg bg-slate-50 hover:bg-indigo-50 transition-colors group">
+          <NuxtLink to="/subjects"
+            class="flex items-center gap-3 p-3 rounded-lg bg-slate-50 hover:bg-indigo-50 transition-colors group">
             <span class="text-xl">📖</span>
             <div>
               <div class="text-sm font-medium text-slate-700 group-hover:text-indigo-700">বিষয়</div>
               <div class="text-xs text-slate-400">বিষয় পরিচালনা করুন</div>
             </div>
           </NuxtLink>
-          <NuxtLink to="/students" class="flex items-center gap-3 p-3 rounded-lg bg-slate-50 hover:bg-indigo-50 transition-colors group">
+          <NuxtLink to="/students"
+            class="flex items-center gap-3 p-3 rounded-lg bg-slate-50 hover:bg-indigo-50 transition-colors group">
             <span class="text-xl">👨‍🎓</span>
             <div>
               <div class="text-sm font-medium text-slate-700 group-hover:text-indigo-700">শিক্ষার্থী</div>
@@ -163,13 +168,10 @@ onMounted(async () => {
       <!-- Step Header -->
       <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm mb-6">
         <div class="flex items-center gap-4 mb-4">
-          <div
-            class="w-14 h-14 rounded-xl flex items-center justify-center text-2xl"
-            :class="{
-              'bg-emerald-100 text-emerald-600': widget.workflow.completed[currentStepInfo?.widget],
-              'bg-indigo-100 text-indigo-600': !widget.workflow.completed[currentStepInfo?.widget],
-            }"
-          >
+          <div class="w-14 h-14 rounded-xl flex items-center justify-center text-2xl" :class="{
+            'bg-emerald-100 text-emerald-600': widget.workflow.completed[currentStepInfo?.widget],
+            'bg-indigo-100 text-indigo-600': !widget.workflow.completed[currentStepInfo?.widget],
+          }">
             {{ currentStepInfo?.icon }}
           </div>
           <div class="flex-1">
@@ -180,17 +182,16 @@ onMounted(async () => {
               {{ selectedStepDescription }}
             </p>
           </div>
-          <div v-if="widget.workflow.completed[currentStepInfo?.widget]" class="px-3 py-1 bg-emerald-100 text-emerald-700 text-sm font-medium rounded-full">
+          <div v-if="widget.workflow.completed[currentStepInfo?.widget]"
+            class="px-3 py-1 bg-emerald-100 text-emerald-700 text-sm font-medium rounded-full">
             সম্পন্ন ✓
           </div>
         </div>
 
         <!-- Progress mini bar -->
         <div class="w-full bg-slate-100 rounded-full h-1.5">
-          <div
-            class="bg-indigo-500 h-1.5 rounded-full transition-all duration-500"
-            :style="{ width: widget.progressPercent + '%' }"
-          ></div>
+          <div class="bg-indigo-500 h-1.5 rounded-full transition-all duration-500"
+            :style="{ width: widget.progressPercent + '%' }"></div>
         </div>
         <div class="mt-2 text-xs text-slate-400 text-right">
           {{ widget.completedStepCount }} / {{ widget.stepCount }} ধাপ সম্পন্ন
@@ -200,61 +201,48 @@ onMounted(async () => {
       <!-- Widget Form Box -->
       <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
         <!-- Institute Create -->
-        <ArsInstituteCreate
-          v-if="widget.workflow.current == 'institute'"
-          @saved="handleSaved"
-        />
+        <ArsInstituteCreate v-if="widget.workflow.current == 'institute'" @saved="handleSaved" />
 
         <!-- Classes Create -->
-        <ArsClassesCreate
-          v-if="widget.workflow.current == 'classes'"
-          @saved="handleSaved"
-          :key="'classes-' + lastCreated"
-        />
+        <ArsClassesCreate v-if="widget.workflow.current == 'classes'" @saved="handleSaved"
+          :key="'classes-' + lastCreated" />
 
         <!-- Subjects Create -->
-        <ArsSubjectsCreate
-          v-if="widget.workflow.current == 'subjects'"
-          @saved="handleSaved"
-          :key="'subjects-' + lastCreated"
-        />
+        <ArsSubjectsCreate v-if="widget.workflow.current == 'subjects'" @saved="handleSaved"
+          :key="'subjects-' + lastCreated" />
 
         <!-- Students Create -->
-        <ArsStudentsCreate
-          v-if="widget.workflow.current == 'students'"
-          @saved="handleSaved"
-          :key="'students-' + lastCreated"
-        />
+        <ArsStudentsCreate v-if="widget.workflow.current == 'students'" @saved="handleSaved"
+          :key="'students-' + lastCreated" />
       </div>
 
-      <div
-        v-if="currentStepAllowsMultiple && workflowItems.length"
-        class="mt-6 bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden"
-      >
+      <div v-if="currentStepAllowsMultiple && workflowItems.length"
+        class="mt-6 bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden">
         <div class="px-6 py-4 border-b border-slate-100 flex items-center justify-between">
           <h3 class="font-semibold text-slate-900">এখন পর্যন্ত যোগ করা তথ্য</h3>
           <span class="text-sm text-slate-500">{{ workflowItems.length }}টি</span>
         </div>
         <div class="divide-y divide-slate-100 max-h-72 overflow-y-auto">
-          <div
-            v-for="item in workflowItems"
-            :key="item.id"
-            class="px-6 py-3 flex items-center justify-between gap-4 text-sm"
-          >
+          <div v-for="item in workflowItems" :key="item.id"
+            class="px-6 py-3 flex items-center justify-between gap-4 text-sm">
             <div class="min-w-0">
               <p class="font-medium text-slate-800 truncate">
                 {{ item.name }}
-                <span v-if="widget.workflow.current === 'students'" class="font-normal text-slate-500">#{{ item.roll }}</span>
+                <span v-if="widget.workflow.current === 'students'" class="font-normal text-slate-500">#{{ item.roll
+                }}</span>
               </p>
-              <p v-if="widget.workflow.current !== 'classes'" class="text-xs text-slate-500 mt-0.5">{{ item.className }}</p>
+              <p v-if="widget.workflow.current !== 'classes'" class="text-xs text-slate-500 mt-0.5">{{ item.className }}
+              </p>
             </div>
-            <span v-if="widget.workflow.current === 'classes' && item.index" class="text-xs text-slate-500">{{ item.index }}</span>
+            <span v-if="widget.workflow.current === 'classes' && item.index" class="text-xs text-slate-500">{{
+              item.index }}</span>
           </div>
         </div>
       </div>
 
       <!-- Action Buttons -->
-      <div class="mt-6 flex flex-col sm:flex-row items-center justify-between gap-3 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
+      <div
+        class="mt-6 flex flex-col sm:flex-row items-center justify-between gap-3 bg-white p-4 rounded-xl border border-slate-200 shadow-sm">
         <div class="text-sm text-slate-500">
           <template v-if="currentStepAllowsMultiple">
             <span v-if="lastCreated" class="text-emerald-600 font-medium">✓ আইটেম যুক্ত হয়েছে।</span>
@@ -267,12 +255,8 @@ onMounted(async () => {
 
         <div class="flex items-center gap-3">
           <!-- "Next Step" button for multi-entry steps -->
-          <button
-            v-if="currentStepAllowsMultiple"
-            type="button"
-            @click="handleNextStep"
-            class="px-6 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all font-medium flex items-center gap-2 shadow-sm hover:shadow-md"
-          >
+          <button v-if="currentStepAllowsMultiple" type="button" @click="handleNextStep"
+            class="px-6 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all font-medium flex items-center gap-2 shadow-sm hover:shadow-md">
             পরবর্তী ধাপ
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
@@ -280,12 +264,9 @@ onMounted(async () => {
           </button>
 
           <!-- "Next Step" for single-entry (institute) — auto-advances via resolver -->
-          <button
-            v-if="!currentStepAllowsMultiple && widget.workflow.completed['institute']"
-            type="button"
+          <button v-if="!currentStepAllowsMultiple && widget.workflow.completed['institute']" type="button"
             @click="handleNextStep"
-            class="px-6 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all font-medium flex items-center gap-2 shadow-sm hover:shadow-md"
-          >
+            class="px-6 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all font-medium flex items-center gap-2 shadow-sm hover:shadow-md">
             পরবর্তী ধাপ
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
@@ -303,13 +284,14 @@ onMounted(async () => {
 .v-leave-active {
   transition: opacity 0.2s ease, transform 0.2s ease;
 }
+
 .v-enter-from {
   opacity: 0;
   transform: translateY(8px);
 }
+
 .v-leave-to {
   opacity: 0;
   transform: translateY(-8px);
 }
 </style>
-

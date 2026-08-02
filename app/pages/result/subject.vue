@@ -27,20 +27,78 @@ const chunks = computed(() => Array.from({ length: Math.max(1, Math.ceil(rows.va
 <template>
   <div class="bg-slate-100 print:bg-white">
     <div class="result-controls mx-auto flex max-w-[1100px] gap-3 px-4 py-5 print:hidden">
-      <select v-model="classId" @change="loadSubjects" class="rounded-lg border border-slate-300 px-3 py-2"><option v-for="item in classes" :key="item.id" :value="item.id">{{ item.name }}</option></select>
-      <select v-model="subjectId" @change="load" class="flex-1 rounded-lg border border-slate-300 px-3 py-2"><option v-for="item in subjects" :key="item.id" :value="item.id">{{ item.name }}</option></select>
+      <select v-model="classId" @change="loadSubjects" class="rounded-lg border border-slate-300 px-3 py-2">
+        <option v-for="item in classes" :key="item.id" :value="item.id">{{ item.name }}</option>
+      </select>
+      <select v-model="subjectId" @change="load" class="flex-1 rounded-lg border border-slate-300 px-3 py-2">
+        <option v-for="item in subjects" :key="item.id" :value="item.id">{{ item.name }}</option>
+      </select>
       <input v-model="examName" class="rounded-lg border border-slate-300 px-3 py-2" />
-      <button @click="window.print()" class="rounded-lg bg-indigo-600 px-4 py-2 font-semibold text-white">প্রিন্ট / PDF</button>
+      <button @click="window.print()" class="rounded-lg bg-indigo-600 px-4 py-2 font-semibold text-white">প্রিন্ট /
+        PDF</button>
     </div>
-    <ResultPaper v-for="(pageRows, page) in chunks" v-if="report?.subject" :key="page" :title="`${report.selectedClass?.name || ''} - বিষয়ভিত্তিক ফলাফল`" :subtitle="`${report.subject.name} | ${page + 1} / ${chunks.length}`" :institute="report.institute" :exam-name="examName" :settings="report.settings" @settings-change="report.settings = $event">
-      <table class="result-table w-full border-collapse text-sm"><thead><tr><th>ক্রমিক</th><th>রোল</th><th class="text-left">শিক্ষার্থীর নাম</th><th v-if="report.settings.showTotalMark">পূর্ণমান</th><th>প্রাপ্ত নম্বর</th><th v-if="report.settings.showPercentage">শতাংশ</th><th v-if="report.settings.showGrade">গ্রেড</th><th v-if="report.settings.showResult">ফলাফল</th></tr></thead><tbody><tr v-for="(row, index) in pageRows" :key="row.student.id"><td>{{ page * 25 + index + 1 }}</td><td>{{ row.student.roll }}</td><td class="text-left font-semibold">{{ row.student.name }}</td><td v-if="report.settings.showTotalMark">{{ report.subject.total_mark || 100 }}</td><td>{{ row.mark }}</td><td v-if="report.settings.showPercentage">{{ row.percentage.toFixed(1) }}%</td><td v-if="report.settings.showGrade">{{ row.label }}</td><td v-if="report.settings.showResult" :class="row.passed && row.mark !== '-' ? 'text-emerald-700' : 'text-red-700'">{{ row.passed && row.mark !== '-' ? 'উত্তীর্ণ' : 'অনুত্তীর্ণ' }}</td></tr></tbody></table>
+    <ResultPaper v-for="(pageRows, page) in chunks" v-if="report?.subject" :key="page"
+      :title="`${report.selectedClass?.name || ''} - বিষয়ভিত্তিক ফলাফল`"
+      :subtitle="`${report.subject.name} | ${page + 1} / ${chunks.length}`" :institute="report.institute"
+      :exam-name="examName" :settings="report.settings" @settings-change="report.settings = $event"
+      @update:examName="examName = $event"
+      @update:instituteName="report.institute = { ...report.institute, name: $event }">
+      <table class="result-table w-full border-collapse text-sm">
+        <thead>
+          <tr>
+            <th>ক্রমিক</th>
+            <th>রোল</th>
+            <th class="text-left">শিক্ষার্থীর নাম</th>
+            <th v-if="report.settings.showTotalMark">পূর্ণমান</th>
+            <th>প্রাপ্ত নম্বর</th>
+            <th v-if="report.settings.showPercentage">শতাংশ</th>
+            <th v-if="report.settings.showGrade">গ্রেড</th>
+            <th v-if="report.settings.showResult">ফলাফল</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(row, index) in pageRows" :key="row.student.id">
+            <td>{{ page * 25 + index + 1 }}</td>
+            <td>{{ row.student.roll }}</td>
+            <td class="text-left font-semibold">{{ row.student.name }}</td>
+            <td v-if="report.settings.showTotalMark">{{ report.subject.total_mark || 100 }}</td>
+            <td>{{ row.mark }}</td>
+            <td v-if="report.settings.showPercentage">{{ row.percentage.toFixed(1) }}%</td>
+            <td v-if="report.settings.showGrade">{{ row.label }}</td>
+            <td v-if="report.settings.showResult"
+              :class="row.passed && row.mark !== '-' ? 'text-emerald-700' : 'text-red-700'">{{ row.passed && row.mark
+                !== '-' ? 'উত্তীর্ণ' : 'অনুত্তীর্ণ' }}</td>
+          </tr>
+        </tbody>
+      </table>
     </ResultPaper>
   </div>
 </template>
 
 <style>
-@page { size: A4 landscape; margin: 0; }
-.result-table th, .result-table td { border: 1px solid #334155; padding: 7px 8px; text-align: center; }
-.result-table th { background: #e2e8f0; }
-@media print { body { background: white; } .result-controls { display: none; } }
+@page {
+  size: A4 landscape;
+  margin: 0;
+}
+
+.result-table th,
+.result-table td {
+  border: 1px solid #334155;
+  padding: 7px 8px;
+  text-align: center;
+}
+
+.result-table th {
+  background: #e2e8f0;
+}
+
+@media print {
+  body {
+    background: white;
+  }
+
+  .result-controls {
+    display: none;
+  }
+}
 </style>

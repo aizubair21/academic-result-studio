@@ -3,23 +3,35 @@ import { db } from '~/db';
 export type ResultPreviewSettings = {
     resultType: string;
     showFooter: boolean;
+    showWatermark: boolean;
     showTotalMark: boolean;
+    showSubjectTotalMark: boolean;
+    showRowGradeLabel: boolean;
     showGpa: boolean;
     showPercentage: boolean;
     showGrade: boolean;
     showGradePoint: boolean;
     showResult: boolean;
+    pageSize: 'A4' | 'A3' | 'Letter';
+    orientation: 'landscape' | 'portrait';
+    pageMargin: 'small' | 'normal' | 'large';
 };
 
 export const DEFAULT_RESULT_PREVIEW_SETTINGS: ResultPreviewSettings = {
     resultType: 'GPA',
     showFooter: true,
+    showWatermark: true,
     showTotalMark: true,
+    showSubjectTotalMark: true,
+    showRowGradeLabel: true,
     showGpa: true,
     showPercentage: true,
     showGrade: true,
     showGradePoint: true,
     showResult: true,
+    pageSize: 'A4',
+    orientation: 'landscape',
+    pageMargin: 'normal',
 };
 
 export const useSettings = () => {
