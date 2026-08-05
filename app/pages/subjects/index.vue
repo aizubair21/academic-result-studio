@@ -176,7 +176,7 @@ function getClassName(classId) {
             </div>
         </div>
 
-        
+
     </LayoutsRightAsside>
 </template>
 
