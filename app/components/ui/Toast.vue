@@ -11,8 +11,8 @@ const ui = useUiStore();
     </transition>
     
     <!-- Success Alert -->
-    <transition name="fade">
-      <div v-if="ui.toast.type == 'success'" class=" text-green-700 px-4 py-3 rounded-lg text-sm">
+    <transition name="fade"  v-if="ui.toast.type == 'success'">
+      <div class=" text-green-700 px-4 py-3 rounded-lg text-sm">
         {{ ui.toast.message }}
       </div>
     </transition>

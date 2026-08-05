@@ -29,13 +29,13 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="bg-slate-100 print:bg-white">
-    <div class="result-controls mx-auto flex max-w-[1100px] gap-3 py-5 border-b print:hidden">
+  <div class="bg-slate-900 h-screen print:bg-white">
+    <div v-if="!loading"
+      class="result-controls mx-auto flex max-w-[1100px] gap-3 py-5 print:hidden sticky top-0 left-0 w-full bg-slate-900 z-50">
       <select v-model="classId" @change="load" class="rounded-lg border border-slate-300 px-3 py-2">
         <option v-for="item in classes" :key="item.id" :value="item.id">{{ item.name }}</option>
       </select>
-      <input v-model="examName" class="flex-1 rounded-lg border border-slate-300 px-3 py-2" />
-      <!-- <button @click="window.print()" class="rounded-lg bg-indigo-600 px-4 py-2 font-semibold text-white">প্রিন্ট / PDF</button> -->
+
     </div>
     <div v-if="loading" class="p-10 text-center print:hidden">ফলাফল তৈরি হচ্ছে...</div>
 
@@ -46,7 +46,7 @@ onMounted(async () => {
         @settings-change="report.settings = $event" @update:examName="examName = $event"
         @update:instituteName="report.institute = { ...report.institute, name: $event }">
         <table class="result-table w-full border-collapse text-xs">
-          <thead>
+          <thead class="sticky top-[50px]">
             <tr>
               <th>ক্রমিক</th>
               <th>রোল</th>
@@ -76,6 +76,7 @@ onMounted(async () => {
         </table>
       </ResultPaper>
     </template>
+
   </div>
 </template>
 
