@@ -85,11 +85,12 @@ async function handleDelete(id) {
     <AppCard>
         <template #header>
             <h1 class="text-3xl font-bold text-slate-900">ক্লাসসমূহ</h1>
-            <AppButton variant="primary" type="button" @click="ui.showWizedModal = true">যোগ করুন</AppButton>
+            <!-- <AppButton variant="primary" type="button" @click="ui.showWizedModal = true">যোগ করুন</AppButton> -->
+            <LayoutsPartialsPanelRightOpen variant="primary" type="plus" />
         </template>
 
         <AppEmpty v-if="classesList.length === 0" title="কোনো ক্লাস নেই"
-            description="একটি ক্লাস যোগ করতে 'যোগ করুন' বাটনে ক্লিক করুন" />
+            description="একটি ক্লাস যোগ করতে '+' বাটনে ক্লিক করুন" />
 
         <div v-else class="overflow-x-auto border border-slate-200 bg-white shadow-lg shadow-slate-200/60 rounded-lg">
             <table class="min-w-full border-collapse text-left text-sm text-slate-700">
@@ -146,15 +147,15 @@ async function handleDelete(id) {
         </div>
     </AppCard>
 
-    <LayoutsRightAsside>
-        <LayoutsRightAssideTitle> ক্লাস যুক্ত করুন </LayoutsRightAssideTitle>
-        <ArsClassesCreate />
+    <LayoutsRightAsside title="ক্লাস যুক্ত করুন">
+        <!-- <LayoutsRightAssideTitle> ক্লাস যুক্ত করুন </LayoutsRightAssideTitle>
+        <ArsClassesCreate /> -->
+        <ArsClassesCreate @saved="handleSaved" />
     </LayoutsRightAsside>
 
     <!-- Create Modal -->
-    <AppModal title="ক্লাস তৈরি করুন" :open="ui.showWizedModal" @close="handleClose">
-        <ArsClassesCreate @handle-saved-from-parent="handleSaved" />
-    </AppModal>
+    <!-- <AppModal title="ক্লাস তৈরি করুন" :open="ui.showWizedModal" @close="handleClose">
+    </AppModal> -->
 </template>
 
 <style lang="postcss" scoped></style>

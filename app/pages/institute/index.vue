@@ -13,7 +13,7 @@ onMounted(async () => {
 async function fetchInstitutes() {
     const inst = useInstitute();
     instituteList.value = await inst.all();
-    
+
 }
 
 // Delete handler
@@ -51,10 +51,11 @@ function handleClose() {
     <AppCard>
         <template #header>
             <h1 class="text-3xl font-bold text-slate-900">প্রতিষ্ঠান</h1>
-            <AppButton variant="primary" type="button" @click="openCreateModal">যোগ করুন</AppButton>
+            <!-- <AppButton variant="primary" type="button" @click="openCreateModal">যোগ করুন</AppButton> -->
+            <LayoutsPartialsPanelRightOpen variant="primary" type="plus" />
         </template>
 
-            <!-- <AppEmpty
+        <!-- <AppEmpty
             v-if="instituteList.length === 0"
             title="কোনো প্রতিষ্ঠান নেই"
             description="একটি প্রতিষ্ঠান যোগ করতে 'যোগ করুন' বাটনে ক্লিক করুন"
@@ -79,16 +80,12 @@ function handleClose() {
                         <td class="px-5 py-4">{{ inst.session || '—' }}</td>
                         <td class="px-5 py-4">
                             <div class="flex gap-2">
-                                <NuxtLink
-                                    to="/institute/edit"
-                                    class="inline-flex items-center rounded-lg bg-indigo-50 px-3 py-1.5 text-sm font-medium text-indigo-700 hover:bg-indigo-100 transition"
-                                >
+                                <NuxtLink to="/institute/edit"
+                                    class="inline-flex items-center rounded-lg bg-indigo-50 px-3 py-1.5 text-sm font-medium text-indigo-700 hover:bg-indigo-100 transition">
                                     এডিট
                                 </NuxtLink>
-                                <button
-                                    @click="handleDelete(inst.id)"
-                                    class="inline-flex items-center rounded-lg bg-red-50 px-3 py-1.5 text-sm font-medium text-red-700 hover:bg-red-100 transition"
-                                >
+                                <button @click="handleDelete(inst.id)"
+                                    class="inline-flex items-center rounded-lg bg-red-50 px-3 py-1.5 text-sm font-medium text-red-700 hover:bg-red-100 transition">
                                     ডিলিট
                                 </button>
                             </div>
@@ -101,16 +98,14 @@ function handleClose() {
 
 
     <LayoutsRightAsside>
-        <ArsInstituteCreate/>
+        <!-- <ArsInstituteCreate/> -->
+        <ArsInstituteCreate @saved="handleSaved" />
     </LayoutsRightAsside>
 
 
     <!-- Create Modal -->
-    <AppModal title="প্রতিষ্ঠান তৈরি করুন" :open="showCreateModal" @close="handleClose">
-        <ArsInstituteCreate @saved="handleSaved" />
-    </AppModal>
+    <!-- <AppModal title="প্রতিষ্ঠান তৈরি করুন" :open="showCreateModal" @close="handleClose">
+    </AppModal> -->
 </template>
 
-<style lang="postcss" scoped>
-
-</style>
+<style lang="postcss" scoped></style>

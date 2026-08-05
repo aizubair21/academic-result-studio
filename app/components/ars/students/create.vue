@@ -30,12 +30,12 @@ async function loadClasses() {
 }
 
 async function handleSubmit() {
-  if (!form.classId || !form.name.trim() || !form.roll) return;
+  if (!ui.selectedClassId || !form.name.trim() || !form.roll) return;
 
   ui.saving = true;
   try {
     await students.create({
-      classId: Number(form.classId),
+      classId: Number(ui.selectedClassId),
       name: form.name.trim(),
       roll: Number(form.roll),
     });
@@ -48,16 +48,16 @@ async function handleSubmit() {
     }, 3000);
 
     // Reset form for next entry — keep classId for convenience
-    const currentClassId = form.classId;
+    // const currentClassId = form.classId;
     form.name = '';
     form.roll = '';
-    form.classId = currentClassId;
+    form.classId = ui.selectedClassId;
 
     ui.showToast('success', `"${form.name || 'শিক্ষার্থী'}" যুক্ত হয়েছে`);
 
-    await loadClasses();
-
+    // await loadClasses();
     emit('saved');
+
   } catch (err) {
     ui.showToast('error', 'শিক্ষার্থী যুক্ত করতে সমস্যা হয়েছে: ' + (err.message || err));
   } finally {
@@ -166,7 +166,7 @@ async function importStudentsFile() {
     <!-- Class Select -->
     <div>
       <label class="block text-sm font-medium text-gray-700 mb-1.5">ক্লাস <span class="text-red-500">*</span></label>
-      <select v-model="form.classId" required
+      <select v-model="ui.selectedClassId" required
         class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white">
         <option value="" disabled>ক্লাস নির্বাচন করুন</option>
         <option v-for="cls in classesData" :key="cls.id" :value="cls.id">{{ cls.name }}</option>

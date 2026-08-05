@@ -6,7 +6,6 @@ const classesList = ref([]);
 const classesMap = ref({});
 const editingId = ref(null);
 const showCreateModal = ref(false);
-const selectedClassId = ref(null);
 const route = useRoute();
 
 definePageMeta({
@@ -14,9 +13,9 @@ definePageMeta({
 })
 
 const filteredSubjects = computed(() => {
-    if (!selectedClassId.value) return [];
+    if (!ui.selectedClassId) return [];
     return [...allSubjects.value]
-        .filter(s => s.classId === Number(selectedClassId.value))
+        .filter(s => s.classId === Number(ui.selectedClassId))
         .sort((a, b) => (a.index ?? 0) - (b.index ?? 0));
 });
 
@@ -24,7 +23,7 @@ const filteredSubjects = computed(() => {
 
 onMounted(async () => {
     if (route.query.classId) {
-        selectedClassId.value = Number(route.query.classId);
+        ui.selectedClassId = Number(route.query.classId);
     }
     await fetchData();
 })
@@ -89,16 +88,42 @@ function getClassName(classId) {
     <AppCard>
         <template #header>
             <h1 class="text-3xl font-bold text-slate-900">বিষয়সমূহ</h1>
-            <AppButton variant="primary" type="button" @click="openCreateModal">যোগ করুন</AppButton>
+
+            <div class="flex items-center justify-between gap-3">
+                <div>
+                    <!-- <label class="block text-sm font-medium text-gray-700 mb-1.5">
+                        ক্লাস <span class="text-red-500">*</span>
+                    </label> -->
+                    <select v-model="ui.selectedClassId" @change="onClassChange"
+                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white">
+                        <option :value="null" selected disabled>ক্লাস নির্বাচন করুন</option>
+                        <option v-for="cls in classesList" :key="cls.id" :value="cls.id">
+                            {{ cls.name }} ({{ cls.index ?? '—' }})
+                        </option>
+                    </select>
+                </div>
+                <LayoutsPartialsPanelRightOpen variant="primary" type="plus" />
+            </div>
+            <!-- <AppButton variant="primary" type="button" @click="openCreateModal">যোগ করুন</AppButton> -->
         </template>
 
         <!-- No class selected -->
-        <AppEmpty v-if="!selectedClassId" title="ক্লাস নির্বাচন করুন"
-            description="দয়া করে ডান পাশের প্যানেল থেকে একটি ক্লাস নির্বাচন করুন।" />
+        <AppEmpty v-if="!ui.selectedClassId" title="ক্লাস নির্বাচন করুন"
+            description="দয়া করে ডান পাশের প্যানেল থেকে একটি ক্লাস নির্বাচন করুন।">
+            <select v-model="ui.selectedClassId" @change="onClassChange"
+                class="mx-w-md px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white">
+                <option :value="null" selected disabled>ক্লাস নির্বাচন করুন</option>
+                <option v-for="cls in classesList" :key="cls.id" :value="cls.id">
+                    {{ cls.name }} ({{ cls.index ?? '—' }})
+                </option>
+            </select>
+        </AppEmpty>
 
         <!-- No subjects for selected class -->
         <AppEmpty v-else-if="filteredSubjects.length === 0" title="কোনো বিষয় নেই"
-            description="এই ক্লাসের জন্য কোনো বিষয় যোগ করা হয়নি।" />
+            description="এই ক্লাসের জন্য কোনো বিষয় যোগ করা হয়নি।">
+
+        </AppEmpty>
 
         <div v-else class="overflow-x-auto border border-slate-200 bg-white shadow-lg shadow-slate-200/60 rounded-lg">
             <table class="min-w-full border-collapse text-left text-sm text-slate-700">
@@ -148,33 +173,22 @@ function getClassName(classId) {
 
     <!-- Create Modal -->
     <AppModal title="বিষয় তৈরি করুন" :open="showCreateModal" @close="handleClose">
-        <ArsSubjectsCreate @saved="handleSaved" />
     </AppModal>
 
     <!-- ── Right Sidebar ── -->
-    <LayoutsRightAsside>
-        <LayoutsRightAssideTitle> বিষয় ফিল্টার </LayoutsRightAssideTitle>
+    <LayoutsRightAsside title="বিষয় যুক্ত করুন">
+        <ArsSubjectsCreate @saved="handleSaved" />
+        <!-- <LayoutsRightAssideTitle> বিষয় ফিল্টার </LayoutsRightAssideTitle> -->
 
         <!-- Class Selector -->
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1.5">
-                ক্লাস <span class="text-red-500">*</span>
-            </label>
-            <select v-model="selectedClassId" @change="onClassChange"
-                class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white">
-                <option :value="null" selected disabled>ক্লাস নির্বাচন করুন</option>
-                <option v-for="cls in classesList" :key="cls.id" :value="cls.id">
-                    {{ cls.name }} ({{ cls.index ?? '—' }})
-                </option>
-            </select>
-        </div>
+
 
         <!-- Summary -->
-        <div v-if="selectedClassId" class="border-t border-slate-200 pt-4">
+        <!-- <div v-if="ui.selectedClassId" class="border-t border-slate-200 pt-4">
             <div class="text-sm text-slate-600 space-y-1">
                 <p><span class="font-medium">বিষয়:</span> {{ filteredSubjects.length }}টি</p>
             </div>
-        </div>
+        </div> -->
 
 
     </LayoutsRightAsside>

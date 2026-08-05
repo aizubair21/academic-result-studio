@@ -1,12 +1,13 @@
 <script lang="ts" setup>
 const ui = useUiStore();
+const widget = useWidgetStore();
+
+
 const studentsList = ref([]);
 const allStudents = ref([]);
 const classesList = ref([]);
 const classesMap = ref({});
 const editingId = ref(null);
-const showCreateModal = ref(false);
-const selectedClassId = ref(null);
 const route = useRoute();
 
 definePageMeta({
@@ -14,17 +15,15 @@ definePageMeta({
 })
 
 const filteredStudents = computed(() => {
-    if (!selectedClassId.value) return [];
+    if (!ui.selectedClassId) return [];
     return [...allStudents.value]
-        .filter(s => s.classId === Number(selectedClassId.value))
+        .filter(s => s.classId === Number(ui.selectedClassId))
         .sort((a, b) => (a.roll ?? 0) - (b.roll ?? 0));
 });
 
-
-
 onMounted(async () => {
     if (route.query.classId) {
-        selectedClassId.value = Number(route.query.classId);
+        ui.selectedClassId = Number(route.query.classId);
     }
     await fetchData();
 })
@@ -46,19 +45,12 @@ async function onClassChange() {
     // Filter will auto-update via computed
 }
 
-function openCreateModal() {
-    showCreateModal.value = true;
-}
-
 function handleSaved() {
-    showCreateModal.value = false;
+    ui.showWizedModal = false;
     editingId.value = null;
     fetchData();
 }
 
-function handleClose() {
-    showCreateModal.value = false;
-}
 
 function startEdit(id) {
     editingId.value = id;
@@ -89,12 +81,31 @@ function getClassName(classId) {
     <AppCard>
         <template #header>
             <h1 class="text-3xl font-bold text-slate-900">শিক্ষার্থীবৃন্দ</h1>
-            <AppButton variant="primary" type="button" @click="openCreateModal">যোগ করুন</AppButton>
+
+            <div class='flex items-center justify-between gap-3'>
+                <!-- <AppButton variant="primary" type="button" @click="openCreateModal">যোগ করুন</AppButton> -->
+                <select v-if="ui.selectedClassId" v-model="ui.selectedClassId" @change="onClassChange"
+                    class="mx-w-sm px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white">
+                    <option :value="null" selected disabled>ক্লাস নির্বাচন করুন</option>
+                    <option v-for="cls in classesList" :key="cls.id" :value="cls.id">
+                        {{ cls.name }} ({{ cls.index ?? '—' }})
+                    </option>
+                </select>
+                <LayoutsPartialsPanelRightOpen variant="primary" type="plus" />
+            </div>
         </template>
 
         <!-- No class selected -->
-        <AppEmpty v-if="!selectedClassId" title="ক্লাস নির্বাচন করুন"
-            description="দয়া করে ডান পাশের প্যানেল থেকে একটি ক্লাস নির্বাচন করুন।" />
+        <AppEmpty v-if="!ui.selectedClassId" title="ক্লাস নির্বাচন করুন"
+            description="যে ক্লাসের শিক্ষার্থী দেখতে চান অনুগ্রহপুর্বক নির্বাচন করুন">
+            <select v-model="ui.selectedClassId" @change="onClassChange"
+                class="mx-w-md px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white">
+                <option :value="null" selected disabled>ক্লাস নির্বাচন করুন</option>
+                <option v-for="cls in classesList" :key="cls.id" :value="cls.id">
+                    {{ cls.name }} ({{ cls.index ?? '—' }})
+                </option>
+            </select>
+        </AppEmpty>
 
         <!-- No students for selected class -->
         <AppEmpty v-else-if="filteredStudents.length === 0" title="কোনো শিক্ষার্থী নেই"
@@ -144,37 +155,9 @@ function getClassName(classId) {
         </div>
     </AppCard>
 
-    <!-- Create Modal -->
-    <AppModal title="শিক্ষার্থী তৈরি করুন" :open="showCreateModal" @close="handleClose">
-        <ArsStudentsCreate @saved="handleSaved" />
-    </AppModal>
-
     <!-- ── Right Sidebar ── -->
-    <LayoutsRightAsside>
-        <LayoutsRightAssideTitle> শিক্ষার্থী ফিল্টার </LayoutsRightAssideTitle>
-
-        <!-- Class Selector -->
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1.5">
-                ক্লাস <span class="text-red-500">*</span>
-            </label>
-            <select v-model="selectedClassId" @change="onClassChange"
-                class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white">
-                <option :value="null" selected disabled>ক্লাস নির্বাচন করুন</option>
-                <option v-for="cls in classesList" :key="cls.id" :value="cls.id">
-                    {{ cls.name }} ({{ cls.index ?? '—' }})
-                </option>
-            </select>
-        </div>
-
-        <!-- Summary -->
-        <div v-if="selectedClassId" class="border-t border-slate-200 pt-4">
-            <div class="text-sm text-slate-600 space-y-1">
-                <p><span class="font-medium">শিক্ষার্থী:</span> {{ filteredStudents.length }} জন</p>
-            </div>
-        </div>
-
-
+    <LayoutsRightAsside title="শিক্ষার্থী যুক্ত করুন">
+        <ArsStudentsCreate @saved="handleSaved" />
     </LayoutsRightAsside>
 </template>
 

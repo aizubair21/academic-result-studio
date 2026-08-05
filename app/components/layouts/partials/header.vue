@@ -14,10 +14,10 @@ const gradeCriteriaList = ref([]);
 const classList = ref([]);
 
 // Sync with uiStore sidebarOpen
-const sidebarOpen = computed({
-  get: () => ui.sidebarOpen,
-  set: (val) => { ui.sidebarOpen = val; },
-});
+// const sidebarOpen = computed({
+//   get: () => ui.sidebarOpen,
+//   set: (val) => { ui.sidebarOpen = val; },
+// });
 
 // Load settings on modal open
 watch(settingsOpen, async (open) => {
@@ -166,7 +166,7 @@ async function handleResetAll() {
             </svg>
           </button>
 
-          <button
+          <!-- <button
             class="inline-flex h-10 w-10 items-center justify-center rounded-lg bg-white shadow-sm ring-1 ring-slate-200 transition hover:bg-slate-50 md:hidden"
             title="Toggle sidebar"
             @click="sidebarOpen = !sidebarOpen"
@@ -174,7 +174,7 @@ async function handleResetAll() {
             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 text-slate-700" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
               <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16M4 18h16" />
             </svg>
-          </button>
+          </button> -->
          
           
         </div>

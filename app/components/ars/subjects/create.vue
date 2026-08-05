@@ -32,12 +32,12 @@ async function loadClasses() {
 }
 
 async function handleSubmit() {
-  if (!form.classId || !form.name.trim()) return;
+  if (!ui.selectedClassId || !form.name.trim()) return;
 
   ui.saving = true;
   try {
     await subjects.create({
-      classId: Number(form.classId),
+      classId: Number(ui.selectedClassId),
       name: form.name.trim(),
       index: form.index ? Number(form.index) : undefined,
       total_mark: form.totalMark ? Number(form.totalMark) : 100,
@@ -171,7 +171,7 @@ async function importSubjectsFile() {
     <!-- Class Select -->
     <div>
       <label class="block text-sm font-medium text-gray-700 mb-1.5">ক্লাস <span class="text-red-500">*</span></label>
-      <select v-model="form.classId" required
+      <select v-model="ui.selectedClassId" required
         class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white">
         <option value="" disabled>ক্লাস নির্বাচন করুন</option>
         <option v-for="cls in classesData" :key="cls.id" :value="cls.id">{{ cls.name }} ({{ cls.index ?? '—' }})
@@ -212,7 +212,8 @@ async function importSubjectsFile() {
     </div>
 
     <!-- Success feedback -->
-    <div v-if="justSaved" class="flex items-center gap-2 text-sm text-emerald-600 bg-emerald-50 px-4 py-2 rounded-lg">
+    <div v-if="justSaved && !ui.sidebarOpen"
+      class="flex items-center gap-2 text-sm text-emerald-600 bg-emerald-50 px-4 py-2 rounded-lg">
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
       </svg>
