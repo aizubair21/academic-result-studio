@@ -12,7 +12,7 @@ export type ResultPreviewSettings = {
     showGrade: boolean;
     showGradePoint: boolean;
     showResult: boolean;
-    pageSize: 'A4' | 'A3' | 'Letter';
+    pageSize: 'A4' | 'A3' | 'A5' | 'Letter' | 'Legal';
     orientation: 'landscape' | 'portrait';
     pageMargin: 'small' | 'normal' | 'large';
 };

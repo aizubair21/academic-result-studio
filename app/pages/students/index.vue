@@ -1,4 +1,4 @@
-<script setup>
+<script lang="ts" setup>
 const ui = useUiStore();
 const studentsList = ref([]);
 const allStudents = ref([]);
@@ -19,6 +19,8 @@ const filteredStudents = computed(() => {
         .filter(s => s.classId === Number(selectedClassId.value))
         .sort((a, b) => (a.roll ?? 0) - (b.roll ?? 0));
 });
+
+
 
 onMounted(async () => {
     if (route.query.classId) {
@@ -91,18 +93,12 @@ function getClassName(classId) {
         </template>
 
         <!-- No class selected -->
-        <AppEmpty
-            v-if="!selectedClassId"
-            title="ক্লাস নির্বাচন করুন"
-            description="দয়া করে ডান পাশের প্যানেল থেকে একটি ক্লাস নির্বাচন করুন।"
-        />
+        <AppEmpty v-if="!selectedClassId" title="ক্লাস নির্বাচন করুন"
+            description="দয়া করে ডান পাশের প্যানেল থেকে একটি ক্লাস নির্বাচন করুন।" />
 
         <!-- No students for selected class -->
-        <AppEmpty
-            v-else-if="filteredStudents.length === 0"
-            title="কোনো শিক্ষার্থী নেই"
-            description="এই ক্লাসের জন্য কোনো শিক্ষার্থী যোগ করা হয়নি।"
-        />
+        <AppEmpty v-else-if="filteredStudents.length === 0" title="কোনো শিক্ষার্থী নেই"
+            description="এই ক্লাসের জন্য কোনো শিক্ষার্থী যোগ করা হয়নি।" />
 
         <div v-else class="overflow-x-auto border border-slate-200 bg-white shadow-lg shadow-slate-200/60 rounded-lg">
             <table class="min-w-full border-collapse text-left text-sm text-slate-700">
@@ -125,16 +121,12 @@ function getClassName(classId) {
                             <td class="px-5 py-4">{{ student.roll ?? '—' }}</td>
                             <td class="px-5 py-4">
                                 <div class="flex gap-2">
-                                    <button
-                                        @click="startEdit(student.id)"
-                                        class="inline-flex items-center rounded-lg bg-indigo-50 px-3 py-1.5 text-sm font-medium text-indigo-700 hover:bg-indigo-100 transition"
-                                    >
+                                    <button @click="startEdit(student.id)"
+                                        class="inline-flex items-center rounded-lg bg-indigo-50 px-3 py-1.5 text-sm font-medium text-indigo-700 hover:bg-indigo-100 transition">
                                         এডিট
                                     </button>
-                                    <button
-                                        @click="handleDelete(student.id)"
-                                        class="inline-flex items-center rounded-lg bg-red-50 px-3 py-1.5 text-sm font-medium text-red-700 hover:bg-red-100 transition"
-                                    >
+                                    <button @click="handleDelete(student.id)"
+                                        class="inline-flex items-center rounded-lg bg-red-50 px-3 py-1.5 text-sm font-medium text-red-700 hover:bg-red-100 transition">
                                         ডিলিট
                                     </button>
                                 </div>
@@ -143,11 +135,7 @@ function getClassName(classId) {
                         <!-- Edit Mode -->
                         <template v-else>
                             <td colspan="5" class="px-5 py-3">
-                                <ArsStudentsEdit
-                                    :data="student"
-                                    @saved="handleSaved"
-                                    @cancel="cancelEdit"
-                                />
+                                <ArsStudentsEdit :data="student" @saved="handleSaved" @cancel="cancelEdit" />
                             </td>
                         </template>
                     </tr>
@@ -170,17 +158,10 @@ function getClassName(classId) {
             <label class="block text-sm font-medium text-gray-700 mb-1.5">
                 ক্লাস <span class="text-red-500">*</span>
             </label>
-            <select
-                v-model="selectedClassId"
-                @change="onClassChange"
-                class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white"
-            >
+            <select v-model="selectedClassId" @change="onClassChange"
+                class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white">
                 <option :value="null" selected disabled>ক্লাস নির্বাচন করুন</option>
-                <option
-                    v-for="cls in classesList"
-                    :key="cls.id"
-                    :value="cls.id"
-                >
+                <option v-for="cls in classesList" :key="cls.id" :value="cls.id">
                     {{ cls.name }} ({{ cls.index ?? '—' }})
                 </option>
             </select>
@@ -192,9 +173,9 @@ function getClassName(classId) {
                 <p><span class="font-medium">শিক্ষার্থী:</span> {{ filteredStudents.length }} জন</p>
             </div>
         </div>
+
+        
     </LayoutsRightAsside>
 </template>
 
-<style lang="postcss" scoped>
-
-</style>
+<style lang="postcss" scoped></style>

@@ -13,9 +13,9 @@ onUpdated(() => {
     fetchClasses();
 }),
 
-onMounted(async () => {
-    await fetchClasses();
-})
+    onMounted(async () => {
+        await fetchClasses();
+    })
 
 async function fetchClasses() {
     const cls = useClasses();
@@ -88,17 +88,16 @@ async function handleDelete(id) {
             <AppButton variant="primary" type="button" @click="ui.showWizedModal = true">যোগ করুন</AppButton>
         </template>
 
-        <AppEmpty
-            v-if="classesList.length === 0"
-            title="কোনো ক্লাস নেই"
-            description="একটি ক্লাস যোগ করতে 'যোগ করুন' বাটনে ক্লিক করুন"
-        />
+        <AppEmpty v-if="classesList.length === 0" title="কোনো ক্লাস নেই"
+            description="একটি ক্লাস যোগ করতে 'যোগ করুন' বাটনে ক্লিক করুন" />
 
         <div v-else class="overflow-x-auto border border-slate-200 bg-white shadow-lg shadow-slate-200/60 rounded-lg">
             <table class="min-w-full border-collapse text-left text-sm text-slate-700">
                 <thead class="bg-slate-50">
                     <tr>
-                        <th class="border-b border-slate-200 px-5 py-4 font-semibold text-slate-600">ক্রমিক</th>
+                        <th class="border-b border-slate-200 px-5 py-4 font-semibold text-slate-600">ক্রমিক
+                        </th>
+                        <th class="border-b border-slate-200 px-5 py-4 font-semibold text-slate-600"> ID </th>
                         <th class="border-b border-slate-200 px-5 py-4 font-semibold text-slate-600">নাম</th>
                         <th class="border-b border-slate-200 px-5 py-4 font-semibold text-slate-600">বিষয়</th>
                         <th class="border-b border-slate-200 px-5 py-4 font-semibold text-slate-600">শিক্ষার্থী</th>
@@ -110,33 +109,26 @@ async function handleDelete(id) {
                         <!-- View Mode -->
                         <template v-if="editingId !== cls.id">
                             <td class="px-5 py-4">{{ index + 1 }}</td>
+                            <td class="px-5 py-4">{{ cls.id }}</td>
                             <td class="px-5 py-4 font-medium">{{ cls.name }}</td>
                             <td class="px-5 py-4">{{ cls.subjectsCount }}</td>
                             <td class="px-5 py-4">{{ cls.studentsCount }}</td>
                             <td class="px-5 py-4">
                                 <div class="flex gap-2">
-                                    <NuxtLink
-                                        :to="{ path: '/subjects', query: { classId: cls.id } }"
-                                        class="inline-flex items-center rounded-lg bg-blue-50 px-3 py-1.5 text-sm font-medium text-blue-700 hover:bg-blue-100 transition"
-                                    >
+                                    <NuxtLink :to="{ path: '/subjects', query: { classId: cls.id } }"
+                                        class="inline-flex items-center rounded-lg bg-blue-50 px-3 py-1.5 text-sm font-medium text-blue-700 hover:bg-blue-100 transition">
                                         বিষয় দেখুন
                                     </NuxtLink>
-                                    <NuxtLink
-                                        :to="{ path: '/students', query: { classId: cls.id } }"
-                                        class="inline-flex items-center rounded-lg bg-emerald-50 px-3 py-1.5 text-sm font-medium text-emerald-700 hover:bg-emerald-100 transition"
-                                    >
+                                    <NuxtLink :to="{ path: '/students', query: { classId: cls.id } }"
+                                        class="inline-flex items-center rounded-lg bg-emerald-50 px-3 py-1.5 text-sm font-medium text-emerald-700 hover:bg-emerald-100 transition">
                                         শিক্ষার্থী দেখুন
                                     </NuxtLink>
-                                    <button
-                                        @click="startEdit(cls.id)"
-                                        class="inline-flex items-center rounded-lg bg-indigo-50 px-3 py-1.5 text-sm font-medium text-indigo-700 hover:bg-indigo-100 transition"
-                                    >
+                                    <button @click="startEdit(cls.id)"
+                                        class="inline-flex items-center rounded-lg bg-indigo-50 px-3 py-1.5 text-sm font-medium text-indigo-700 hover:bg-indigo-100 transition">
                                         এডিট
                                     </button>
-                                    <button
-                                        @click="handleDelete(cls.id)"
-                                        class="inline-flex items-center rounded-lg bg-red-50 px-3 py-1.5 text-sm font-medium text-red-700 hover:bg-red-100 transition"
-                                    >
+                                    <button @click="handleDelete(cls.id)"
+                                        class="inline-flex items-center rounded-lg bg-red-50 px-3 py-1.5 text-sm font-medium text-red-700 hover:bg-red-100 transition">
                                         ডিলিট
                                     </button>
                                 </div>
@@ -145,11 +137,7 @@ async function handleDelete(id) {
                         <!-- Edit Mode -->
                         <template v-else>
                             <td colspan="4" class="px-5 py-3">
-                                <ArsClassesEdit
-                                    :data="cls"
-                                    @saved="handleSaved"
-                                    @cancel="cancelEdit"
-                                />
+                                <ArsClassesEdit :data="cls" @saved="handleSaved" @cancel="cancelEdit" />
                             </td>
                         </template>
                     </tr>
@@ -159,8 +147,8 @@ async function handleDelete(id) {
     </AppCard>
 
     <LayoutsRightAsside>
-        <LayoutsRightAssideTitle > ক্লাস যুক্ত করুন </LayoutsRightAssideTitle>
-        <ArsClassesCreate/>
+        <LayoutsRightAssideTitle> ক্লাস যুক্ত করুন </LayoutsRightAssideTitle>
+        <ArsClassesCreate />
     </LayoutsRightAsside>
 
     <!-- Create Modal -->
@@ -169,6 +157,4 @@ async function handleDelete(id) {
     </AppModal>
 </template>
 
-<style lang="postcss" scoped>
-
-</style>
+<style lang="postcss" scoped></style>
