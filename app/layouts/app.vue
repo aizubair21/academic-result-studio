@@ -29,18 +29,19 @@ const readiness = computed(() => {
 <template>
   <div class="min-h-screen bg-slate-50 text-slate-900 font-sans">
     <!-- Top Application Bar -->
-    <LayoutsPartialsHeader/>
+    <LayoutsPartialsHeader />
 
     <!-- Main layout regions -->
-    <div class="mx-auto grid max-w-[1440px] grid-cols-1 gap-0 px-0 pt-0 md:grid-cols-[80px_1fr_280px] lg:grid-cols-[100px_1fr_350px]">
+    <div
+      class="mx-auto grid max-w-[1440px] grid-cols-1 gap-0 px-0 pt-0 md:grid-cols-[80px_1fr_280px] lg:grid-cols-[100px_1fr_350px]">
 
       <!-- Left Workspace Navigator -->
-      <LayoutsPartialsNav/>
+      <LayoutsPartialsNav />
 
       <!-- Main Workspace -->
       <main class="sm:w-full min-h-[calc(100vh-108px)] px-4 pb-20 pt-4 md:px-6 md:pb-4">
 
-        <div v-if="ui.showWizedModal == false" class="fixed top-0 inset-x-50 mb-1">
+        <div v-if="!ui.sidebarOpen" class="fixed top-0 inset-x-50 mb-1">
           <UiToast />
         </div>
 
@@ -59,13 +60,13 @@ const readiness = computed(() => {
                 <!-- <div class="text-4xl">🎯</div> -->
                 <h1 class="text-3xl font-bold">স্বাগতম!</h1>
               </div>
-              
-             
+
+
             </div>
 
             <p class="text-indigo-100 max-w-xl leading-relaxed mt-3 border-t border-gray-200 pt-2">
-                নিচের ধাপগুলো অনুসরণ করে আপনার প্রতিষ্ঠানের তথ্য যোগ করুন এবং রেজাল্ট ম্যানেজমেন্ট শুরু করুন।
-              </p>
+              নিচের ধাপগুলো অনুসরণ করে আপনার প্রতিষ্ঠানের তথ্য যোগ করুন এবং রেজাল্ট ম্যানেজমেন্ট শুরু করুন।
+            </p>
           </div>
         </div>
 
@@ -78,10 +79,8 @@ const readiness = computed(() => {
     <!-- Bottom Status Bar -->
     <LayoutsPartialsFooter />
 
-   
+
   </div>
 </template>
 
-<style lang="postcss" scoped>
-
-</style>
+<style lang="postcss" scoped></style>

@@ -19,7 +19,7 @@ const settingsOpen = ref(false);
       <!-- Main Workspace -->
       <main class="sm:w-full min-h-[calc(100vh-108px)] px-4 pb-20 pt-4 md:px-6 md:pb-4">
 
-        <div v-if="ui.showWizedModal == false" class="mb-1">
+        <div v-if="!ui.sidebarOpen" class="mb-1">
           <UiToast />
         </div>
 

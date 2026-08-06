@@ -88,28 +88,24 @@ function getClassName(classId) {
     <AppCard>
         <template #header>
             <h1 class="text-3xl font-bold text-slate-900">বিষয়সমূহ</h1>
+            <LayoutsPartialsPanelRightOpen variant="primary" type="plus" />
 
-            <div class="flex items-center justify-between gap-3">
-                <div>
-                    <!-- <label class="block text-sm font-medium text-gray-700 mb-1.5">
-                        ক্লাস <span class="text-red-500">*</span>
-                    </label> -->
-                    <select v-model="ui.selectedClassId" @change="onClassChange"
-                        class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white">
-                        <option :value="null" selected disabled>ক্লাস নির্বাচন করুন</option>
-                        <option v-for="cls in classesList" :key="cls.id" :value="cls.id">
-                            {{ cls.name }} ({{ cls.index ?? '—' }})
-                        </option>
-                    </select>
-                </div>
-                <LayoutsPartialsPanelRightOpen variant="primary" type="plus" />
-            </div>
             <!-- <AppButton variant="primary" type="button" @click="openCreateModal">যোগ করুন</AppButton> -->
         </template>
 
+
+        <select v-if="ui.selectedClassId" v-model="ui.selectedClassId" @change="onClassChange"
+            class="mb-3 mx-w-md px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white">
+            <option :value="null" selected disabled>ক্লাস নির্বাচন করুন</option>
+            <option v-for="cls in classesList" :key="cls.id" :value="cls.id">
+                {{ cls.name }} ({{ cls.index ?? '—' }})
+            </option>
+        </select>
+
+
         <!-- No class selected -->
         <AppEmpty v-if="!ui.selectedClassId" title="ক্লাস নির্বাচন করুন"
-            description="দয়া করে ডান পাশের প্যানেল থেকে একটি ক্লাস নির্বাচন করুন।">
+            description="দয়া করে একটি ক্লাস নির্বাচন করুন।">
             <select v-model="ui.selectedClassId" @change="onClassChange"
                 class="mx-w-md px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white">
                 <option :value="null" selected disabled>ক্লাস নির্বাচন করুন</option>
@@ -122,8 +118,13 @@ function getClassName(classId) {
         <!-- No subjects for selected class -->
         <AppEmpty v-else-if="filteredSubjects.length === 0" title="কোনো বিষয় নেই"
             description="এই ক্লাসের জন্য কোনো বিষয় যোগ করা হয়নি।">
-
+            <div>
+                <AppButton variant="ghost" type="button" @click="ui.sidebarOpen = true"> বিষয় যুক্ত করুন </AppButton>
+            </div>
         </AppEmpty>
+
+
+
 
         <div v-else class="overflow-x-auto border border-slate-200 bg-white shadow-lg shadow-slate-200/60 rounded-lg">
             <table class="min-w-full border-collapse text-left text-sm text-slate-700">

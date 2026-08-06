@@ -82,18 +82,17 @@ function getClassName(classId) {
         <template #header>
             <h1 class="text-3xl font-bold text-slate-900">শিক্ষার্থীবৃন্দ</h1>
 
-            <div class='flex items-center justify-between gap-3'>
-                <!-- <AppButton variant="primary" type="button" @click="openCreateModal">যোগ করুন</AppButton> -->
-                <select v-if="ui.selectedClassId" v-model="ui.selectedClassId" @change="onClassChange"
-                    class="mx-w-sm px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white">
-                    <option :value="null" selected disabled>ক্লাস নির্বাচন করুন</option>
-                    <option v-for="cls in classesList" :key="cls.id" :value="cls.id">
-                        {{ cls.name }} ({{ cls.index ?? '—' }})
-                    </option>
-                </select>
-                <LayoutsPartialsPanelRightOpen variant="primary" type="plus" />
-            </div>
+            <LayoutsPartialsPanelRightOpen variant="primary" type="plus" />
         </template>
+
+
+        <select v-if="ui.selectedClassId" v-model="ui.selectedClassId" @change="onClassChange"
+            class="mb-3 mx-w-sm px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white">
+            <option :value="null" selected disabled>ক্লাস নির্বাচন করুন</option>
+            <option v-for="cls in classesList" :key="cls.id" :value="cls.id">
+                {{ cls.name }} ({{ cls.index ?? '—' }})
+            </option>
+        </select>
 
         <!-- No class selected -->
         <AppEmpty v-if="!ui.selectedClassId" title="ক্লাস নির্বাচন করুন"
@@ -109,7 +108,9 @@ function getClassName(classId) {
 
         <!-- No students for selected class -->
         <AppEmpty v-else-if="filteredStudents.length === 0" title="কোনো শিক্ষার্থী নেই"
-            description="এই ক্লাসের জন্য কোনো শিক্ষার্থী যোগ করা হয়নি।" />
+            description="এই ক্লাসের জন্য কোনো শিক্ষার্থী যোগ করা হয়নি।">
+            <AppButton type="button" variant="ghost" @click="ui.sidebarOpen = true"> শিক্ষার্থী যোগ করুন </AppButton>
+        </AppEmpty>
 
         <div v-else class="overflow-x-auto border border-slate-200 bg-white shadow-lg shadow-slate-200/60 rounded-lg">
             <table class="min-w-full border-collapse text-left text-sm text-slate-700">

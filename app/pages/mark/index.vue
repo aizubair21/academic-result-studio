@@ -252,14 +252,12 @@ async function saveAllMarks() {
     <AppCard>
         <template #header>
             <h1 class="text-3xl font-bold text-slate-900">মার্ক এন্ট্রি</h1>
-            <div class="flex gap-2">
-
-            </div>
+            <LayoutsPartialsPanelRightOpen />
         </template>
 
         <div class="flex items-start justify-start mb-4 gap-2">
             <!-- Class Selector -->
-            <div>
+            <div v-if="selectedClassId">
                 <label class="block text-sm font-medium text-gray-700 mb-1.5">
                     ক্লাস <span class="text-red-500">*</span>
                 </label>
@@ -273,7 +271,7 @@ async function saveAllMarks() {
             </div>
 
             <!-- Student Selector (optional filter) -->
-            <div>
+            <div v-if="selectedClassId">
                 <label class="block text-sm font-medium text-gray-700 mb-1.5">
                     শিক্ষার্থী
                     <span class="text-xs text-gray-400 font-normal">(ঐচ্ছিক)</span>
@@ -295,17 +293,32 @@ async function saveAllMarks() {
 
         <!-- No class selected -->
         <AppEmpty v-if="!selectedClassId" title="ক্লাস নির্বাচন করুন"
-            description="দয়া করে প্যানেল থেকে একটি ক্লাস নির্বাচন করুন।">
+            description=" একটি ক্লাস নির্বাচনের মাধ্যমে মার্ক এন্ট্রি শুরু করুন।  ">
+            <div class="my-2">
 
+                <select v-model="selectedClassId" @change="onClassChange"
+                    class="mx-w-lg px-2 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white">
+                    <option :value="null">ক্লাস নির্বাচন করুন</option>
+                    <option v-for="cls in classesList" :key="cls.id" :value="cls.id">
+                        {{ cls.name }}
+                    </option>
+                </select>
+            </div>
         </AppEmpty>
 
         <!-- No subjects found -->
         <AppEmpty v-else-if="subjectsList.length === 0" title="কোনো বিষয় নেই"
-            description="এই ক্লাসের জন্য কোনো বিষয় যোগ করা হয়নি। দয়া করে বিষয় পৃষ্ঠা থেকে বিষয় যোগ করুন।" />
+            description="এই ক্লাসের জন্য কোনো বিষয় যোগ করা হয়নি। বিষয় পৃষ্ঠা থেকে বিষয় যোগ করুন।">
+
+            <NuxtLink to="subjects"> বিষয় যুক্ত করুন </NuxtLink>
+        </AppEmpty>
 
         <!-- No students found -->
         <AppEmpty v-else-if="studentsList.length === 0" title="কোনো শিক্ষার্থী নেই"
-            description="এই ক্লাসের জন্য কোনো শিক্ষার্থী যোগ করা হয়নি। দয়া করে শিক্ষার্থী পৃষ্ঠা থেকে শিক্ষার্থী যোগ করুন।" />
+            description="এই ক্লাসের জন্য কোনো শিক্ষার্থী যোগ করা হয়নি। শিক্ষার্থী পৃষ্ঠা থেকে শিক্ষার্থী যোগ করুন।">
+
+            <NuxtLink to="students"> শিক্ষার্থী যুক্ত করুন </NuxtLink>
+        </AppEmpty>
 
         <!-- Marks Entry Table -->
         <div v-else class="overflow-x-auto border border-slate-200 bg-white shadow-lg shadow-slate-200/60 rounded-lg">
@@ -393,8 +406,8 @@ async function saveAllMarks() {
 
 
     <!-- ── Right Sidebar Content (via named slot) ── -->
-    <LayoutsRightAsside>
-        <LayoutsRightAssideTitle> মার্ক ফিল্টার </LayoutsRightAssideTitle>
+    <LayoutsRightAsside title="">
+        <!-- <LayoutsRightAssideTitle> মার্ক ফিল্টার </LayoutsRightAssideTitle> -->
 
 
 

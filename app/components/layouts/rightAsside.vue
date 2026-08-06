@@ -43,6 +43,11 @@ function checkMobile() {
             </button>
           </div>
           <div class="p-4">
+
+            <div v-if="ui.sidebarOpen && !ui.showWizedModal">
+              <UiToast />
+            </div>
+
             <!-- Page-specific drawer content teleported from LayoutsRightAsside -->
             <div id="mobile-drawer-content">
               <slot></slot>
