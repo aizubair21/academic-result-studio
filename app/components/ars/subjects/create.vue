@@ -192,21 +192,21 @@ async function importSubjectsFile() {
       <!-- Index -->
       <div>
         <label class="block text-sm font-medium text-gray-700 mb-1.5">ইনডেক্স</label>
-        <input v-model="form.index" type="number" placeholder="যেমন: 1"
+        <input v-model="form.index" type="number" placeholder="1"
           class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all" />
       </div>
 
       <!-- Total Mark -->
       <div>
         <label class="block text-sm font-medium text-gray-700 mb-1.5">মোট নম্বর</label>
-        <input v-model="form.totalMark" type="number" placeholder="যেমন: 100"
+        <input v-model="form.totalMark" type="number" placeholder="100"
           class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all" />
       </div>
 
       <!-- Pass Mark -->
       <div>
         <label class="block text-sm font-medium text-gray-700 mb-1.5">পাস নম্বর</label>
-        <input v-model="form.passMark" type="number" placeholder="যেমন: 33"
+        <input v-model="form.passMark" type="number" placeholder="33"
           class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all" />
       </div>
     </div>

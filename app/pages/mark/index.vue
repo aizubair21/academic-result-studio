@@ -1,4 +1,6 @@
 <script setup>
+import { Save } from '@lucide/vue'
+
 const ui = useUiStore();
 const marksRepo = useMarks();
 const studentsRepo = useStudents();
@@ -249,56 +251,73 @@ async function saveAllMarks() {
     <!-- ── Main Content ── -->
     <AppCard>
         <template #header>
-            <h1 class="text-3xl font-bold text-slate-900">মার্ক প্রবেশ করান</h1>
+            <h1 class="text-3xl font-bold text-slate-900">মার্ক এন্ট্রি</h1>
             <div class="flex gap-2">
-                <AppButton
-                    v-if="selectedClassId && filteredStudents.length > 1"
-                    variant="secondary"
-                    type="button"
-                    @click="saveAllMarks"
-                >
-                    সকল নম্বর সংরক্ষণ
-                </AppButton>
+
             </div>
         </template>
 
+        <div class="flex items-start justify-start mb-4 gap-2">
+            <!-- Class Selector -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1.5">
+                    ক্লাস <span class="text-red-500">*</span>
+                </label>
+                <select v-model="selectedClassId" @change="onClassChange"
+                    class="mx-w-sm px-2 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white">
+                    <option :value="null">ক্লাস নির্বাচন করুন</option>
+                    <option v-for="cls in classesList" :key="cls.id" :value="cls.id">
+                        {{ cls.name }}
+                    </option>
+                </select>
+            </div>
+
+            <!-- Student Selector (optional filter) -->
+            <div>
+                <label class="block text-sm font-medium text-gray-700 mb-1.5">
+                    শিক্ষার্থী
+                    <span class="text-xs text-gray-400 font-normal">(ঐচ্ছিক)</span>
+                </label>
+                <select v-model="selectedStudentId"
+                    class="mx-w-sm px-2 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white">
+                    <option :value="null">সকল শিক্ষার্থী</option>
+                    <option v-for="student in [...studentsList].sort((a, b) => (a.roll ?? 0) - (b.roll ?? 0))"
+                        :key="student.id" :value="student.id">
+                        {{ student.name }} (রোল: {{ student.roll }})
+                    </option>
+                </select>
+                <!-- <p class="mt-1.5 text-xs text-gray-500">
+                    {{ isShowingAllStudents ? 'সকল শিক্ষার্থী প্রদর্শিত হচ্ছে' : 'নির্বাচিত শিক্ষার্থী প্রদর্শিত হচ্ছে'
+                    }}
+                </p> -->
+            </div>
+        </div>
+
         <!-- No class selected -->
-        <AppEmpty
-            v-if="!selectedClassId"
-            title="ক্লাস নির্বাচন করুন"
-            description="দয়া করে ডান পাশের প্যানেল থেকে একটি ক্লাস নির্বাচন করুন।"
-        />
+        <AppEmpty v-if="!selectedClassId" title="ক্লাস নির্বাচন করুন"
+            description="দয়া করে প্যানেল থেকে একটি ক্লাস নির্বাচন করুন।">
+
+        </AppEmpty>
 
         <!-- No subjects found -->
-        <AppEmpty
-            v-else-if="subjectsList.length === 0"
-            title="কোনো বিষয় নেই"
-            description="এই ক্লাসের জন্য কোনো বিষয় যোগ করা হয়নি। দয়া করে বিষয় পৃষ্ঠা থেকে বিষয় যোগ করুন।"
-        />
+        <AppEmpty v-else-if="subjectsList.length === 0" title="কোনো বিষয় নেই"
+            description="এই ক্লাসের জন্য কোনো বিষয় যোগ করা হয়নি। দয়া করে বিষয় পৃষ্ঠা থেকে বিষয় যোগ করুন।" />
 
         <!-- No students found -->
-        <AppEmpty
-            v-else-if="studentsList.length === 0"
-            title="কোনো শিক্ষার্থী নেই"
-            description="এই ক্লাসের জন্য কোনো শিক্ষার্থী যোগ করা হয়নি। দয়া করে শিক্ষার্থী পৃষ্ঠা থেকে শিক্ষার্থী যোগ করুন।"
-        />
+        <AppEmpty v-else-if="studentsList.length === 0" title="কোনো শিক্ষার্থী নেই"
+            description="এই ক্লাসের জন্য কোনো শিক্ষার্থী যোগ করা হয়নি। দয়া করে শিক্ষার্থী পৃষ্ঠা থেকে শিক্ষার্থী যোগ করুন।" />
 
         <!-- Marks Entry Table -->
-        <div
-            v-else
-            class="overflow-x-auto border border-slate-200 bg-white shadow-lg shadow-slate-200/60 rounded-lg"
-        >
+        <div v-else class="overflow-x-auto border border-slate-200 bg-white shadow-lg shadow-slate-200/60 rounded-lg">
             <table class="min-w-full border-collapse text-left text-sm text-slate-700">
                 <thead class="bg-slate-50">
                     <tr>
                         <th class="border-b border-slate-200 px-4 py-4 font-semibold text-slate-600 w-14">ক্রমিক</th>
-                        <th class="border-b border-slate-200 px-4 py-4 font-semibold text-slate-600 w-40">শিক্ষার্থীর নাম</th>
+                        <th class="border-b border-slate-200 px-4 py-4 font-semibold text-slate-600 w-40">শিক্ষার্থীর
+                            নাম</th>
                         <th class="border-b border-slate-200 px-4 py-4 font-semibold text-slate-600 w-16">রোল</th>
-                        <th
-                            v-for="subject in sortedSubjects"
-                            :key="subject.id"
-                            class="border-b border-slate-200 px-3 py-4 font-semibold text-slate-600 min-w-[100px] text-center"
-                        >
+                        <th v-for="subject in sortedSubjects" :key="subject.id"
+                            class="border-b border-slate-200 px-3 py-4 font-semibold text-slate-600 min-w-[100px] text-center">
                             <div class="text-xs leading-tight">
                                 <div>{{ subject.name }}</div>
                                 <div class="text-[10px] text-slate-400 font-normal">
@@ -310,37 +329,24 @@ async function saveAllMarks() {
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-200 bg-white">
-                    <tr
-                        v-for="(student, index) in filteredStudents"
-                        :key="student.id"
-                        class="hover:bg-slate-50 transition"
-                    >
+                    <tr v-for="(student, index) in filteredStudents" :key="student.id"
+                        class="hover:bg-slate-50 transition">
                         <td class="px-4 py-3 text-center text-slate-500">{{ index + 1 }}</td>
                         <td class="px-4 py-3 font-medium text-slate-800">{{ student.name }}</td>
                         <td class="px-4 py-3 text-center">{{ student.roll ?? '—' }}</td>
 
                         <!-- Mark input for each subject -->
-                        <td
-                            v-for="subject in sortedSubjects"
-                            :key="`${student.id}-${subject.id}`"
-                            class="px-2 py-2 relative"
-                        >
+                        <td v-for="subject in sortedSubjects" :key="`${student.id}-${subject.id}`"
+                            class="px-2 py-2 relative">
                             <div class="relative">
-                                <input
-                                    type="number"
-                                    :value="getMarkValue(student.id, subject.id)"
+                                <input type="number" :value="getMarkValue(student.id, subject.id)"
                                     @input="setMarkValue(student.id, subject.id, $event.target.value)"
-                                    :placeholder="`0-${subject.total_mark ?? 100}`"
-                                    min="0"
-                                    :max="subject.total_mark ?? 999"
-                                    step="0.5"
+                                    :placeholder="`0-${subject.total_mark ?? 100}`" min="0"
+                                    :max="subject.total_mark ?? 999" step="0.5"
                                     class="w-full px-2 py-1.5 text-center border rounded-md focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 outline-none transition-all text-sm"
-                                    :class="getMarkError(student.id, subject.id) ? 'border-red-400 bg-red-50' : 'border-slate-300'"
-                                />
-                                <div
-                                    v-if="getMarkError(student.id, subject.id)"
-                                    class="absolute -bottom-5 left-0 right-0 text-[10px] text-red-500 text-center leading-tight pointer-events-none"
-                                >
+                                    :class="getMarkError(student.id, subject.id) ? 'border-red-400 bg-red-50' : 'border-slate-300'" />
+                                <div v-if="getMarkError(student.id, subject.id)"
+                                    class="absolute -bottom-5 left-0 right-0 text-[10px] text-red-500 text-center leading-tight pointer-events-none">
                                     {{ getMarkError(student.id, subject.id) }}
                                 </div>
                             </div>
@@ -348,14 +354,11 @@ async function saveAllMarks() {
 
                         <!-- Save button per student -->
                         <td class="px-4 py-3 text-center">
-                            <button
-                                @click="saveStudentMarks(student.id)"
-                                :disabled="savingRows.has(student.id)"
+                            <button @click="saveStudentMarks(student.id)" :disabled="savingRows.has(student.id)"
                                 class="inline-flex items-center px-3 py-1.5 text-xs font-medium rounded-lg transition-all duration-150"
                                 :class="savingRows.has(student.id)
                                     ? 'bg-slate-200 text-slate-400 cursor-not-allowed'
-                                    : 'bg-indigo-50 text-indigo-700 hover:bg-indigo-100'"
-                            >
+                                    : 'bg-indigo-50 text-indigo-700 hover:bg-indigo-100'">
                                 <span v-if="savingRows.has(student.id)">
                                     {{ ui.saving ? 'সেইভ হচ্ছে...' : 'সংরক্ষণ' }}
                                 </span>
@@ -365,6 +368,13 @@ async function saveAllMarks() {
                     </tr>
                 </tbody>
             </table>
+
+            <div class="p-3 flex justify-end">
+                <AppButton v-if="selectedClassId && filteredStudents.length > 1" variant="primary" type="button"
+                    size="sm" @click="saveAllMarks">
+                    <Save /> <span class='ps-3'> সমস্ত সেইভ করুন </span>
+                </AppButton>
+            </div>
         </div>
 
         <!-- Bottom info bar -->
@@ -386,52 +396,7 @@ async function saveAllMarks() {
     <LayoutsRightAsside>
         <LayoutsRightAssideTitle> মার্ক ফিল্টার </LayoutsRightAssideTitle>
 
-        <!-- Class Selector -->
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1.5">
-                ক্লাস <span class="text-red-500">*</span>
-            </label>
-            <select
-                v-model="selectedClassId"
-                @change="onClassChange"
-                class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white"
-            >
-                <option value="" selected>ক্লাস নির্বাচন করুন</option>
-                <option
-                    v-for="cls in classesList"
-                    :key="cls.id"
-                    :value="cls.id"
-                >
-                    {{ cls.name }}
-                </option>
-            </select>
-        </div>
 
-        
-
-        <!-- Student Selector (optional filter) -->
-        <div>
-            <label class="block text-sm font-medium text-gray-700 mb-1.5">
-                শিক্ষার্থী
-                <span class="text-xs text-gray-400 font-normal">(ঐচ্ছিক)</span>
-            </label>
-            <select
-                v-model="selectedStudentId"
-                class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white"
-            >
-                <option :value="null">সকল শিক্ষার্থী</option>
-                <option
-                    v-for="student in [...studentsList].sort((a, b) => (a.roll ?? 0) - (b.roll ?? 0))"
-                    :key="student.id"
-                    :value="student.id"
-                >
-                    {{ student.name }} (রোল: {{ student.roll }})
-                </option>
-            </select>
-            <p class="mt-1.5 text-xs text-gray-500">
-                {{ isShowingAllStudents ? 'সকল শিক্ষার্থী প্রদর্শিত হচ্ছে' : 'নির্বাচিত শিক্ষার্থী প্রদর্শিত হচ্ছে' }}
-            </p>
-        </div>
 
         <!-- Summary -->
         <div v-if="selectedClassId" class="border-t border-slate-200 pt-4">
@@ -457,4 +422,3 @@ input[type="number"] {
     -moz-appearance: textfield;
 }
 </style>
-
