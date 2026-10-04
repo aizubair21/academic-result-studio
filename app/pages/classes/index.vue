@@ -86,10 +86,10 @@ async function handleDelete(id) {
         <template #header>
             <h1 class="text-3xl font-bold text-slate-900">ক্লাসসমূহ</h1>
             <!-- <AppButton variant="primary" type="button" @click="ui.showWizedModal = true">যোগ করুন</AppButton> -->
-            <LayoutsPartialsPanelRightOpen variant="primary" type="plus" />
+            <LayoutsPartialsPanelRightOpen variant="primary" type="plus" title="শ্রেনী যুক্ত করুন" />
         </template>
 
-        <AppEmpty v-if="classesList.length === 0" title="কোনো ক্লাস নেই"
+        <AppEmpty v-if="classesList.length === 0" title="এখনো কোন শ্রেনী যুক্ত করা হয়নি"
             description="একটি ক্লাস যোগ করতে '+' বাটনে ক্লিক করুন" />
 
         <div v-else class="overflow-x-auto border border-slate-200 bg-white shadow-lg shadow-slate-200/60 rounded-lg">

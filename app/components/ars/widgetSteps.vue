@@ -4,6 +4,7 @@ Shows all steps with icons, labels, and completion status.
 -->
 <script setup>
 	const widgetStore = useWidgetStore();
+	import { BarChart, BarChart2Icon, Barrel, Book, BookMarked, FileInput, Group, Home, HomeIcon, InspectionPanel, Layers, LucideBook, Users } from "@lucide/vue";
 </script>
 
 <template>

@@ -88,7 +88,7 @@ function getClassName(classId) {
     <AppCard>
         <template #header>
             <h1 class="text-3xl font-bold text-slate-900">বিষয়সমূহ</h1>
-            <LayoutsPartialsPanelRightOpen variant="primary" type="plus" />
+            <LayoutsPartialsPanelRightOpen variant="primary" type="plus" title="বিষয় যুক্ত করুন" />
 
             <!-- <AppButton variant="primary" type="button" @click="openCreateModal">যোগ করুন</AppButton> -->
         </template>

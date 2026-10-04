@@ -3,6 +3,7 @@ const props = defineProps({
     type: { type: String, default: 'asside' },
     variant: { type: String, default: 'ghost' },
     size: { default: 'sm' },
+    title: { type: String, default: '' }
 })
 import { PanelLeftOpen, Plus } from '@lucide/vue';
 const ui = useUiStore();
@@ -15,7 +16,7 @@ const sidebarOpen = computed({
 </script>
 
 <template>
-    <AppButton class="mt-0" :variant="variant" :size="size" title="Toggle sidebar" @click="sidebarOpen = !sidebarOpen">
+    <AppButton class="mt-0" :variant :size :title @click="sidebarOpen = !sidebarOpen">
         <PanelLeftOpen v-if="type == 'asside'" />
         <Plus v-else />
     </AppButton>

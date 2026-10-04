@@ -1,5 +1,7 @@
 <script lang="ts" setup>
 import { WorkflowResolver } from './service/workflowResolver'
+
+
 onMounted(async () => {
   const resolver = new WorkflowResolver();
   await resolver.resolve();
@@ -11,7 +13,7 @@ onMounted(async () => {
 <template>
   <NuxtLayout>
     <NuxtRouteAnnouncer/>
-    <NuxtPage></NuxtPage>
+    <NuxtPage />
   </NuxtLayout>
 </template>
 

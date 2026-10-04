@@ -82,7 +82,7 @@ function getClassName(classId) {
         <template #header>
             <h1 class="text-3xl font-bold text-slate-900">শিক্ষার্থীবৃন্দ</h1>
 
-            <LayoutsPartialsPanelRightOpen variant="primary" type="plus" />
+            <LayoutsPartialsPanelRightOpen variant="primary" type="plus" title="শিক্ষার্থী যুক্ত করুন" />
         </template>
 
 

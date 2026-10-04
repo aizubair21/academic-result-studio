@@ -1,8 +1,3 @@
-<!--
-Widget Panel — Onboarding workflow panel for the index page.
-Handles step-by-step setup of institute, classes, subjects, and students.
-Supports multiple entries per step with a "Next Step" button.
--->
 <script setup>
 const widget = useWidgetStore();
 const ui = useUiStore();
@@ -10,6 +5,7 @@ const instituteRepo = useInstitute();
 const classesRepo = useClasses();
 const subjectsRepo = useSubjects();
 const studentsRepo = useStudents();
+import { BarChart, BarChart2Icon, Barrel, Book, BookMarked, FileInput, Group, Home, HomeIcon, InspectionPanel, Layers, LucideBook, Users } from "@lucide/vue";
 
 // Track if item was just created to show "Add Another" state
 const lastCreated = ref(false);
@@ -77,6 +73,14 @@ const currentStepInfo = computed(() => {
   return widget.widgetSteps.find(s => s.widget === widget.workflow.current);
 });
 
+
+// data information
+const existedData = async() => {
+  const cls = await classesRepo.count();
+  const subj = await subjectsRepo.count();
+  const std = await studentsRepo.count();
+}
+
 // Check if institute exists
 const instituteExists = ref(false);
 onMounted(async () => {
@@ -100,24 +104,24 @@ onMounted(async () => {
       </div> -->
 
       <!-- Quick Stats -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
-          <div class="text-2xl mb-2">🏫</div>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 rounded-xl bg-white border border-slate-200">
+        <div class="p-5 ">
+          <Home :size="17" />
           <div class="text-sm font-medium text-slate-500">প্রতিষ্ঠান</div>
           <div class="text-lg font-bold text-slate-900">১টি যুক্ত</div>
         </div>
-        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
-          <div class="text-2xl mb-2">📚</div>
+        <div class="p-5 ">
+          <Layers :size="17" />
           <div class="text-sm font-medium text-slate-500">ক্লাস</div>
           <div class="text-lg font-bold text-slate-900">যুক্ত হয়েছে</div>
         </div>
-        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
-          <div class="text-2xl mb-2">📖</div>
+        <div class="p-5 ">
+          <BookMarked :size="17" />
           <div class="text-sm font-medium text-slate-500">বিষয়</div>
           <div class="text-lg font-bold text-slate-900">যুক্ত হয়েছে</div>
         </div>
-        <div class="bg-white p-5 rounded-xl border border-slate-200 shadow-sm hover:shadow-md transition-shadow">
-          <div class="text-2xl mb-2">👨‍🎓</div>
+        <div class="p-5 ">
+          <Users :size="17" />
           <div class="text-sm font-medium text-slate-500">শিক্ষার্থী</div>
           <div class="text-lg font-bold text-slate-900">যুক্ত হয়েছে</div>
         </div>
@@ -129,7 +133,8 @@ onMounted(async () => {
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <NuxtLink to="/institute"
             class="flex items-center gap-3 p-3 rounded-lg bg-slate-50 hover:bg-indigo-50 transition-colors group">
-            <span class="text-xl">🏫</span>
+            <Home :size="17" />
+
             <div>
               <div class="text-sm font-medium text-slate-700 group-hover:text-indigo-700">প্রতিষ্ঠান</div>
               <div class="text-xs text-slate-400">প্রতিষ্ঠানের তথ্য দেখুন</div>
@@ -137,7 +142,8 @@ onMounted(async () => {
           </NuxtLink>
           <NuxtLink to="/classes"
             class="flex items-center gap-3 p-3 rounded-lg bg-slate-50 hover:bg-indigo-50 transition-colors group">
-            <span class="text-xl">📚</span>
+            <Layers :size="17" />
+
             <div>
               <div class="text-sm font-medium text-slate-700 group-hover:text-indigo-700">ক্লাস</div>
               <div class="text-xs text-slate-400">ক্লাস পরিচালনা করুন</div>
@@ -145,7 +151,8 @@ onMounted(async () => {
           </NuxtLink>
           <NuxtLink to="/subjects"
             class="flex items-center gap-3 p-3 rounded-lg bg-slate-50 hover:bg-indigo-50 transition-colors group">
-            <span class="text-xl">📖</span>
+            <BookMarked :size="17" />
+
             <div>
               <div class="text-sm font-medium text-slate-700 group-hover:text-indigo-700">বিষয়</div>
               <div class="text-xs text-slate-400">বিষয় পরিচালনা করুন</div>
@@ -153,7 +160,8 @@ onMounted(async () => {
           </NuxtLink>
           <NuxtLink to="/students"
             class="flex items-center gap-3 p-3 rounded-lg bg-slate-50 hover:bg-indigo-50 transition-colors group">
-            <span class="text-xl">👨‍🎓</span>
+            <Users :size="17" />
+
             <div>
               <div class="text-sm font-medium text-slate-700 group-hover:text-indigo-700">শিক্ষার্থী</div>
               <div class="text-xs text-slate-400">শিক্ষার্থী পরিচালনা করুন</div>
@@ -172,7 +180,7 @@ onMounted(async () => {
             'bg-emerald-100 text-emerald-600': widget.workflow.completed[currentStepInfo?.widget],
             'bg-indigo-100 text-indigo-600': !widget.workflow.completed[currentStepInfo?.widget],
           }">
-            {{ currentStepInfo?.icon }}
+            <component :is="currentStepInfo?.icon" class="flex items-center w-full mb-2" :size="17" />
           </div>
           <div class="flex-1">
             <h2 class="text-xl font-bold text-slate-900">
@@ -274,8 +282,11 @@ onMounted(async () => {
           </button>
         </div>
       </div>
+
+
     </template>
   </div>
+
 </template>
 
 <style scoped>

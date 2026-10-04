@@ -6,7 +6,7 @@ Displays welcome section, step progress, and the current workflow form.
 import { WorkflowResolver } from '~/service/workflowResolver'
 
 definePageMeta({
-  layout: 'app',
+  layout: 'master',
 })
 
 const widget = useWidgetStore();
@@ -31,11 +31,8 @@ onMounted(async () => {
 
 <template>
   <div class="min-h-[calc(100vh-200px)]">
-    
-
-    <!-- Dashboard Hero (all completed) -->
-    <div v-if="widget.workflow.current == 'dashboard'" class="mb-6">
-      <div class="bg-gradient-to-r from-emerald-500 to-teal-600 rounded-2xl p-8 text-white shadow-xl">
+    <div v-if="widget.workflow.current == 'dashboard'" class="mb-6 flex items-center justify-center">
+      <div class="bg-gradient-to-r from-emerald-500 to-teal-600 rounded-2xl p-8 text-white shadow-xl max-w-xl">
         <div class="flex items-center gap-4">
           <div class="text-5xl">🎉</div>
           <div>
@@ -48,10 +45,6 @@ onMounted(async () => {
       </div>
     </div>
 
-    <!-- Steps Progress Indicator -->
-    <!-- <ArsWidgetSteps /> -->
-
-    <!-- Workflow Panel (Form / Dashboard) -->
     <ArsWidgetPanel />
   </div>
 </template>

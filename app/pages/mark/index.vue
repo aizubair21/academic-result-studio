@@ -255,15 +255,15 @@ async function saveAllMarks() {
             <LayoutsPartialsPanelRightOpen />
         </template>
 
-        <div class="flex items-start justify-start mb-4 gap-2">
+        <div class="flex items-start justify-between md:justify-start mb-4 gap-3">
             <!-- Class Selector -->
             <div v-if="selectedClassId">
                 <label class="block text-sm font-medium text-gray-700 mb-1.5">
-                    ক্লাস <span class="text-red-500">*</span>
+                    শ্রেনী <span class="text-red-500">*</span>
                 </label>
                 <select v-model="selectedClassId" @change="onClassChange"
-                    class="mx-w-sm px-2 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white">
-                    <option :value="null">ক্লাস নির্বাচন করুন</option>
+                    class="w-full md:w-sm px-2 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white">
+                    <option :value="null">একটি শ্রেনী বেছে নিন</option>
                     <option v-for="cls in classesList" :key="cls.id" :value="cls.id">
                         {{ cls.name }}
                     </option>
@@ -277,7 +277,7 @@ async function saveAllMarks() {
                     <span class="text-xs text-gray-400 font-normal">(ঐচ্ছিক)</span>
                 </label>
                 <select v-model="selectedStudentId"
-                    class="mx-w-sm px-2 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white">
+                    class="w-full md:w-sm px-2 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white">
                     <option :value="null">সকল শিক্ষার্থী</option>
                     <option v-for="student in [...studentsList].sort((a, b) => (a.roll ?? 0) - (b.roll ?? 0))"
                         :key="student.id" :value="student.id">
@@ -292,13 +292,15 @@ async function saveAllMarks() {
         </div>
 
         <!-- No class selected -->
-        <AppEmpty v-if="!selectedClassId" title="ক্লাস নির্বাচন করুন"
-            description=" একটি ক্লাস নির্বাচনের মাধ্যমে মার্ক এন্ট্রি শুরু করুন।  ">
+        <AppEmpty v-if="!selectedClassId" title="মার্ক এন্ট্রি"
+            description=" যে শ্রেণির শিক্ষার্থীদের মার্ক দিতে চান, প্রথমে সেই শ্রেণিটি নির্বাচন করুন। ">
             <div class="my-2">
-
+                <label class="block text-sm font-medium text-gray-700 mb-1.5">
+                    শ্রেনী
+                </label>
                 <select v-model="selectedClassId" @change="onClassChange"
                     class="mx-w-lg px-2 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white">
-                    <option :value="null">ক্লাস নির্বাচন করুন</option>
+                    <option :value="null">একটি শ্রেনী বেছে নিন</option>
                     <option v-for="cls in classesList" :key="cls.id" :value="cls.id">
                         {{ cls.name }}
                     </option>
@@ -307,15 +309,15 @@ async function saveAllMarks() {
         </AppEmpty>
 
         <!-- No subjects found -->
-        <AppEmpty v-else-if="subjectsList.length === 0" title="কোনো বিষয় নেই"
-            description="এই ক্লাসের জন্য কোনো বিষয় যোগ করা হয়নি। বিষয় পৃষ্ঠা থেকে বিষয় যোগ করুন।">
+        <AppEmpty v-else-if="subjectsList.length === 0" title=" মার্ক এন্ট্রি "
+            description="এই ক্লাসের জন্য কোনো বিষয় যোগ করা হয়নি। মার্ক এন্ট্রির জন্য বিষয় পৃষ্ঠা থেকে বিষয় যোগ করুন।">
 
             <NuxtLink to="subjects"> বিষয় যুক্ত করুন </NuxtLink>
         </AppEmpty>
 
         <!-- No students found -->
-        <AppEmpty v-else-if="studentsList.length === 0" title="কোনো শিক্ষার্থী নেই"
-            description="এই ক্লাসের জন্য কোনো শিক্ষার্থী যোগ করা হয়নি। শিক্ষার্থী পৃষ্ঠা থেকে শিক্ষার্থী যোগ করুন।">
+        <AppEmpty v-else-if="studentsList.length === 0" title="মার্ক এন্ট্রি"
+            description="এই ক্লাসের জন্য কোনো শিক্ষার্থী যোগ করা হয়নি। মার্ক এন্ট্রির জন্য শিক্ষার্থী পৃষ্ঠা থেকে শিক্ষার্থী যোগ করুন।">
 
             <NuxtLink to="students"> শিক্ষার্থী যুক্ত করুন </NuxtLink>
         </AppEmpty>

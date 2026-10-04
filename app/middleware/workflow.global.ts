@@ -44,6 +44,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
     // ── Resolve workflow from actual DB state ─────────────────────
     const widgetStore = useWidgetStore();
     const resolver = new WorkflowResolver();
+    const ui = useUiStore();
 
     try {
         await resolver.resolve();
@@ -62,9 +63,8 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 
             // Only show toast when navigating from a different page
             // (not on first app load) and if a toast store exists.
-            if (from && from.path && from.path !== to.path) {
+            if (from && from.path && ( from.path !== to.path) ) {
                 try {
-                    const ui = useUiStore();
                     ui.showToast('error', `আগে "${step}" সম্পন্ন করুন`);
                 } catch {
                     // uiStore may not be ready; ignore.
