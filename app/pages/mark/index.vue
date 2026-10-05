@@ -259,7 +259,7 @@ async function saveAllMarks() {
             <!-- Class Selector -->
             <div v-if="selectedClassId">
                 <label class="block text-sm font-medium text-gray-700 mb-1.5">
-                    শ্রেনী <span class="text-red-500">*</span>
+                    শ্রেনী
                 </label>
                 <select v-model="selectedClassId" @change="onClassChange"
                     class="w-full md:w-sm px-2 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white">
@@ -274,7 +274,6 @@ async function saveAllMarks() {
             <div v-if="selectedClassId">
                 <label class="block text-sm font-medium text-gray-700 mb-1.5">
                     শিক্ষার্থী
-                    <span class="text-xs text-gray-400 font-normal">(ঐচ্ছিক)</span>
                 </label>
                 <select v-model="selectedStudentId"
                     class="w-full md:w-sm px-2 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none transition-all bg-white">
@@ -327,38 +326,37 @@ async function saveAllMarks() {
             <table class="min-w-full border-collapse text-left text-sm text-slate-700">
                 <thead class="bg-slate-50">
                     <tr>
-                        <th class="border-b border-slate-200 px-4 py-4 font-semibold text-slate-600 w-14">ক্রমিক</th>
-                        <th class="border-b border-slate-200 px-4 py-4 font-semibold text-slate-600 w-40">শিক্ষার্থীর
-                            নাম</th>
-                        <th class="border-b border-slate-200 px-4 py-4 font-semibold text-slate-600 w-16">রোল</th>
+                        <th class="border-b border-slate-200 px-4 py-4 font-semibold text-slate-600 max-w-10">ক্রমিক</th>
+                        <th class="border-b border-slate-200 px-4 py-4 font-semibold text-slate-600 w-20">                           নাম</th>
+                        <th class="border-b border-slate-200 px-4 py-4 font-semibold text-slate-600 w-8">রোল</th>
                         <th v-for="subject in sortedSubjects" :key="subject.id"
-                            class="border-b border-slate-200 px-3 py-4 font-semibold text-slate-600 min-w-[100px] text-center">
-                            <div class="text-xs leading-tight">
-                                <div>{{ subject.name }}</div>
-                                <div class="text-[10px] text-slate-400 font-normal">
+                            class="border-b border-slate-200 px-3 py-4 font-semibold text-slate-600 text-center" style="width: 20px;">
+                            <div class="text-xs leading-center w-auto">
+                                <div class="w-auto">{{ subject.name }}</div>
+                                <div class="text-[10px] w-auto text-slate-400 font-normal">
                                     ({{ subject.total_mark ?? '—' }}/{{ subject.pass_mark ?? '—' }})
                                 </div>
                             </div>
                         </th>
-                        <th class="border-b border-slate-200 px-4 py-4 font-semibold text-slate-600 w-20">অ্যাকশন</th>
+                        <th class="border-b border-slate-200 px-4 py-4 font-semibold text-slate-600 text-right ">অ্যাকশন</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-slate-200 bg-white">
                     <tr v-for="(student, index) in filteredStudents" :key="student.id"
                         class="hover:bg-slate-50 transition">
-                        <td class="px-4 py-3 text-center text-slate-500">{{ index + 1 }}</td>
-                        <td class="px-4 py-3 font-medium text-slate-800">{{ student.name }}</td>
-                        <td class="px-4 py-3 text-center">{{ student.roll ?? '—' }}</td>
+                        <td class="px-4 py-3 text-slate-500 w-10">{{ index + 1 }}</td>
+                        <td class="px-4 py-3 font-medium text-slate-800 w-20">{{ student.name }}</td>
+                        <td class="px-4 py-3 w-8 text-left">{{ student.roll ?? '—' }}</td>
 
                         <!-- Mark input for each subject -->
                         <td v-for="subject in sortedSubjects" :key="`${student.id}-${subject.id}`"
-                            class="px-2 py-2 relative">
+                            class="px-2 py-2 relative text-center" style="width:20px">
                             <div class="relative">
                                 <input type="number" :value="getMarkValue(student.id, subject.id)"
                                     @input="setMarkValue(student.id, subject.id, $event.target.value)"
                                     :placeholder="`0-${subject.total_mark ?? 100}`" min="0"
                                     :max="subject.total_mark ?? 999" step="0.5"
-                                    class="w-full px-2 py-1.5 text-center border rounded-md focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 outline-none transition-all text-sm"
+                                    class="w-auto px-2 py-1.5 text-center border rounded-md focus:ring-2 focus:ring-indigo-400 focus:border-indigo-400 outline-none transition-all text-sm"
                                     :class="getMarkError(student.id, subject.id) ? 'border-red-400 bg-red-50' : 'border-slate-300'" />
                                 <div v-if="getMarkError(student.id, subject.id)"
                                     class="absolute -bottom-5 left-0 right-0 text-[10px] text-red-500 text-center leading-tight pointer-events-none">
@@ -368,7 +366,7 @@ async function saveAllMarks() {
                         </td>
 
                         <!-- Save button per student -->
-                        <td class="px-4 py-3 text-center">
+                        <td class="px-4 py-3 text-right">
                             <button @click="saveStudentMarks(student.id)" :disabled="savingRows.has(student.id)"
                                 class="inline-flex items-center px-3 py-1.5 text-xs font-medium rounded-lg transition-all duration-150"
                                 :class="savingRows.has(student.id)
@@ -384,8 +382,8 @@ async function saveAllMarks() {
                 </tbody>
             </table>
 
-            <div class="p-3 flex justify-end">
-                <AppButton v-if="selectedClassId && filteredStudents.length > 1" variant="primary" type="button"
+            <div class="p-3 flex justify-end"> 
+                <AppButton v-if="selectedClassId && filteredStudents.length > 1" variant="primary" type="button" :icon="false"
                     size="sm" @click="saveAllMarks">
                     <Save /> <span class='ps-3'> সমস্ত সেইভ করুন </span>
                 </AppButton>

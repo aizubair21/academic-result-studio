@@ -263,23 +263,21 @@ onMounted(async () => {
 
         <div class="flex items-center gap-3">
           <!-- "Next Step" button for multi-entry steps -->
-          <button v-if="currentStepAllowsMultiple" type="button" @click="handleNextStep"
-            class="px-6 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all font-medium flex items-center gap-2 shadow-sm hover:shadow-md">
+          <AppButton v-if="currentStepAllowsMultiple" type="button" @click="handleNextStep" variant="primary">
             পরবর্তী ধাপ
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <!-- <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-            </svg>
-          </button>
+            </svg> -->
+          </AppButton>
 
           <!-- "Next Step" for single-entry (institute) — auto-advances via resolver -->
-          <button v-if="!currentStepAllowsMultiple && widget.workflow.completed['institute']" type="button"
-            @click="handleNextStep"
-            class="px-6 py-2.5 bg-indigo-600 text-white rounded-lg hover:bg-indigo-700 transition-all font-medium flex items-center gap-2 shadow-sm hover:shadow-md">
+          <AppButton variant="primary" v-if="!currentStepAllowsMultiple && widget.workflow.completed['institute']" type="button"
+            @click="handleNextStep">
             পরবর্তী ধাপ
-            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <!-- <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7l5 5m0 0l-5 5m5-5H6" />
-            </svg>
-          </button>
+            </svg> -->
+          </AppButton>
         </div>
       </div>
 

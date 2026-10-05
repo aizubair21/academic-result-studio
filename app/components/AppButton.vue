@@ -1,9 +1,13 @@
 <script lang="ts" setup>
+
+import { ChevronRight } from "@lucide/vue";
+
 const ui = useUiStore()
 defineProps({
   variant: { type: String, default: 'primary' },
   size: { type: String, default: 'md' },
-  type: { type: String, default: 'button' }
+  type: { type: String, default: 'button' },
+  icon: { type: Boolean, default: true }
 })
 
 const variantClasses = {
@@ -29,6 +33,8 @@ const sizeClasses = {
     </svg>
 
     <slot />
+
+    <ChevronRight size="17" class="ml-2" v-if="icon"/>
 
   </button>
 </template>

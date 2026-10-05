@@ -8,6 +8,8 @@ export const useWidgetStore = defineStore('widget', () => {
       icon: 'Home',
       description: 'প্রতিষ্ঠানের নাম যোগ করুন',
       allowMultiple: false,
+      buttonText: '',
+      nextError: '',
     },
     {
       name: 'ক্লাস',
@@ -15,6 +17,8 @@ export const useWidgetStore = defineStore('widget', () => {
       icon: 'Layers',
       description: 'ক্লাস সমূহ যোগ করুন (একাধিক)',
       allowMultiple: true,
+      buttonText: '',
+      nextError: '',
     },
     {
       name: 'বিষয়',
@@ -22,6 +26,8 @@ export const useWidgetStore = defineStore('widget', () => {
       icon: 'BookMarked',
       description: 'প্রতিটি ক্লাসের বিষয় যোগ করুন (একাধিক)',
       allowMultiple: true,
+      buttonText: '',
+      nextError: '',
     },
     {
       name: 'শিক্ষার্থী',
@@ -29,6 +35,8 @@ export const useWidgetStore = defineStore('widget', () => {
       icon: "Users",
       description: 'শিক্ষার্থীদের তথ্য যোগ করুন (একাধিক)',
       allowMultiple: true,
+      buttonText: '',
+      nextError: '',
     },
   ];
 

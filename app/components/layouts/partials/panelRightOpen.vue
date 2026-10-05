@@ -16,7 +16,7 @@ const sidebarOpen = computed({
 </script>
 
 <template>
-    <AppButton class="mt-0" :variant :size :title @click="sidebarOpen = !sidebarOpen">
+    <AppButton class="mt-0" :variant :size :title :icon="false" @click="sidebarOpen = !sidebarOpen">
         <PanelLeftOpen v-if="type == 'asside'" />
         <Plus v-else />
     </AppButton>

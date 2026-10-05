@@ -12,7 +12,6 @@ onMounted(async () => {
 
 <template>
   <NuxtLayout>
-    <NuxtRouteAnnouncer/>
     <NuxtPage />
   </NuxtLayout>
 </template>

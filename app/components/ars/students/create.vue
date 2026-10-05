@@ -149,6 +149,7 @@ async function importStudentsFile() {
     }
     await Promise.allSettled(ops);
     ui.showToast('success', `${success} সফলভাবে আমদানি হয়েছে, ${failed} ত্রুটি`);
+    ui.sidebarOpen = false;
     emit('saved');
   } catch (err) {
     ui.showToast('error', 'আমদানি করতে সমস্যা হয়েছে: ' + (err.message || err));
@@ -192,7 +193,7 @@ async function importStudentsFile() {
     </div>
 
     <!-- Success feedback -->
-    <div v-if="justSaved" class="flex items-center gap-2 text-sm text-emerald-600 bg-emerald-50 px-4 py-2 rounded-lg">
+    <div v-if="justSaved && !ui.sidebarOpen" class="flex items-center gap-2 text-sm text-emerald-600 bg-emerald-50 px-4 py-2 rounded-lg">
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
       </svg>
@@ -201,14 +202,13 @@ async function importStudentsFile() {
 
     <!-- Actions -->
     <div class="flex gap-3 pt-2">
-      <button type="submit" :disabled="ui.saving"
-        class="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-medium flex items-center gap-2">
+      <AppButton type="submit" :disabled="ui.saving" variant="primary">
         <svg v-if="ui.saving" class="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
           <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none" />
           <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
         </svg>
         {{ ui.saving ? 'সংরক্ষণ হচ্ছে...' : 'শিক্ষার্থী যোগ করুন' }}
-      </button>
+      </AppButton>
     </div>
   </form>
 
@@ -218,14 +218,13 @@ async function importStudentsFile() {
     <p class="text-sm text-slate-600 mb-3">প্রথম সারিতে হেডার দিতে হবে। প্রথম কলামটি অবশ্যই ক্লাস আইডি থাকবে, তারপর
       কলামগুলো হতে পারে: <strong>name, roll</strong>. উদাহরণ: <em>classId,name,roll</em></p>
     <input id="students-import-file" type="file" accept="text/csv" @change="handleImportFile" class="mb-2" />
-    <div class="flex gap-2">
+    <div class="flex gap-2 mt-2">
       <AppButton variant="primary" :disabled="importing" @click="importStudentsFile">
         Import CSV
       </AppButton>
-      <button
-        @click="() => { importFile = null; const el = document.querySelector('#students-import-file'); if (el) (el as HTMLInputElement).value = ''; }"
-        class="px-3 py-2 rounded border">Clear
-      </button>
+      <AppButton variant="ghost" type="button" :icon="false"
+        @click="() => { importFile = null; const el = document.querySelector('#students-import-file'); if (el) (el as HTMLInputElement).value = ''; }">Clear
+      </AppButton>
     </div>
     <div v-if="importResults.length" class="mt-3 text-sm">
       <div v-for="(r, i) in importResults" :key="i" class="py-1">

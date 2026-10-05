@@ -142,7 +142,7 @@ async function handleResetAll() {
 
 <template>
 
-  <header class="sticky top-0 z-40 h-[72px] border-b border-slate-200 bg-white/90 backdrop-blur">
+  <header class="sticky top-0 z-40 h-[72px] border-b border-slate-200  backdrop-blur">
     <div class="mx-auto flex h-full max-w-[1440px] items-center justify-between px-4">
       <NuxtLink to="/" class="flex items-center gap-3">
         <div

@@ -13,7 +13,7 @@ const props = defineProps({
       <h3 v-if="title" class="text-2xl font-semibold text-slate-900">{{ title }}</h3>
     </div>
 
-    <div v-if="$slots.header" class="flex items-center justify-between py-5 px-2 lg:px-5 border-b">
+    <div v-if="$slots.header" class="flex items-center justify-between py-5 px-2 lg:px-5 border-b  backdrop-blur">
       <slot name="header"></slot>
     </div>
 
