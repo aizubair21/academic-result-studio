@@ -1,7 +1,3 @@
-<!--
-Index Page — Main onboarding dashboard.
-Displays welcome section, step progress, and the current workflow form.
--->
 <script lang="ts" setup>
 import { WorkflowResolver } from '~/service/workflowResolver'
 
@@ -11,6 +7,7 @@ definePageMeta({
 
 const widget = useWidgetStore();
 const ui = useUiStore();
+const showOpenModal = ref(false)
 
 // Resolve workflow on mount to determine current step
 onMounted(async () => {
@@ -31,21 +28,22 @@ onMounted(async () => {
 
 <template>
   <div class="min-h-[calc(100vh-200px)]">
-    <div v-if="widget.workflow.current == 'dashboard'" class="mb-6 flex items-center justify-center">
-      <div class="bg-gradient-to-r from-emerald-500 to-teal-600 rounded-2xl p-8 text-white shadow-xl max-w-xl">
-        <div class="flex items-center gap-4">
-          <div class="text-5xl">🎉</div>
-          <div>
-            <h1 class="text-2xl font-bold">সবকিছু প্রস্তুত!</h1>
-            <p class="text-emerald-100 mt-1">
-              {{ instituteData?.name || 'আপনার প্রতিষ্ঠান' }} — রেজাল্ট ম্যানেজমেন্ট শুরু করতে প্রস্তুত।
-            </p>
-          </div>
+    <div v-if="widget.workflow.current == 'dashboard'" class="mb-6 md:flex items-start gap-4 justify-center">
+
+      <div class="">      
+        <ArsWidgetWelcome />
+        <ArsWidgetPanel />
+
+
+
+        <div>
+
+
         </div>
       </div>
+
     </div>
 
-    <ArsWidgetPanel />
   </div>
 </template>
 

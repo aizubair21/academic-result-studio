@@ -53,13 +53,13 @@ async function handleSubmit() {
     form.roll = '';
     form.classId = ui.selectedClassId;
 
-    ui.showToast('success', `"${form.name || 'শিক্ষার্থী'}" যুক্ত হয়েছে`);
+    ui.showToast('success', `শিক্ষার্থী যুক্ত হয়েছে`);
 
     // await loadClasses();
     emit('saved');
 
   } catch (err) {
-    ui.showToast('error', 'শিক্ষার্থী যুক্ত করতে সমস্যা হয়েছে: ' + (err.message || err));
+    ui.showToast('error', 'সমস্যা হয়েছে: ' + (err.message || err));
   } finally {
     ui.saving = false;
   }

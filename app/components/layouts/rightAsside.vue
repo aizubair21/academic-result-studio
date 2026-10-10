@@ -25,13 +25,13 @@ function checkMobile() {
   <!-- Mobile: Slide-over drawer from right -->
   <Teleport to="body">
     <Transition name="drawer">
-      <div v-if="ui.sidebarOpen" class="fixed inset-0 z-[60]">
+      <div v-if="ui.sidebarOpen" class="fixed inset-0 z-[90]">
         <!-- Backdrop -->
         <div class="fixed inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300"
           @click="ui.sidebarOpen = false"></div>
         <!-- Drawer panel -->
-        <aside class="fixed right-0 top-0 bottom-0 w-[320px] max-w-[85vw] bg-white shadow-2xl overflow-y-auto z-[61]">
-          <div class="flex items-center justify-between border-b border-slate-200 px-4 py-3">
+        <div class="fixed top-0 bottom-0 right-0 max-w-[300px] bg-white shadow-2xl overflow-y-scroll z-[61] h-screen md:h-auto">
+          <div class="flex items-center justify-between border-b border-slate-200 px-4 py-3 sticky bg-white top-0">
             <h2 class="text-sm font-semibold text-slate-700"> {{ title }} </h2>
             <button
               class="inline-flex h-8 w-8 items-center justify-center rounded-lg bg-slate-100 text-slate-500 hover:bg-slate-200 transition"
@@ -49,7 +49,7 @@ function checkMobile() {
             </div>
 
             <!-- Page-specific drawer content teleported from LayoutsRightAsside -->
-            <div id="mobile-drawer-content">
+            <div >
               <slot></slot>
             </div>
             <!-- Fallback content when no page-specific content is provided -->
@@ -60,7 +60,7 @@ function checkMobile() {
                 </div>
               </div> -->
           </div>
-        </aside>
+        </div>
       </div>
     </Transition>
   </Teleport>

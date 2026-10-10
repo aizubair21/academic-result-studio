@@ -8,7 +8,7 @@ Shows all steps with icons, labels, and completion status.
 </script>
 
 <template>
-	<div v-if="widgetStore.workflow.current !== 'dashboard'" class="mb-8">
+	<div class="mb-8">
 		<!-- Step Progress Bar -->
 		<div class="flex flex-col items-center justify-center mb-2 overflow-x-auto px-2">
 			<div
@@ -58,8 +58,6 @@ Shows all steps with icons, labels, and completion status.
 			</div>
 		</div>
 
-		<!-- Progress Text -->
-		<!-- Progress Circle -->
 		 <div>
 			<div class="hidden sm:flex flex-col items-center">
 				<div class="relative w-20 h-20">

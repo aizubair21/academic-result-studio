@@ -2,12 +2,13 @@
 export const useUiStore = defineStore('ui', () => {
   const loading = ref(false)
   const saving = ref(false)
-  const saveButtonText = ref('সেইভ করুন')
-  const updateButtonText = ref('‍আফডেট করুন')
-  const addButtonText = ref('যোগ করুন')
+  const saveButtonText = ref('সংরক্ণ করুন')
+  const updateButtonText = ref('সংরক্ষণ করুন')
+  const addButtonText = ref('যুক্থ করুন')
+  const cancleButtonText = ref('বাতিল করুন')
   let timeoutId = null;
 
-  const showWizedModal = ref(false)
+  const showWizedModal = ref('')
   const selectedClassId = ref(null)
   const selectedStudentId = ref(null)
   const selectedSbujectId = ref(null)

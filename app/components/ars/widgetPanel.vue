@@ -93,86 +93,10 @@ onMounted(async () => {
 
 <template>
   <div class="max-w-3xl mx-auto">
-    <!-- Dashboard View (all steps completed) -->
-    <div v-if="widget.workflow.current === 'dashboard'" class="space-y-6">
-      <!-- Dashboard Header -->
-      <!-- <div class="text-center py-8">
-        <div class="text-5xl mb-4">🎉</div>
-        <h1 class="text-3xl font-bold text-slate-900 mb-2">সবকিছু প্রস্তুত!</h1>
-        <p class="text-slate-500 text-lg">আপনার প্রতিষ্ঠানের ড্যাশবোর্ডে স্বাগতম। এখন আপনি রেজাল্ট ম্যানেজমেন্ট শুরু
-          করতে প্রস্তুত।</p>
-      </div> -->
 
-      <!-- Quick Stats -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 rounded-xl bg-white border border-slate-200">
-        <div class="p-5 ">
-          <Home :size="17" />
-          <div class="text-sm font-medium text-slate-500">প্রতিষ্ঠান</div>
-          <div class="text-lg font-bold text-slate-900">১টি যুক্ত</div>
-        </div>
-        <div class="p-5 ">
-          <Layers :size="17" />
-          <div class="text-sm font-medium text-slate-500">ক্লাস</div>
-          <div class="text-lg font-bold text-slate-900">যুক্ত হয়েছে</div>
-        </div>
-        <div class="p-5 ">
-          <BookMarked :size="17" />
-          <div class="text-sm font-medium text-slate-500">বিষয়</div>
-          <div class="text-lg font-bold text-slate-900">যুক্ত হয়েছে</div>
-        </div>
-        <div class="p-5 ">
-          <Users :size="17" />
-          <div class="text-sm font-medium text-slate-500">শিক্ষার্থী</div>
-          <div class="text-lg font-bold text-slate-900">যুক্ত হয়েছে</div>
-        </div>
-      </div>
-
-      <!-- Navigation Links -->
-      <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm">
-        <h3 class="text-lg font-semibold text-slate-900 mb-4">দ্রুত নেভিগেশন</h3>
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-          <NuxtLink to="/institute"
-            class="flex items-center gap-3 p-3 rounded-lg bg-slate-50 hover:bg-indigo-50 transition-colors group">
-            <Home :size="17" />
-
-            <div>
-              <div class="text-sm font-medium text-slate-700 group-hover:text-indigo-700">প্রতিষ্ঠান</div>
-              <div class="text-xs text-slate-400">প্রতিষ্ঠানের তথ্য দেখুন</div>
-            </div>
-          </NuxtLink>
-          <NuxtLink to="/classes"
-            class="flex items-center gap-3 p-3 rounded-lg bg-slate-50 hover:bg-indigo-50 transition-colors group">
-            <Layers :size="17" />
-
-            <div>
-              <div class="text-sm font-medium text-slate-700 group-hover:text-indigo-700">ক্লাস</div>
-              <div class="text-xs text-slate-400">ক্লাস পরিচালনা করুন</div>
-            </div>
-          </NuxtLink>
-          <NuxtLink to="/subjects"
-            class="flex items-center gap-3 p-3 rounded-lg bg-slate-50 hover:bg-indigo-50 transition-colors group">
-            <BookMarked :size="17" />
-
-            <div>
-              <div class="text-sm font-medium text-slate-700 group-hover:text-indigo-700">বিষয়</div>
-              <div class="text-xs text-slate-400">বিষয় পরিচালনা করুন</div>
-            </div>
-          </NuxtLink>
-          <NuxtLink to="/students"
-            class="flex items-center gap-3 p-3 rounded-lg bg-slate-50 hover:bg-indigo-50 transition-colors group">
-            <Users :size="17" />
-
-            <div>
-              <div class="text-sm font-medium text-slate-700 group-hover:text-indigo-700">শিক্ষার্থী</div>
-              <div class="text-xs text-slate-400">শিক্ষার্থী পরিচালনা করুন</div>
-            </div>
-          </NuxtLink>
-        </div>
-      </div>
-    </div>
 
     <!-- Onboarding View -->
-    <template v-else>
+    <template v-if="widget.workflow.current != 'dashboard'">
       <!-- Step Header -->
       <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm mb-6">
         <div class="flex items-center gap-4 mb-4">

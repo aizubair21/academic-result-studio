@@ -1,7 +1,8 @@
 <script lang="ts" setup>
 const ui = useUiStore();
 const widget = useWidgetStore();
-
+const showCreateModal = ref(false)
+const openEditMOdal = ref(false);
 
 const studentsList = ref([]);
 const allStudents = ref([]);
@@ -46,7 +47,8 @@ async function onClassChange() {
 }
 
 function handleSaved() {
-    ui.showWizedModal = false;
+    showCreateModal.value = false;
+    openEditMOdal.value = false;
     editingId.value = null;
     fetchData();
 }
@@ -54,10 +56,12 @@ function handleSaved() {
 
 function startEdit(id) {
     editingId.value = id;
+    openEditMOdal.value = true;
 }
 
 function cancelEdit() {
     editingId.value = null;
+    openEditMOdal.value = false;
 }
 
 async function handleDelete(id) {
@@ -80,9 +84,10 @@ function getClassName(classId) {
 <template>
     <AppCard>
         <template #header>
-            <h1 class="text-3xl font-bold text-slate-900">শিক্ষার্থীবৃন্দ</h1>
+            <h1 class="text-xl font-bold text-slate-900">শিক্ষার্থীবৃন্দ ({{allStudents.length}}) </h1>
 
-            <LayoutsPartialsPanelRightOpen variant="primary" type="plus" title="শিক্ষার্থী যুক্ত করুন" />
+            <!-- <LayoutsPartialsPanelRightOpen variant="primary" type="plus" title="শিক্ষার্থী যুক্ত করুন" /> -->
+            <AppButton variant="primary" type="button" @click="showCreateModal = true"> শিক্ষর্থী যুক্ত করুন </AppButton>
         </template>
 
         <label v-if="ui.selectedClassId" class="block text-sm font-medium text-gray-700 mb-1.5">ক্লাস </label>
@@ -116,7 +121,7 @@ function getClassName(classId) {
             <table class="min-w-full border-collapse text-left text-sm text-slate-700">
                 <thead class="bg-slate-50">
                     <tr>
-                        <th class="border-b border-slate-200 px-5 py-4 font-semibold text-slate-600">ক্রমিক</th>
+                        <th class="border-b border-slate-200 px-5 py-4 font-semibold text-slate-600 max-w-[10px]">ক্রমিক</th>
                         <th class="border-b border-slate-200 px-5 py-4 font-semibold text-slate-600">ক্লাস</th>
                         <th class="border-b border-slate-200 px-5 py-4 font-semibold text-slate-600">নাম</th>
                         <th class="border-b border-slate-200 px-5 py-4 font-semibold text-slate-600">রোল</th>
@@ -125,31 +130,17 @@ function getClassName(classId) {
                 </thead>
                 <tbody class="divide-y divide-slate-200 bg-white">
                     <tr v-for="(student, index) in filteredStudents" :key="student.id" class="hover:bg-slate-50">
-                        <!-- View Mode -->
-                        <template v-if="editingId !== student.id">
-                            <td class="px-5 py-4">{{ index + 1 }}</td>
+                    
+                            <td class="px-5 py-4 max-w-[20px]">{{ index + 1 }}</td>
                             <td class="px-5 py-4">{{ getClassName(student.classId) }}</td>
                             <td class="px-5 py-4 font-medium">{{ student.name }}</td>
                             <td class="px-5 py-4">{{ student.roll ?? '—' }}</td>
                             <td class="px-5 py-4">
                                 <div class="flex gap-2">
-                                    <button @click="startEdit(student.id)"
-                                        class="inline-flex items-center rounded-lg bg-indigo-50 px-3 py-1.5 text-sm font-medium text-indigo-700 hover:bg-indigo-100 transition">
-                                        এডিট
-                                    </button>
-                                    <button @click="handleDelete(student.id)"
-                                        class="inline-flex items-center rounded-lg bg-red-50 px-3 py-1.5 text-sm font-medium text-red-700 hover:bg-red-100 transition">
-                                        ডিলিট
-                                    </button>
+                                    <AppButton button="button" variant="primary" icon="pen" @click="startEdit(student)" />
+                                    <AppButton type="button" variant="danger" icon="minus" @click="handleDelete(student.id)" />
                                 </div>
                             </td>
-                        </template>
-                        <!-- Edit Mode -->
-                        <template v-else>
-                            <td colspan="5" class="px-5 py-3">
-                                <ArsStudentsEdit :data="student" @saved="handleSaved" @cancel="cancelEdit" />
-                            </td>
-                        </template>
                     </tr>
                 </tbody>
             </table>
@@ -157,9 +148,16 @@ function getClassName(classId) {
     </AppCard>
 
     <!-- ── Right Sidebar ── -->
-    <LayoutsRightAsside title="শিক্ষার্থী যুক্ত করুন">
+    <AppModal :open="showCreateModal" @close="showCreateModal = false" title="শিক্ষার্থী যুক্ত করুন">
         <ArsStudentsCreate @saved="handleSaved" />
-    </LayoutsRightAsside>
+    </AppModal>
+
+
+
+    <!-- edit modal  -->
+    <AppModal :open="openEditMOdal" @close="cancelEdit" title="শিক্ষার্থীর তথ্য সম্পাদনা করুন">
+        <ArsStudentsEdit :data="editingId" @saved="handleSaved" @cancel="cancelEdit" />
+    </AppModal>
 </template>
 
 <style lang="postcss" scoped></style>

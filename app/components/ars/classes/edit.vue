@@ -1,22 +1,22 @@
 <script setup>
 const props = defineProps({
-  data: { type: Object, required: true }
+  data: { type: String, required: true }
 });
 
 const emit = defineEmits(['saved', 'cancel']);
-
 const ui = useUiStore();
+const classRepo = useClasses();
 
 const form = reactive({
-  name: props.data.name || '',
-  index: props.data.index || '',
+  name: '',
+  index: '',
 });
 
 async function handleSubmit() {
   ui.saving = true;
   try {
     const classes = useClasses();
-    await classes.update(props.data.id, {
+    await classes.update(props.data, {
       name: form.name.trim(),
       index: form.index ? Number(form.index) : undefined,
     });
@@ -32,6 +32,12 @@ async function handleSubmit() {
 function handleCancel() {
   emit('cancel');
 }
+
+onMounted( async () => {
+  const ab = await classRepo.find(props.data);
+  form.name = ab.name;
+  form.index = ab.index;
+})
 </script>
 
 <template>
@@ -56,20 +62,21 @@ function handleCancel() {
       />
     </div>
     <div class="flex gap-2 pt-1">
-      <button
+      <AppButton
         type="submit"
-        :disabled="ui.saving"
-        class="px-4 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 text-sm font-medium transition"
+        variant="primary"
+        icon="check"
       >
-        {{ ui.saving ? 'সেইভ হচ্ছে...' : 'সেইভ' }}
-      </button>
-      <button
+        {{ ui.saving ? 'সেইভ হচ্ছে...' : 'সংরক্ষণ করুন' }}
+      </AppButton>
+      <AppButton
         type="button"
+        variant="ghost"
+        icon="x"
         @click="handleCancel"
-        class="px-4 py-1.5 bg-white text-slate-700 border border-slate-300 rounded-lg hover:bg-slate-50 text-sm font-medium transition"
       >
-        বাতিল
-      </button>
+        বাতিল করুন
+      </AppButton>
     </div>
   </form>
 </template>

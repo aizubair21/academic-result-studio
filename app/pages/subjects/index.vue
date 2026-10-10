@@ -4,8 +4,9 @@ const subjectsList = ref([]);
 const allSubjects = ref([]);
 const classesList = ref([]);
 const classesMap = ref({});
-const editingId = ref(null);
+const editing = ref(null);
 const showCreateModal = ref(false);
+const showEditModal = ref(false);
 const route = useRoute();
 
 definePageMeta({
@@ -47,24 +48,29 @@ async function onClassChange() {
 
 function openCreateModal() {
     showCreateModal.value = true;
+    showEditModal.value = false;
 }
 
 function handleSaved() {
     showCreateModal.value = false;
-    editingId.value = null;
+    showEditModal.value = false;
+    editing.value = null;
     fetchData();
 }
 
 function handleClose() {
     showCreateModal.value = false;
+    showEditModal.value = false;
 }
 
 function startEdit(id) {
-    editingId.value = id;
+    editing.value = id;
+    showEditModal.value = true;
 }
 
 function cancelEdit() {
-    editingId.value = null;
+    editing.value = null;
+    showEditModal.value = false;
 }
 
 async function handleDelete(id) {
@@ -87,10 +93,9 @@ function getClassName(classId) {
 <template>
     <AppCard>
         <template #header>
-            <h1 class="text-3xl font-bold text-slate-900">বিষয়সমূহ</h1>
-            <LayoutsPartialsPanelRightOpen variant="primary" type="plus" title="বিষয় যুক্ত করুন" />
+            <h1 class="text-xl font-bold text-slate-900">বিষয়সমূহ ({{allSubjects.length}})</h1>
 
-            <!-- <AppButton variant="primary" type="button" @click="openCreateModal">যোগ করুন</AppButton> -->
+            <AppButton variant="primary" type="button" @click="openCreateModal"> বিষয় যুক্ত করুন</AppButton>
         </template>
 
         <label v-if="ui.selectedClassId" class="block text-sm font-medium text-gray-700 mb-1.5">ক্লাস </label>
@@ -130,7 +135,7 @@ function getClassName(classId) {
             <table class="min-w-full border-collapse text-left text-sm text-slate-700">
                 <thead class="bg-slate-50">
                     <tr>
-                        <th class="border-b border-slate-200 px-5 py-4 font-semibold text-slate-600">ক্রমিক</th>
+                        <th class="border-b border-slate-200 px-5 py-4 font-semibold text-slate-600 max-w-[10px}">ক্রমিক</th>
                         <th class="border-b border-slate-200 px-5 py-4 font-semibold text-slate-600">ক্লাস</th>
                         <th class="border-b border-slate-200 px-5 py-4 font-semibold text-slate-600">নাম</th>
                         <th class="border-b border-slate-200 px-5 py-4 font-semibold text-slate-600">মোট নম্বর</th>
@@ -141,31 +146,17 @@ function getClassName(classId) {
                 <tbody class="divide-y divide-slate-200 bg-white">
                     <tr v-for="(sub, index) in filteredSubjects" :key="sub.id" class="hover:bg-slate-50">
                         <!-- View Mode -->
-                        <template v-if="editingId !== sub.id">
-                            <td class="px-5 py-4">{{ index + 1 }}</td>
-                            <td class="px-5 py-4">{{ getClassName(sub.classId) }}</td>
-                            <td class="px-5 py-4 font-medium">{{ sub.name }}</td>
-                            <td class="px-5 py-4">{{ sub.total_mark ?? '—' }}</td>
-                            <td class="px-5 py-4">{{ sub.pass_mark ?? '—' }}</td>
-                            <td class="px-5 py-4">
-                                <div class="flex gap-2">
-                                    <button @click="startEdit(sub.id)"
-                                        class="inline-flex items-center rounded-lg bg-indigo-50 px-3 py-1.5 text-sm font-medium text-indigo-700 hover:bg-indigo-100 transition">
-                                        এডিট
-                                    </button>
-                                    <button @click="handleDelete(sub.id)"
-                                        class="inline-flex items-center rounded-lg bg-red-50 px-3 py-1.5 text-sm font-medium text-red-700 hover:bg-red-100 transition">
-                                        ডিলিট
-                                    </button>
-                                </div>
-                            </td>
-                        </template>
-                        <!-- Edit Mode -->
-                        <template v-else>
-                            <td colspan="7" class="px-5 py-3">
-                                <ArsSubjectsEdit :data="sub" @saved="handleSaved" @cancel="cancelEdit" />
-                            </td>
-                        </template>
+                        <td class="px-5 py-4 max-w-[10px]">{{ index + 1 }}</td>
+                        <td class="px-5 py-4">{{ getClassName(sub.classId) }}</td>
+                        <td class="px-5 py-4 font-medium">{{ sub.name }}</td>
+                        <td class="px-5 py-4">{{ sub.total_mark ?? '—' }}</td>
+                        <td class="px-5 py-4">{{ sub.pass_mark ?? '—' }}</td>
+                        <td class="px-5 py-4">
+                            <div class="flex gap-2">
+                                <AppButton type="button" variant="primary" icon="pen" @click="startEdit(sub)" />
+                                <AppButton type="button" variant="danger" icon="minus" @click="handleDelete(sub.id)" />
+                            </div>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -174,25 +165,14 @@ function getClassName(classId) {
 
     <!-- Create Modal -->
     <AppModal title="বিষয় তৈরি করুন" :open="showCreateModal" @close="handleClose">
+        <ArsSubjectsCreate @saved="handleSaved" />
     </AppModal>
 
-    <!-- ── Right Sidebar ── -->
-    <LayoutsRightAsside title="বিষয় যুক্ত করুন">
-        <ArsSubjectsCreate @saved="handleSaved" />
-        <!-- <LayoutsRightAssideTitle> বিষয় ফিল্টার </LayoutsRightAssideTitle> -->
+    <!-- edit modal  -->
+    <AppModal :open="showEditModal" @close="handleClose" title="বিষয় সম্পাদনা করুন" >
+        <ArsSubjectsEdit :data="editing" @saved="handleSaved" @cancel="cancelEdit" />
+    </AppModal>
 
-        <!-- Class Selector -->
-
-
-        <!-- Summary -->
-        <!-- <div v-if="ui.selectedClassId" class="border-t border-slate-200 pt-4">
-            <div class="text-sm text-slate-600 space-y-1">
-                <p><span class="font-medium">বিষয়:</span> {{ filteredSubjects.length }}টি</p>
-            </div>
-        </div> -->
-
-
-    </LayoutsRightAsside>
 </template>
 
 <style lang="postcss" scoped></style>

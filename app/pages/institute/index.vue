@@ -2,6 +2,7 @@
 const ui = useUiStore();
 const instituteList = ref([]);
 
+
 definePageMeta({
     layout: 'master',
 })
@@ -50,9 +51,9 @@ function handleClose() {
 <template>
     <AppCard>
         <template #header>
-            <h1 class="text-3xl font-bold text-slate-900">প্রতিষ্ঠান</h1>
-            <!-- <AppButton variant="primary" type="button" @click="openCreateModal">যোগ করুন</AppButton> -->
-            <LayoutsPartialsPanelRightOpen variant="primary" type="plus" />
+            <h1 class="text-xl font-bold text-slate-900">প্রতিষ্ঠান</h1>
+            <AppButton variant="primary" type="button" @click="showCreateModal = true">যোগ করুন</AppButton>
+            <!-- <LayoutsPartialsPanelRightOpen variant="primary" type="plus" /> -->
         </template>
 
         <!-- <AppEmpty
@@ -97,15 +98,15 @@ function handleClose() {
     </AppCard>
 
 
-    <LayoutsRightAsside>
+    <!-- <LayoutsRightAsside> -->
         <!-- <ArsInstituteCreate/> -->
-        <ArsInstituteCreate @saved="handleSaved" />
-    </LayoutsRightAsside>
+    <!-- </LayoutsRightAsside> -->
 
 
     <!-- Create Modal -->
-    <!-- <AppModal title="প্রতিষ্ঠান তৈরি করুন" :open="showCreateModal" @close="handleClose">
-    </AppModal> -->
+    <AppModal title="প্রতিষ্ঠান তৈরি করুন" :open="showCreateModal" @close="handleClose">
+        <ArsInstituteCreate @saved="handleSaved" />
+    </AppModal>
 </template>
 
 <style lang="postcss" scoped></style>

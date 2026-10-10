@@ -37,7 +37,7 @@ const handleSubmit = async () => {
     form.name = '';
     form.index = '';
 
-    ui.showToast('success', `"${data.name}" ক্লাস যুক্ত হয়েছে`);
+    ui.showToast('success', `ক্লাস যুক্ত হয়েছে`);
 
     emit('saved');
   } catch (error) {
@@ -68,7 +68,7 @@ const handleSubmit = async () => {
     </div>
 
     <!-- Success feedback -->
-    <div v-if="justSaved && !ui.sidebarOpen"
+    <div v-if="justSaved"
       class="flex items-center gap-2 text-sm text-emerald-600 bg-emerald-50 px-4 py-2 rounded-lg">
       <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
@@ -78,9 +78,8 @@ const handleSubmit = async () => {
 
     <!-- Actions -->
     <div class="flex gap-3 pt-2">
-      <AppButton variant="primary" type="submit"
-        class="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-medium flex items-center gap-2">
-        {{ ui.saving ? 'সংরক্ষণ হচ্ছে...' : 'ক্লাস যোগ করুন' }}
+      <AppButton variant="primary" type="submit">
+        ক্লাস যুক্ত করুন
       </AppButton>
     </div>
   </form>

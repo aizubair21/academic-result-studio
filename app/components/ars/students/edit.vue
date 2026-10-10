@@ -1,6 +1,6 @@
 <script setup>
 const props = defineProps({
-  data: { type: Object, required: true }
+  data: { type: String, required: true }
 });
 
 const emit = defineEmits(['saved', 'cancel']);
@@ -84,20 +84,20 @@ function handleCancel() {
 
     <!-- Actions -->
     <div class="flex gap-2 pt-1">
-      <button
-        type="submit"
-        :disabled="ui.saving"
-        class="px-4 py-1.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 text-sm font-medium transition"
-      >
-        {{ ui.saving ? 'সেইভ হচ্ছে...' : 'সেইভ' }}
-      </button>
-      <button
+      <AppButton
         type="button"
+        variant="primary" 
+        icon="check"
+        @click="handleSubmit">
+        {{ ui.saveButtonText }}
+      </AppButton>
+      <AppButton
+        type="button"
+        variant="ghost"
         @click="handleCancel"
-        class="px-4 py-1.5 bg-white text-slate-700 border border-slate-300 rounded-lg hover:bg-slate-50 text-sm font-medium transition"
-      >
-        বাতিল
-      </button>
+        icon="x">
+        {{ ui.cancleButtonText }}
+      </AppButton>
     </div>
   </form>
 </template>

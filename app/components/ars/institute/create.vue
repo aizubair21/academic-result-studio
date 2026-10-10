@@ -49,7 +49,7 @@ const handleSubmit = async () => {
 
     await institute.create(data);
     ui.toast = {
-      message: 'ইনস্টিটিউট সফলভাবে তৈরি হয়েছে',
+      message: 'ইনস্টিটিউট সফলভাবে যুক্ত হয়েছে',
       type:'success',
     }
     // successMsg.value = 'ইনস্টিটিউট সফলভাবে তৈরি হয়েছে!';
@@ -111,17 +111,12 @@ const handleSubmit = async () => {
 
           <!-- <div class="flex-1"></div> -->
 
-          <button
+          <AppButton
             type="submit"
-            :disabled="saving"
-            class="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-medium flex items-center gap-2"
+            variant="primary"
           >
-            <svg v-if="saving" class="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none" />
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-            </svg>
               সেভ
-          </button>
+          </AppButton>
         </div>
       </form>
     </div>
