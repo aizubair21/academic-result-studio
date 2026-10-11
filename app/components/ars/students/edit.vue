@@ -96,7 +96,7 @@ function handleCancel() {
         variant="ghost"
         @click="handleCancel"
         icon="x">
-        {{ ui.cancleButtonText }}
+        বাতিল করুন
       </AppButton>
     </div>
   </form>

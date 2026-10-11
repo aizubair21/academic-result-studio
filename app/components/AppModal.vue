@@ -12,7 +12,7 @@ const emit = defineEmits(['close'])
 
 <template>
   <transition name="drawer">
-    <div v-if="open" class="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-slate-950/40 md:p-4 ">
+    <div v-if="open" class="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-slate-950/20 md:p-4 backdrop-blur-sm ">
 
       <div class="w-full max-w-2xl md:rounded-lg bg-white shadow-2xl shadow-slate-900/20">
         <div class="flex items-center justify-between gap-4 p-6 border-b">

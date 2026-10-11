@@ -26,11 +26,13 @@ function checkMobile() {
   <Teleport to="body">
     <Transition name="drawer">
       <div v-if="ui.sidebarOpen" class="fixed inset-0 z-[90]">
+
         <!-- Backdrop -->
         <div class="fixed inset-0 bg-black/40 backdrop-blur-sm transition-opacity duration-300"
           @click="ui.sidebarOpen = false"></div>
+
         <!-- Drawer panel -->
-        <div class="fixed top-0 bottom-0 right-0 max-w-[300px] bg-white shadow-2xl overflow-y-scroll z-[61] h-screen md:h-auto">
+        <div class="fixed top-0 bottom-0 right-0 w-[250px] bg-white shadow-2xl overflow-y-scroll z-[61] h-screen md:h-auto">
           <div class="flex items-center justify-between border-b border-slate-200 px-4 py-3 sticky bg-white top-0">
             <h2 class="text-sm font-semibold text-slate-700"> {{ title }} </h2>
             <button
@@ -42,11 +44,11 @@ function checkMobile() {
               </svg>
             </button>
           </div>
-          <div class="p-4">
+          <div class="">
 
-            <div v-if="ui.sidebarOpen && !ui.showWizedModal">
+            <!-- <div v-if="ui.sidebarOpen && !ui.showWizedModal">
               <UiToast />
-            </div>
+            </div> -->
 
             <!-- Page-specific drawer content teleported from LayoutsRightAsside -->
             <div >

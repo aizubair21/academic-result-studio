@@ -1,8 +1,8 @@
-<script setup lang="ts">
+<script setup>
 const { loadBaseData } = useResultReport();
-const classes = ref<any[]>([]);
-const students = ref<any[]>([]);
-const subjects = ref<any[]>([]);
+const classes = ref([]);
+const students = ref([]);
+const subjects = ref([]);
 const type = ref('class');
 const classId = ref('');
 const studentId = ref('');
@@ -36,8 +36,8 @@ function openReport() {
 </script>
 
 <template>
-  <div class="flex items-center justify-center h-full">
-    <AppCard class="max:w-lg shadow-lg">
+  <div class="">
+    <AppCard classes="max-w-lg">
       <template #header>
         <div>
           <h1 class="text-3xl font-bold text-slate-900">ফলাফল তৈরি করুন</h1>
@@ -51,6 +51,7 @@ function openReport() {
             placeholder="বার্ষিক পরীক্ষা" />
         </label>
       </div>
+
       <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
         <label class="text-sm font-medium text-slate-700">ফলাফলের ধরন
           <select v-model="type" class="mt-1.5 w-full rounded-lg border border-slate-300 px-3 py-2.5">
@@ -81,12 +82,11 @@ function openReport() {
       </div>
 
       <div class="mt-6 flex justify-end">
-        <button type="button"
+        <AppButton type="button" variant="secondary" icon="chevron"
           :disabled="!classId || (type === 'student' && !studentId) || (type === 'subject' && !subjectId)"
-          @click="openReport"
-          class="rounded-lg bg-indigo-600 px-5 py-2.5 font-semibold text-white hover:bg-indigo-700 disabled:cursor-not-allowed disabled:opacity-50">
+          @click="openReport">
           ফলাফল দেখুন
-        </button>
+        </AppButton>
       </div>
     </AppCard>
   </div>

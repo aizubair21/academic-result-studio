@@ -74,7 +74,7 @@ function setMarkValue(studentId, subjectId, value) {
     if (isNaN(numValue)) {
         markErrors.value[key] = 'সংখ্যা দিন';
     } else if (numValue < 0) {
-        markErrors.value[key] = '০ এর কম হবে না';
+        markErrors.value[key] = '০ থেকে বড়';
     } else if (subject && subject.total_mark && numValue > Number(subject.total_mark)) {
         markErrors.value[key] = `সর্বোচ্চ ${subject.total_mark} নম্বর`;
     } else if (numValue > 999) {
@@ -199,6 +199,7 @@ async function saveStudentMarks(studentId) {
 
 async function saveAllMarks() {
     const studentsToSave = filteredStudents.value;
+    ui.saving = true;
 
     // Check all students for validation errors
     let hasErrors = false;
@@ -243,6 +244,7 @@ async function saveAllMarks() {
     marksMap.value = map;
 
     ui.showToast('success', 'সকল নম্বর সংরক্ষিত হয়েছে');
+    ui.saving = false;
 }
 </script>
 
@@ -251,10 +253,10 @@ async function saveAllMarks() {
     <!-- ── Main Content ── -->
     <AppCard>
         <template #header>
-            <h1 class="text-3xl font-bold text-slate-900">মার্ক এন্ট্রি</h1>
-            <LayoutsPartialsPanelRightOpen />
+            <h1 class="text-xl font-bold text-slate-900">মার্ক এন্ট্রি</h1>
         </template>
 
+        <!-- class and student selector  -->
         <div class="flex items-start justify-between md:justify-start mb-4 gap-3">
             <!-- Class Selector -->
             <div v-if="selectedClassId">
@@ -326,7 +328,7 @@ async function saveAllMarks() {
             <table class="min-w-full border-collapse text-left text-sm text-slate-700">
                 <thead class="bg-slate-50">
                     <tr>
-                        <th class="border-b border-slate-200 px-4 py-4 font-semibold text-slate-600 max-w-10">ক্রমিক</th>
+                        <th class="border-b border-slate-200 px-4 py-4 font-semibold text-slate-600 max-w-[10px]">ক্রমিক</th>
                         <th class="border-b border-slate-200 px-4 py-4 font-semibold text-slate-600 w-20">                           নাম</th>
                         <th class="border-b border-slate-200 px-4 py-4 font-semibold text-slate-600 w-8">রোল</th>
                         <th v-for="subject in sortedSubjects" :key="subject.id"
@@ -344,8 +346,8 @@ async function saveAllMarks() {
                 <tbody class="divide-y divide-slate-200 bg-white">
                     <tr v-for="(student, index) in filteredStudents" :key="student.id"
                         class="hover:bg-slate-50 transition">
-                        <td class="px-4 py-3 text-slate-500 w-10">{{ index + 1 }}</td>
-                        <td class="px-4 py-3 font-medium text-slate-800 w-20">{{ student.name }}</td>
+                        <td class="px-4 py-3 text-slate-500 max-w-[10px]">{{ index + 1 }}</td>
+                        <td class="px-4 py-3 font-medium text-slate-800 ">{{ student.name }}</td>
                         <td class="px-4 py-3 w-8 text-left">{{ student.roll ?? '—' }}</td>
 
                         <!-- Mark input for each subject -->
@@ -383,9 +385,9 @@ async function saveAllMarks() {
             </table>
 
             <div class="p-3 flex justify-end"> 
-                <AppButton v-if="selectedClassId && filteredStudents.length > 1" variant="primary" type="button" :icon="false"
-                    size="sm" @click="saveAllMarks">
-                    <Save /> <span class='ps-3'> সমস্ত সেইভ করুন </span>
+                <AppButton v-if="selectedClassId && filteredStudents.length > 1" variant="secondary" type="button" icon="check"
+                    @click="saveAllMarks">
+                   <span class='ps-3'> সমস্ত {{ ui.saveButtonText}} </span>
                 </AppButton>
             </div>
         </div>

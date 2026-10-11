@@ -114,8 +114,9 @@ const handleSubmit = async () => {
           <AppButton
             type="submit"
             variant="primary"
+            icon="check"
           >
-              সেভ
+              {{ ui.saveButtonText}}
           </AppButton>
         </div>
       </form>

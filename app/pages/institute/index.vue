@@ -2,6 +2,9 @@
 const ui = useUiStore();
 const instituteList = ref([]);
 
+import { Pen } from "@lucide/vue";
+
+
 
 definePageMeta({
     layout: 'master',
@@ -33,6 +36,7 @@ async function handleDelete(id) {
 
 // Modal state
 const showCreateModal = ref(false);
+const showEditModal = ref(false);
 
 function openCreateModal() {
     showCreateModal.value = true;
@@ -40,27 +44,36 @@ function openCreateModal() {
 
 function handleSaved() {
     showCreateModal.value = false;
+    showEditModal.value = false;
     fetchInstitutes();
 }
 
 function handleClose() {
     showCreateModal.value = false;
+    showEditModal.value = false;
 }
+
+// function editInstitute() {
+//     // showEditModal.value = true;
+//     const path = `/institute/edit`;
+//     // window.open('/institute/edit');
+//     window.open(`/institute/edit`, '_self', 'noopener,noreferrer');
+// }
 </script>
 
 <template>
     <AppCard>
         <template #header>
             <h1 class="text-xl font-bold text-slate-900">প্রতিষ্ঠান</h1>
-            <AppButton variant="primary" type="button" @click="showCreateModal = true">যোগ করুন</AppButton>
+            <AppButton variant="primary" type="button" @click="showCreateModal = true">প্রতিষ্ঠান যুক্ত করুন</AppButton>
             <!-- <LayoutsPartialsPanelRightOpen variant="primary" type="plus" /> -->
         </template>
 
-        <!-- <AppEmpty
+        <AppEmpty
             v-if="instituteList.length === 0"
             title="কোনো প্রতিষ্ঠান নেই"
             description="একটি প্রতিষ্ঠান যোগ করতে 'যোগ করুন' বাটনে ক্লিক করুন"
-        /> -->
+        />
 
         <div class="overflow-x-auto border border-slate-200 bg-white shadow-lg shadow-slate-200/60 rounded-lg">
             <table class="min-w-full border-collapse text-left text-sm text-slate-700">
@@ -83,12 +96,10 @@ function handleClose() {
                             <div class="flex gap-2">
                                 <NuxtLink to="/institute/edit"
                                     class="inline-flex items-center rounded-lg bg-indigo-50 px-3 py-1.5 text-sm font-medium text-indigo-700 hover:bg-indigo-100 transition">
-                                    এডিট
+                                    <Pen size="15" />
                                 </NuxtLink>
-                                <button @click="handleDelete(inst.id)"
-                                    class="inline-flex items-center rounded-lg bg-red-50 px-3 py-1.5 text-sm font-medium text-red-700 hover:bg-red-100 transition">
-                                    ডিলিট
-                                </button>
+                                <!-- <AppButton type="button" variant="primary" icon="pen" @click="editInstitute" /> -->
+                                <AppButton type="button" variant="danger" icon="minus" @click="handleDelete(inst.id)" />
                             </div>
                         </td>
                     </tr>
@@ -97,15 +108,15 @@ function handleClose() {
         </div>
     </AppCard>
 
-
-    <!-- <LayoutsRightAsside> -->
-        <!-- <ArsInstituteCreate/> -->
-    <!-- </LayoutsRightAsside> -->
-
-
     <!-- Create Modal -->
     <AppModal title="প্রতিষ্ঠান তৈরি করুন" :open="showCreateModal" @close="handleClose">
         <ArsInstituteCreate @saved="handleSaved" />
+    </AppModal>
+
+
+    <!-- edit modal  -->
+    <AppModal :open="showEditModal" @close="handleClose" title="প্রতিষ্ঠান সম্পাদনা করুন">
+
     </AppModal>
 </template>
 

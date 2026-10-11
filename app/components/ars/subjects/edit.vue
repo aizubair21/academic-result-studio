@@ -119,7 +119,7 @@ function handleCancel() {
       </AppButton>
       <AppButton
         type="button"
-        variant="danger"
+        variant="ghost"
         icon="x"
         @click="handleCancel">
         বাতিল করুন

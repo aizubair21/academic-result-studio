@@ -8,7 +8,7 @@ const props = defineProps({
 
 <template>
   <div class="md:bg-white md:rounded-lg">
-    <div v-if="title || subtitle" class="mb-4 space-y-1 py-5 px-2 lg:px-5">
+    <div v-if="title || subtitle" class="mb-4 space-y-1 py-5 px-3 lg:px-5">
       <p v-if="subtitle" class="text-sm font-medium uppercase tracking-[0.24em] text-slate-500">{{ subtitle }}</p>
       <h3 v-if="title" class="text-2xl font-semibold text-slate-900">{{ title }}</h3>
     </div>
