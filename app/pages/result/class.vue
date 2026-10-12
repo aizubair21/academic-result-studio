@@ -29,9 +29,9 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="bg-slate-900 h-screen print:bg-white">
+  <div class="">
     <div v-if="!loading"
-      class="result-controls mx-auto flex max-w-[1100px] gap-3 py-5 print:hidden sticky top-0 left-0 w-full bg-slate-900 z-50">
+      class="result-controls mx-auto flex max-w-[1100px] gap-3 py-5 print:hidden sticky top-0 left-0 w-full z-50">
       <select v-model="classId" @change="load" class="rounded-lg border border-slate-300 px-3 py-2">
         <option v-for="item in classes" :key="item.id" :value="item.id">{{ item.name }}</option>
       </select>
@@ -39,7 +39,7 @@ onMounted(async () => {
     </div>
     <div v-if="loading" class="p-10 text-center print:hidden">ফলাফল তৈরি হচ্ছে...</div>
 
-    <template v-else-if="report">
+    <div v-else-if="report">
       <ResultPaper v-for="(rows, page) in chunks" :key="page"
         :title="`${report.selectedClass?.name || ''} - শ্রেণির ফলাফল`" :subtitle="`${page + 1} / ${chunks.length}`"
         :institute="report.institute" :exam-name="examName" :settings="report.settings"
@@ -75,7 +75,7 @@ onMounted(async () => {
           </tbody>
         </table>
       </ResultPaper>
-    </template>
+    </div>
 
   </div>
 </template>

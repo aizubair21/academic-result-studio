@@ -33,7 +33,7 @@ const readiness = computed(() => {
 
     <!-- Main layout regions -->
     <div
-      class="mx-auto grid max-w-[1440px] grid-cols-1 gap-0 px-0 pt-0 md:grid-cols-[80px_1fr_280px] lg:grid-cols-[100px_1fr_350px]">
+      class="mx-auto grid max-w-[1400px] grid-cols-1 gap-0 px-0 pt-0 md:grid-cols-[80px_1fr_280px] lg:grid-cols-[100px_1fr_350px]">
 
       <!-- Left Workspace Navigator -->
       <LayoutsPartialsNav />

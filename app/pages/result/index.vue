@@ -25,14 +25,17 @@ async function onClassChange() {
   subjectId.value = '';
 }
 
-function openReport() {
+const openReport = computed(() => {
   if (!classId.value) return;
   const path = `/result/${type.value}`;
   const params = new URLSearchParams({ classId: classId.value, examName: examName.value });
   if (type.value === 'student') params.set('studentId', studentId.value);
   if (type.value === 'subject') params.set('subjectId', subjectId.value);
-  window.open(`${path}?${params.toString()}`, '_blank', 'noopener,noreferrer');
-}
+  return `${path}?${params.toString()}`
+  // window.open(`${path}?${params.toString()}`);
+})
+
+
 </script>
 
 <template>
@@ -82,11 +85,11 @@ function openReport() {
       </div>
 
       <div class="mt-6 flex justify-end">
-        <AppButton type="button" variant="secondary" icon="chevron"
+        <NuxtLink :to="openReport" class="inline-flex items-center justify-center rounded-lg font-semibold transition duration-200 bg-indigo-600 text-white hover:bg-indigo-500 shadow-lg shadow-indigo-500/20 px-4 py-2 text-sm"
           :disabled="!classId || (type === 'student' && !studentId) || (type === 'subject' && !subjectId)"
-          @click="openReport">
+          >
           ফলাফল দেখুন
-        </AppButton>
+        </NuxtLink>
       </div>
     </AppCard>
   </div>

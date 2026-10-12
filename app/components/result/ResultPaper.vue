@@ -77,6 +77,7 @@ async function saveSettings() {
   await useSettings().upsert(settings.value);
   emit('settingsChange', { ...settings.value });
   settingsOpen.value = false;
+  openPageSetupModal.value = false;
 }
 
 function printReport() {
@@ -85,30 +86,31 @@ function printReport() {
 </script>
 
 <template>
-  <div class="result-page min-h-screen bg-slate-900 px-4 py-6 text-slate-900 print:bg-white print:p-0">
+  <div class="result-page min-h-screen px-4 py-6 text-slate-900 print:bg-white print:p-0">
 
     <!-- fixed floting icon  -->
     <div
-      class="rounded-xl result-controls-float fixed bottom-5 right-5 z-50 flex flex-col  ittems-center justify-center gap-3 print:hidden bg-white shadow-xl p-2">
+      class="rounded-xl result-controls-float fixed bottom-5 right-5 z-50 flex flex-col  ittems-center justify-center print:hidden bg-white border p-1">
 
       <!-- print -->
-      <button class="p-3 rounded-xl hover:bg-slate-100" type="button" @click="printReport">
-        <Printer />
+      <button class="p-3 rounded-lg hover:bg-slate-100" type="button" @click="printReport">
+        <Printer size="17"/>
       </button>
 
       <!-- component toggle modal  -->
-      <button class="p-3 rounded-xl hover:bg-slate-100" type="button" title="ফলাফল প্রিভিউ সেটিংস"
+      <button class="p-3 rounded-lg hover:bg-slate-100" type="button" title="ফলাফল প্রিভিউ সেটিংস"
         @click="settingsOpen = true; loadSettings()">
-        <SlidersHorizontal />
+        <SlidersHorizontal size="17" />
       </button>
 
       <!-- page setup modal  -->
-      <button class="p-3 rounded-xl hover:bg-slate-100" type="button" @click="openPageSetupModal = true"
+      <button class="p-3 rounded-lg hover:bg-slate-100" type="button" @click="openPageSetupModal = true"
         title="Page Setup">
-        <File />
+        <File size="17" />
       </button>
     </div>
 
+    <!-- settings setup modal  -->
     <AppModal title="ফলাফল প্রিভিউ সেটিংস" :open="settingsOpen" @close="settingsOpen = false">
       <div class="space-y-4">
         <div class="grid grid-cols-1 gap-3 sm:grid-cols-2">
@@ -170,7 +172,7 @@ function printReport() {
       </div>
     </AppModal>
 
-
+    <!-- page setup modal  -->
     <AppModal title="পেইজ সেটাপ" :open="openPageSetupModal" @close="openPageSetupModal = false">
       <div class="grid gap-3 sm:grid-cols-2">
         <div>
@@ -199,43 +201,50 @@ function printReport() {
             <option value="large">Large</option>
           </select>
         </div>
+
       </div>
+        <div class="flex justify-end pt-2">
+          <AppButton variant="primary" type="button" @click="saveSettings">সংরক্ষণ করুন</AppButton>
+        </div>
     </AppModal>
 
 
     <article
-      class="result-paper relative mx-auto min-h-[210mm] w-full max-w-[297mm] overflow-hidden bg-white p-[14mm] shadow-xl print:min-h-0 print:max-w-none print:shadow-none z-8"
+      class="result-paper relative mx-auto overflow-hidden bg-white print:min-h-0 print:max-w-none border z-8"
       :style="pageStyle">
+
       <!-- watermark -->
       <div v-if="settings.showWatermark"
         class="pointer-events-none absolute inset-0 flex items-center justify-center opacity-[0.045]">
-        <div class="rotate-[-25deg] text-center text-7xl font-black uppercase tracking-[0.2em]">{{ localInstituteName ||
+        <div class="rotate-[-25deg] text-center text-7xl font-black uppercase ">{{ localInstituteName ||
           'Result Studio' }}</div>
       </div>
 
       <header class="relative border-b-2 border-slate-900 pb-4 text-center">
         <input v-model="localInstituteName" placeholder="Institute name"
-          class="mx-auto block w-full  border-0 border-slate-300 bg-transparent pb-2 text-2xl font-bold uppercase tracking-wide text-center focus:outline-none focus:border-slate-900" />
-        <p v-if="institute?.address" class="mt-1 text-sm">{{ institute.address }}</p>
+          class="mx-auto block w-full border-0 border-slate-300 bg-transparent text-2xl font-bold uppercase tracking-wide text-center focus:outline-none focus:border-slate-900" />
+        <p v-if="institute?.address" class="text-sm">{{ institute.address }}</p>
         <input v-model="localExamName" placeholder="Exam name"
-          class="mx-auto lock w-full border-0 border-slate-300 bg-transparent pb-2 text-lg font-bold uppercase tracking-wide text-center focus:outline-none focus:border-slate-900" />
-        <p class="mt-1 text-sm font-semibold">{{ title }}</p>
+          class="mx-auto lock w-full border-0 border-slate-300 bg-transparent text-lg uppercase tracking-wide text-center focus:outline-none focus:border-slate-900" />
+        <p class="text-sm">{{ title }}</p>
       </header>
 
       <div class="relative mt-4 flex items-center justify-between border-b border-slate-300 pb-3 text-xs">
-        <span>সেশন: {{ institute?.session || '................' }}</span>
-        <span>প্রকাশের তারিখ: {{ new Date().toLocaleDateString('en-GB') }}</span>
-        <span>ফলাফল: {{ subtitle || 'Academic Result' }}</span>
+        <!-- <span>সেশন: {{ institute?.session || '................' }}</span> -->
+        <span>সেশন: </span>
+        <span class="mr-[80px]">ফলাফল প্রকাশের তারিখ: </span>
+        <!-- <span>প্রকাশের তারিখ: {{ new Date().toLocaleDateString('en-GB') }}</span> -->
+        <!-- <span>ফলাফল: {{ subtitle || 'Academic Result' }}</span> -->
       </div>
 
       <section class="relative mt-5">
         <slot></slot>
       </section>
 
-      <footer v-if="settings.showFooter" class="relative mt-12 grid grid-cols-3 gap-8 pt-8 text-center text-xs">
-        <div class="border-t border-slate-800 pt-2">শ্রেণি শিক্ষক</div>
-        <div class="border-t border-slate-800 pt-2">পরীক্ষা নিয়ন্ত্রক</div>
-        <div class="border-t border-slate-800 pt-2">প্রধান শিক্ষক</div>
+      <footer v-if="settings.showFooter" class="relative mt-12 flex gap-[50px] pt-8 text-center text-xs">
+        <div class="border-t border-slate-800 pt-2 w-[100px]">শ্রেণি শিক্ষক</div>
+        <div class="border-t border-slate-800 pt-2 w-[100px]">পরীক্ষা নিয়ন্ত্রক</div>
+        <div class="border-t border-slate-800 pt-2 w-[100px]">প্রধান শিক্ষক</div>
       </footer>
     </article>
   </div>
@@ -243,7 +252,7 @@ function printReport() {
 
 <style>
 @page {
-  size: A4 landscape;
+  size: A4 portrait;
   margin: 0;
 }
 

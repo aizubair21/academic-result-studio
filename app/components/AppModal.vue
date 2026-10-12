@@ -15,14 +15,14 @@ const emit = defineEmits(['close'])
     <div v-if="open" class="fixed inset-0 z-50 flex items-end md:items-center justify-center bg-slate-950/20 md:p-4 backdrop-blur-sm ">
 
       <div class="w-full max-w-2xl md:rounded-lg bg-white shadow-2xl shadow-slate-900/20">
-        <div class="flex items-center justify-between gap-4 p-6 border-b">
+        <div class="flex items-center justify-between gap-4 px-6 py-3 border-b ">
           <div>
             <!-- <p class="text-sm uppercase tracking-[0.24em] text-slate-500">Modal</p> -->
-            <h3 class="text-2xl font-semibold text-slate-900">{{ title }}</h3>
+            <h3 class="text-xl font-semibold text-slate-900">{{ title }}</h3>
           </div>
-          <button @click="emit('close')" class="rounded-lg p-2 text-slate-700 transition hover:bg-slate-100">
+          <AppButton @click="emit('close')" type="button" variant="ghost">
             <CircleX />
-          </button>
+          </AppButton>
         </div>
         <div class="space-y-4 p-6">
 

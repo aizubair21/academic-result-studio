@@ -13,17 +13,16 @@ const showOpenModal = ref(false)
 onMounted(async () => {
   const resolver = new WorkflowResolver();
   await resolver.resolve();
+  
+  if (await institute.exists()) {
+    instituteData.value = await institute.first();
+  }
 })
 
 // Institute info for greeting
 const institute = useInstitute();
 const instituteData = ref<any>(null);
 
-onMounted(async () => {
-  if (await institute.exists()) {
-    instituteData.value = await institute.first();
-  }
-})
 </script>
 
 <template>
