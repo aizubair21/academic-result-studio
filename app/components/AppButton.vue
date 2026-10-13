@@ -2,7 +2,9 @@
 import { ChevronRight, LoaderCircle, Plus, Minus, X, PenLine, Check, Save } from "@lucide/vue";
 
 const ui = useUiStore()
+
 defineProps({
+  target: { type: String, default: ''},
   variant: { type: String, default: 'primary' },
   size: { type: String, default: 'sm' },
   type: { type: String, default: 'button' },
@@ -24,7 +26,7 @@ const sizeClasses = {
 </script>
 
 <template>
-  <button :type="type" :disabled="ui.saving"
+  <button :type="type" :disabled="ui.isLoading(target)"
     :class="['inline-flex items-center justify-center rounded-lg font-semibold transition duration-200', variantClasses[variant], sizeClasses[size]]">
 
 
@@ -32,14 +34,14 @@ const sizeClasses = {
     <slot />
 
     <!-- Updating Spinner  -->
-    <svg v-if="ui.saving" class="ml-2 animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
+    <svg v-if="ui.isLoading(target)" class="ml-2 animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
       <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none" />
       <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
     </svg>
 
 
     <!-- Placeholder Icon  -->
-    <div v-if="!ui.saving">
+    <div v-if="!ui.isLoading(target)">
       <ChevronRight v-if="icon == 'chevron'" size="17" class="ml-2" />
       <Plus v-if="icon == 'plus'" size="17" class="ml-2"/>
       <Minus v-if="icon == 'minus'" size="17" />

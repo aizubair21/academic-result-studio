@@ -34,8 +34,7 @@ async function loadClasses() {
 async function handleSubmit() {
   if (!ui.selectedClassId || !form.name.trim()) return;
 
-  ui.saving = true;
-  try {
+  ui.loading('subjects.create', async () => {
     await subjects.create({
       classId: Number(ui.selectedClassId),
       name: form.name.trim(),
@@ -63,11 +62,7 @@ async function handleSubmit() {
     await loadClasses();
 
     emit('saved');
-  } catch (err) {
-    ui.showToast('error', 'বিষয় যুক্ত করতে সমস্যা হয়েছে: ' + (err.message || err));
-  } finally {
-    ui.saving = false;
-  }
+  });
 }
 
 // Bulk import support for subjects
@@ -222,14 +217,9 @@ async function importSubjectsFile() {
 
     <!-- Actions -->
     <div class="flex gap-3 pt-2">
-      <button type="submit" :disabled="ui.saving"
-        class="px-6 py-2.5 bg-blue-600 text-white rounded-lg hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-all font-medium flex items-center gap-2">
-        <svg v-if="ui.saving" class="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
-          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none" />
-          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-        </svg>
-        {{ ui.saving ? 'সংরক্ষণ হচ্ছে...' : 'বিষয় যোগ করুন' }}
-      </button>
+      <AppButton type="submit" icon="" target="subjects.create">
+        {{ ui.saveButtonText}}
+      </AppButton>
     </div>
   </form>
 

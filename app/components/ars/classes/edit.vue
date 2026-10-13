@@ -67,7 +67,7 @@ onMounted( async () => {
         variant="primary"
         icon="check"
       >
-        {{ ui.saving ? 'সেইভ হচ্ছে...' : 'সংরক্ষণ করুন' }}
+        {{ ui.updateButtonText }}
       </AppButton>
       <AppButton
         type="button"
@@ -75,7 +75,7 @@ onMounted( async () => {
         icon="x"
         @click="handleCancel"
       >
-        বাতিল করুন
+        {{ui.cancleButtonText}}
       </AppButton>
     </div>
   </form>

@@ -17,14 +17,16 @@ let successTimeout = null;
 const handleSubmit = async () => {
   if (!form.name.trim()) return;
 
-  ui.saving = true;
-  try {
+  ui.loading('class.create', async () => {
+
     const data = {
       name: form.name.trim(),
       index: form.index ? Number(form.index) : undefined,
     };
 
-    await classes.create(data);
+    // await classes.create(data);
+
+    // await setTimeout(1000)
 
     // Show success feedback
     justSaved.value = true
@@ -40,11 +42,7 @@ const handleSubmit = async () => {
     ui.showToast('success', `ক্লাস যুক্ত হয়েছে`);
 
     emit('saved');
-  } catch (error) {
-    ui.showToast('error', 'ক্লাস যুক্ত করতে সমস্যা হয়েছে: ' + (error.message || error));
-  } finally {
-    ui.saving = false;
-  }
+  })
 };
 </script>
 
@@ -78,8 +76,8 @@ const handleSubmit = async () => {
 
     <!-- Actions -->
     <div class="flex gap-3 pt-2">
-      <AppButton variant="primary" type="submit">
-        ক্লাস যুক্ত করুন
+      <AppButton variant="primary" type="submit" target="class.create">
+        {{ui.saveButtonText}}
       </AppButton>
     </div>
   </form>

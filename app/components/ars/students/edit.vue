@@ -21,8 +21,8 @@ onMounted(async () => {
 });
 
 async function handleSubmit() {
-  ui.saving = true;
-  try {
+ 
+  ui.loading('students.update', async () => {
     const students = useStudents();
     await students.update(props.data.id, {
       classId: Number(form.classId),
@@ -31,11 +31,7 @@ async function handleSubmit() {
     });
     ui.showToast('success', 'শিক্ষার্থী আপডেট হয়েছে');
     emit('saved');
-  } catch (err) {
-    ui.showToast('error', 'আপডেট করতে সমস্যা হয়েছে: ' + err);
-  } finally {
-    ui.saving = false;
-  }
+  })
 }
 
 function handleCancel() {
@@ -88,6 +84,7 @@ function handleCancel() {
         type="button"
         variant="primary" 
         icon="check"
+        target="students.update"
         @click="handleSubmit">
         {{ ui.saveButtonText }}
       </AppButton>

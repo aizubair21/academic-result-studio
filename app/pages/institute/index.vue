@@ -65,7 +65,7 @@ function handleClose() {
     <AppCard>
         <template #header>
             <h1 class="text-xl font-bold text-slate-900">প্রতিষ্ঠান</h1>
-            <AppButton variant="primary" type="button" @click="showCreateModal = true">প্রতিষ্ঠান যুক্ত করুন</AppButton>
+            <AppButton variant="primary" type="button" target="isntitute.create" @click="showCreateModal = true">প্রতিষ্ঠান যুক্ত করুন</AppButton>
             <!-- <LayoutsPartialsPanelRightOpen variant="primary" type="plus" /> -->
         </template>
 

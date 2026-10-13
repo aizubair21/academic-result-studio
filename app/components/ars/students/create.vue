@@ -32,8 +32,7 @@ async function loadClasses() {
 async function handleSubmit() {
   if (!ui.selectedClassId || !form.name.trim() || !form.roll) return;
 
-  ui.saving = true;
-  try {
+  ui.loading('students.create', async () => {
     await students.create({
       classId: Number(ui.selectedClassId),
       name: form.name.trim(),
@@ -58,11 +57,7 @@ async function handleSubmit() {
     // await loadClasses();
     emit('saved');
 
-  } catch (err) {
-    ui.showToast('error', 'সমস্যা হয়েছে: ' + (err.message || err));
-  } finally {
-    ui.saving = false;
-  }
+  })
 }
 
 // Bulk import support
@@ -202,12 +197,8 @@ async function importStudentsFile() {
 
     <!-- Actions -->
     <div class="flex gap-3 pt-2">
-      <AppButton type="submit" :disabled="ui.saving" variant="primary">
-        <svg v-if="ui.saving" class="animate-spin w-4 h-4" fill="none" viewBox="0 0 24 24">
-          <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4" fill="none" />
-          <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
-        </svg>
-        {{ ui.saving ? 'সংরক্ষণ হচ্ছে...' : 'শিক্ষার্থী যুক্ত করুন' }}
+      <AppButton type="submit" variant="primary" target="students.create" >
+        {{ ui.saveButtonText}}
       </AppButton>
     </div>
   </form>

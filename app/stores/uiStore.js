@@ -1,8 +1,27 @@
 // stores/uiStore.js
 export const useUiStore = defineStore('ui', () => {
-  const loading = ref(false)
-  const saving = ref(false)
-  const saveButtonText = ref('সংরক্ণ করুন')
+  const load = reactive({})
+
+  const isLoading = (key) => {
+    return load[key] == true;
+  }
+  
+
+  const loading = async (key, action) => {
+    load[key] = true;
+    try{
+      console.log('loading Begin 1')
+      return await action()
+    }catch{
+      console.log('loading Error 3')
+      showToast('error', 'দুক্ষিত, আবার চেষ্টা করুন। ');
+    }finally{
+      console.log('Action Begin 2')
+      load[key] = false; 
+    }
+  }
+
+  const saveButtonText = ref('যুক্ত করুন')
   const updateButtonText = ref('সংরক্ষণ করুন')
   const addButtonText = ref('যুক্থ করুন')
   const cancleButtonText = ref('বাতিল করুন')
@@ -40,6 +59,6 @@ export const useUiStore = defineStore('ui', () => {
   }
 
   return {
-    loading, saving, saveButtonText, updateButtonText, addButtonText, showWizedModal, selectedClassId, selectedStudentId, selectedSbujectId, sidebarOpen, resetAll, errors, toast, showToast, clearToast
+    load, loading, isLoading, saveButtonText, cancleButtonText, updateButtonText, addButtonText, showWizedModal, selectedClassId, selectedStudentId, selectedSbujectId, sidebarOpen, resetAll, errors, toast, showToast, clearToast
   };
 });

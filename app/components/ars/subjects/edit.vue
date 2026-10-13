@@ -24,8 +24,7 @@ onMounted(async () => {
 });
 
 async function handleSubmit() {
-  ui.saving = true;
-  try {
+  ui.loading('subjects.update', async () =>{
     const subjects = useSubjects();
     await subjects.update(props.data.id, {
       classId: Number(form.classId),
@@ -36,11 +35,7 @@ async function handleSubmit() {
     });
     ui.showToast('success', 'বিষয় আপডেট হয়েছে');
     emit('saved');
-  } catch (err) {
-    ui.showToast('error', 'আপডেট করতে সমস্যা হয়েছে: ' + err);
-  } finally {
-    ui.saving = false;
-  }
+  });
 }
 
 function handleCancel() {
@@ -115,14 +110,14 @@ function handleCancel() {
         type="button"
         icon="check"
         @click="handleSubmit">
-        {{ ui.saveButtonText }}
+        {{ ui.updateButtonText }}
       </AppButton>
       <AppButton
         type="button"
         variant="ghost"
         icon="x"
         @click="handleCancel">
-        বাতিল করুন
+        {{ui.cancleButtonText}}
       </AppButton>
     </div>
   </form>

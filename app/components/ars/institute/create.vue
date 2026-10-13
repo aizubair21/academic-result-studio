@@ -37,9 +37,8 @@ const errors = ref(ui.errors)
 // Submit handler
 const handleSubmit = async () => {
 
-  ui.saving = true;
+  ui.loading('institute.create', async () => {    
 
-  try {
     const data = {
       name: form.name.trim(),
       // email: form.email.trim(),
@@ -56,15 +55,8 @@ const handleSubmit = async () => {
 
     emit('saved');
 
-  } catch (err) {
-    ui.toast = {
-      message:  "সমস্যা হয়েছে : " + err, 
-      type: 'error'
-    }
-    // errorMsg.value = err.message || 'কিছু ভুল হয়েছে';
-  } finally {
-    ui.saving = false;
   }
+
 };
 
 
@@ -115,6 +107,7 @@ const handleSubmit = async () => {
             type="submit"
             variant="primary"
             icon="check"
+            target="institute.create"
           >
               {{ ui.saveButtonText}}
           </AppButton>

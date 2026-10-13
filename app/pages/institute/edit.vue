@@ -45,9 +45,8 @@ const isValid = computed(() => Object.keys(errors.value).length === 0);
 async function handleSubmit() {
     if (!isValid.value) return;
 
-    ui.saving = true;
+    ui.loading('institute.update', async () => {
 
-    try {
         await institute.update(1, {
             name: form.name.trim(),
             email: form.email.trim(),
@@ -55,13 +54,11 @@ async function handleSubmit() {
             headSirName: form.headSirName.trim(),
         });
 
+        // return new Promise(resolve => setTimeout(resolve, 2000));
+
         ui.showToast('success', 'প্রতিষ্ঠান সফলভাবে আপডেট হয়েছে');
         router.push('/institute');
-    } catch (err) {
-        ui.showToast('error', 'আপডেট করতে সমস্যা হয়েছে: ' + err);
-    } finally {
-        ui.saving = false;
-    }
+    })
 }
 
 function handleCancel() {
@@ -139,15 +136,15 @@ function handleCancel() {
             <!-- Actions -->
             <div class="flex gap-3 pt-4 border-t">
                 <AppButton
-                    type="submit" variant="primary" icon="check">
-                    {{ui.saveButtonText}}
+                    type="submit" variant="primary" icon="check" target="institute.update">
+                    {{ui.updateButtonText}}
                 </AppButton>
                 <AppButton
                     type="button"
                     variant="ghost"
                     icon="x"
                     @click="handleCancel" > 
-                    বাতিল করুন 
+                    {{ui.cancleButtonText}}
                 </AppButton>
             </div>
         </form>
