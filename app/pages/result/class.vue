@@ -29,7 +29,7 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="">
+  <div class="bg-slate-100 print:bg-white">
     <div v-if="!loading"
       class="result-controls mx-auto flex max-w-[1100px] gap-3 py-5 print:hidden sticky top-0 left-0 w-full z-50">
       <select v-model="classId" @change="load" class="rounded-lg border border-slate-300 px-3 py-2">
@@ -48,10 +48,10 @@ onMounted(async () => {
         <table class="result-table w-full border-collapse text-xs">
           <thead class="sticky top-[50px]">
             <tr>
-              <th>ক্রমিক</th>
-              <th>রোল</th>
-              <th>শিক্ষার্থীর নাম</th>
-              <th v-for="subject in report.subjects" :key="subject.id">{{ subject.name }}<br><small
+              <th class="max-w-[20px]">ক্রম</th>
+              <th class="max-w-[20px]">রোল</th>
+              <th class="text-left">শিক্ষার্থীর নাম</th>
+              <th class="max-w-[30px]" v-for="subject in report.subjects" :key="subject.id">{{ subject.name }}<br><small
                   v-if="report.settings.showSubjectTotalMark">{{
                     subject.total_mark || 100 }}</small></th>
               <th v-if="report.settings.showTotalMark">মোট</th>
@@ -81,10 +81,10 @@ onMounted(async () => {
 </template>
 
 <style>
-@page {
-  size: A4 landscape;
+/*@page {
+  size: A4 portrait;
   margin: 0;
-}
+}*/
 
 .result-table th,
 .result-table td {

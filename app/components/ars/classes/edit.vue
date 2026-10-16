@@ -13,20 +13,15 @@ const form = reactive({
 });
 
 async function handleSubmit() {
-  ui.saving = true;
-  try {
+  ui.loading('class.update', async () => {
     const classes = useClasses();
     await classes.update(props.data, {
       name: form.name.trim(),
       index: form.index ? Number(form.index) : undefined,
     });
     ui.showToast('success', 'ক্লাস আপডেট হয়েছে');
-    emit('saved');
-  } catch (err) {
-    ui.showToast('error', 'আপডেট করতে সমস্যা হয়েছে: ' + err);
-  } finally {
-    ui.saving = false;
-  }
+  });
+
 }
 
 function handleCancel() {
@@ -66,6 +61,7 @@ onMounted( async () => {
         type="submit"
         variant="primary"
         icon="check"
+        target="class.update"
       >
         {{ ui.updateButtonText }}
       </AppButton>

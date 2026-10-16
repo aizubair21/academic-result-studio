@@ -50,14 +50,14 @@ const handleSubmit = async () => {
     ui.toast = {
       message: 'ইনস্টিটিউট সফলভাবে যুক্ত হয়েছে',
       type:'success',
-    }
+    };
     // successMsg.value = 'ইনস্টিটিউট সফলভাবে তৈরি হয়েছে!';
 
     emit('saved');
 
-  }
+  })
 
-};
+}
 
 
 </script>

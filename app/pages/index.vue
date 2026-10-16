@@ -32,13 +32,6 @@ const instituteData = ref<any>(null);
       <div class="">      
         <ArsWidgetWelcome />
         <ArsWidgetPanel />
-
-
-
-        <div>
-
-
-        </div>
       </div>
 
     </div>

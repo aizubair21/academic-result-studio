@@ -46,14 +46,14 @@ const chunks = computed(() => Array.from({ length: Math.max(1, Math.ceil(rows.va
       <table class="result-table w-full border-collapse text-sm">
         <thead>
           <tr>
-            <th>ক্রমিক</th>
-            <th>রোল</th>
+            <th class="max-w-[20px]">ক্রম</th>
+            <th class="max-w-[20px]">রোল</th>
             <th class="text-left">শিক্ষার্থীর নাম</th>
-            <th v-if="report.settings.showTotalMark">পূর্ণমান</th>
-            <th>প্রাপ্ত নম্বর</th>
-            <th v-if="report.settings.showPercentage">শতাংশ</th>
-            <th v-if="report.settings.showGrade">গ্রেড</th>
-            <th v-if="report.settings.showResult">ফলাফল</th>
+            <th class="max-w-[20px]" v-if="report.settings.showTotalMark">পূর্ণমান</th>
+            <th class="max-w-[20px]">প্রাপ্ত নম্বর</th>
+            <th class="max-w-[20px]" v-if="report.settings.showPercentage">শতাংশ</th>
+            <th class="max-w-[20px]" v-if="report.settings.showGrade">গ্রেড</th>
+            <th class="max-w-[20px]" v-if="report.settings.showResult">ফলাফল</th>
           </tr>
         </thead>
         <tbody>
@@ -76,10 +76,10 @@ const chunks = computed(() => Array.from({ length: Math.max(1, Math.ceil(rows.va
 </template>
 
 <style>
-@page {
+/*@page {
   size: A4 landscape;
   margin: 0;
-}
+}*/
 
 .result-table th,
 .result-table td {

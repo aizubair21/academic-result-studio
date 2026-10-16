@@ -46,8 +46,8 @@ onMounted(async () => {
       <table class="result-table w-full border-collapse text-sm">
         <thead>
           <tr>
-            <th>ক্রমিক</th>
-            <th class="text-left">বিষয়</th>
+            <th class="max-w-[20px]">ক্রম</th>
+            <th class="text-left max-w[20px]">বিষয়</th>
             <th v-if="report.settings.showTotalMark">পূর্ণমান</th>
             <th>প্রাপ্ত নম্বর</th>
             <th v-if="report.settings.showPercentage">শতাংশ</th>
@@ -84,11 +84,11 @@ onMounted(async () => {
 </template>
 
 <style>
-@page {
+/*@page {
   size: A4 landscape;
   margin: 0;
 }
-
+*/
 .result-table th,
 .result-table td {
   border: 1px solid #334155;

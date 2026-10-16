@@ -8,12 +8,16 @@ const classId = ref('');
 const studentId = ref('');
 const subjectId = ref('');
 const examName = ref('বার্ষিক পরীক্ষা');
+const searchClassName = ref([])
+
+import {ChevronRight, Search} from "@lucide/vue";
 
 definePageMeta({ layout: 'master' });
 
 onMounted(async () => {
   const data = await loadBaseData();
   classes.value = data.classes.sort((a, b) => (a.index ?? 0) - (b.index ?? 0));
+  // classes.value = data.classes.filter(cls => cls.name == searchClassName.value)
 });
 
 async function onClassChange() {
@@ -39,23 +43,29 @@ const openReport = computed(() => {
 </script>
 
 <template>
-  <div class="">
-    <AppCard classes="max-w-lg">
-      <template #header>
-        <div>
-          <h1 class="text-3xl font-bold text-slate-900">ফলাফল তৈরি করুন</h1>
-          <p class="mt-1 text-sm text-slate-500">ফলাফল ধরন নির্বাচন করুন। </p>
-        </div>
-      </template>
 
-      <div class="mb-6">
+  <AppCard>
+     <div class="">
         <label class="text-sm font-medium text-slate-700">পরীক্ষার নাম
           <input v-model="examName" class="mt-1.5 w-full rounded-lg border border-slate-300 px-3 py-2.5"
             placeholder="বার্ষিক পরীক্ষা" />
         </label>
       </div>
+  </AppCard>
 
-      <div class="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
+  <div class="flex gap-3 mt-3">
+
+    <AppCard class="max-w-md">
+      <template #header>
+        <div>
+          <h1 class="text-xl font-bold text-slate-900">ফলাফল তৈরি করুন</h1>
+          <p class="mt-1 text-sm text-slate-500">ফলাফল ধরন নির্বাচন করুন। </p>
+        </div>
+      </template>
+
+    
+
+      <div class="">
         <label class="text-sm font-medium text-slate-700">ফলাফলের ধরন
           <select v-model="type" class="mt-1.5 w-full rounded-lg border border-slate-300 px-3 py-2.5">
             <option value="class">ক্লাস ভিত্তিক ফলাফল</option>
@@ -88,9 +98,43 @@ const openReport = computed(() => {
         <NuxtLink :to="openReport" class="inline-flex items-center justify-center rounded-lg font-semibold transition duration-200 bg-indigo-600 text-white hover:bg-indigo-500 shadow-lg shadow-indigo-500/20 px-4 py-2 text-sm"
           :disabled="!classId || (type === 'student' && !studentId) || (type === 'subject' && !subjectId)"
           >
-          ফলাফল দেখুন
+          ফলাফল দেখুন 
+          <ChevronRight size="17" class="ml-2" />
         </NuxtLink>
       </div>
     </AppCard>
+
+    <AppCard class="max-w-md">
+      <template #header>
+        <div>
+          <h1 class="text-xl font-bold text-slate-900"> ক্লাস ভিত্তিক ফলাফল </h1>
+          <p class="mt-1 text-sm text-slate-500"> যেকোন ক্লাসের দ্রুত ফলাফল দেখুন </p>
+        </div>
+      </template>
+
+      <div class="mb-3 flex items-center">
+        <Search size="15" class="my-2 mx-3" />
+        <input v-model="searchClassName" type="search" class="border rounded-lg px-2 py-1">
+      </div> 
+
+      <div class="flex flex-wrap gap-3">
+        <template v-for="clas in classes" >
+          <NuxtLink :to="`/result/class?classId=${clas.id}&examName=${examName}`" class=" border rounded-md hover:bg-indigo-500 hover:text-white trnasition all-linear ">
+            <div class="flex items-center justify-between px-3 py-2 w-[140px]">
+              <span> {{clas.name}} </span>
+              <ChevronRight size="17" />
+            </div>
+          </NuxtLink>
+        </template>
+      </div>
+    </AppCard>
+
   </div>
+
+<AppCard class="mt-3">
+  <template #header>
+    <h1 class="text-xl font-bold text-slate-900"> ফলাফল ইতিহাস দেখুন </h1>
+  </template>
+</AppCard>
+
 </template>

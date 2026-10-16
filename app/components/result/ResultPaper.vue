@@ -55,7 +55,7 @@ watch(localInstituteName, (value, oldValue) => {
 });
 
 const pageStyle = computed(() => {
-  const margin = settings.value.pageMargin === 'small' ? '10mm' : settings.value.pageMargin === 'large' ? '25mm' : '14mm';
+  const margin = settings.value.pageMargin === 'small' ? '10mm' : settings.value.pageMargin === 'large' ? '25mm' : '5mm';
   const dimensions = {
     A4: { landscape: { width: '297mm', height: '210mm' }, portrait: { width: '210mm', height: '297mm' } },
     A3: { landscape: { width: '420mm', height: '297mm' }, portrait: { width: '297mm', height: '420mm' } },
@@ -251,10 +251,10 @@ function printReport() {
 </template>
 
 <style>
-@page {
+/*@page {
   size: A4 portrait;
   margin: 0;
-}
+}*/
 
 @media print {
   body {

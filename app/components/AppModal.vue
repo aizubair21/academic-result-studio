@@ -20,9 +20,7 @@ const emit = defineEmits(['close'])
             <!-- <p class="text-sm uppercase tracking-[0.24em] text-slate-500">Modal</p> -->
             <h3 class="text-xl font-semibold text-slate-900">{{ title }}</h3>
           </div>
-          <AppButton @click="emit('close')" type="button" variant="ghost">
-            <CircleX />
-          </AppButton>
+          <AppButton @click="emit('close')" type="button" variant="ghost" icon="x" />
         </div>
         <div class="space-y-4 p-6">
 

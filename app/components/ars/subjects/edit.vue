@@ -109,6 +109,7 @@ function handleCancel() {
         variant="primary"
         type="button"
         icon="check"
+        target="subjects.update"
         @click="handleSubmit">
         {{ ui.updateButtonText }}
       </AppButton>
