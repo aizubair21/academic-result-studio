@@ -53,7 +53,7 @@ const openReport = computed(() => {
       </div>
   </AppCard>
 
-  <div class="flex gap-3 mt-3">
+  <div class="lg:flex gap-3 mt-3">
 
     <div clas="flex flex-col gap-3">
       <AppCard class="max-w-md">
@@ -113,12 +113,12 @@ const openReport = computed(() => {
           </div>
         </template>
 
-        <div class="mb-3 flex items-center">
-          <Search size="15" class="my-2 mx-3" />
-          <input v-model="searchClassName" type="search" class="border rounded-lg px-2 py-1">
-        </div> 
 
-        <div class="flex flex-wrap gap-3">
+        <div v-if="classes.length > 0" class="flex flex-wrap gap-3">
+          <div class="mb-3 flex items-center">
+            <Search size="15" class="my-2 mx-3" />
+            <input v-model="searchClassName" type="search" class="border rounded-lg px-2 py-1">
+          </div> 
           <template v-for="clas in classes" >
             <NuxtLink :to="`/result/class?classId=${clas.id}&examName=${examName}`" class=" border rounded-md hover:bg-indigo-500 hover:text-white trnasition all-linear ">
               <div class="flex items-center justify-between px-3 py-2 w-[140px]">
@@ -128,6 +128,8 @@ const openReport = computed(() => {
             </NuxtLink>
           </template>
         </div>
+
+        <AppEmpty v-else > কোন ক্লাশ পাওয়া যায় নি।  </AppEmpty>
       </AppCard>
     </div>
 

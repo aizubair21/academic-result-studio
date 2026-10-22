@@ -36,7 +36,7 @@ const navItems = [
   <nav
     class="fixed bottom-0 left-0 right-0 z-50 border-t border-slate-200 bg-white/95 backdrop-blur-lg shadow-[0_-4px_20px_rgba(0,0,0,0.08)] md:hidden"
     aria-label="Mobile navigation">
-    <div class="flex items-center justify-center px-1 py-1">
+    <div class="flex items-center justify-evenly px-1 py-1">
       <NuxtLink v-for="item in navItems" :key="item.key" :to="item.key"
         class="flex flex-col items-center gap-0.5 rounded-md px-3 py-1.5 text-[10px] font-medium text-slate-500 transition-all duration-150 min-w-0 "
         :title="item.label">
