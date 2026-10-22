@@ -24,9 +24,7 @@ const handleSubmit = async () => {
       index: form.index ? Number(form.index) : undefined,
     };
 
-    // await classes.create(data);
-
-    // await setTimeout(1000)
+    await classes.create(data);
 
     // Show success feedback
     justSaved.value = true

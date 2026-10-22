@@ -4,7 +4,9 @@ const settingsOpen = ref(false);
 </script>
 
 <template>
-  <div class="min-h-screen bg-slate-50 text-slate-900 font-sans">
+  
+	<UiToast />
+<div class="min-h-screen bg-slate-50 text-slate-900 font-sans">
     <!-- Top Application Bar -->
     <LayoutsPartialsHeader />
 
@@ -20,7 +22,7 @@ const settingsOpen = ref(false);
       <main class="sm:w-full min-h-[calc(100vh-108px)] px-2 pb-20 pt-4 md:px-6 md:pb-4">
 
         <div v-if="!ui.sidebarOpen" class="mb-1">
-          <UiToast />
+		<!-- <UiToast /> -->
         </div>
 
         <!-- slot  -->

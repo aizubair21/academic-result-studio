@@ -10,13 +10,13 @@ export const useUiStore = defineStore('ui', () => {
   const loading = async (key, action) => {
     load[key] = true;
     try{
-      console.log('loading Begin 1')
+     // console.log('loading Begin 1')
       return await action()
     }catch{
-      console.log('loading Error 3')
+      // console.log('loading Error 3')
       showToast('error', 'দুক্ষিত, আবার চেষ্টা করুন। ');
     }finally{
-      console.log('Action Begin 2')
+      // console.log('Action Begin 2')
       load[key] = false; 
     }
   }

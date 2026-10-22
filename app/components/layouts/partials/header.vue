@@ -116,12 +116,13 @@ async function handleResetAll() {
     await db.marks.clear();
     await db.resultCache.clear();
     await db.settings.clear();
-    await db.gradeCriteria.clear();
+   // await db.gradeCriteria.clear();
 
     // Reset all stores
     useUiStore().resetAll();
     useWidgetStore().reset();
-    useDbStore().reset();
+    // useDbStore().reset();
+
 
     // Reset workflow
     useWidgetStore().workflow.current = 'institute';
