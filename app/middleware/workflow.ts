@@ -65,7 +65,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
             // (not on first app load) and if a toast store exists.
             if (from && from.path && ( from.path !== to.path) ) {
                 try {
-                    ui.showToast('error', `আগে "${step}" সম্পন্ন করুন`);
+                    ui.showToast('error', ` আগে "${step}" সম্পন্ন করুন`);
                 } catch {
                     // uiStore may not be ready; ignore.
                 }
