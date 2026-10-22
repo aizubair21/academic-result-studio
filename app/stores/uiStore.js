@@ -50,7 +50,7 @@ export const useUiStore = defineStore('ui', () => {
     toast.value.message = newMessage;
     timeoutId = setTimeout(() => {
       clearToast();
-    }, 5000);
+    }, 2000);
   };
 
 

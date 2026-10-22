@@ -27,7 +27,7 @@ const instituteData = ref<any>(null);
 
 <template>
   <div class="min-h-[calc(100vh-200px)]">
-    <div v-if="widget.workflow.current == 'dashboard'" class="mb-6 md:flex items-start gap-4 justify-center">
+    <div class="mb-6 md:flex items-start gap-4 justify-center">
 
       <div class="">      
         <ArsWidgetWelcome />

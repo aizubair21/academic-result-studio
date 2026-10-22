@@ -106,7 +106,6 @@ const handleSubmit = async () => {
           <AppButton
             type="submit"
             variant="primary"
-            icon="check"
             target="institute.create"
           >
               {{ ui.saveButtonText}}

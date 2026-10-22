@@ -92,13 +92,13 @@ onMounted(async () => {
 </script>
 
 <template>
-  <div class="max-w-3xl mx-auto">
+  <div class="w-full lg:w-[600px]">
 
 
     <!-- Onboarding View -->
     <template v-if="widget.workflow.current != 'dashboard'">
       <!-- Step Header -->
-      <div class="bg-white p-6 rounded-xl border border-slate-200 shadow-sm mb-6">
+      <div class="w-full bg-white p-6 rounded-xl border border-slate-200 shadow-sm mb-6">
         <div class="flex items-center gap-4 mb-4">
           <div class="w-14 h-14 rounded-xl flex items-center justify-center text-2xl" :class="{
             'bg-emerald-100 text-emerald-600': widget.workflow.completed[currentStepInfo?.widget],

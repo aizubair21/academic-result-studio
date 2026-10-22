@@ -7,16 +7,6 @@ onMounted(async () => {
   await resolver.resolve();
 
 
-
-
-  const buttons = document.getElementsByTagName('button');
-  // const uid = 'abc';
-  // for (var i = 0; i = buttons.length - 1; i++) {
-  //   buttons[i].addEventListener('click', (e) => {
-  //     console.log(e);
-  //   })
-  // }
-
 })
 
 
